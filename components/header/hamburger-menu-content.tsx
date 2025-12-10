@@ -16,15 +16,24 @@ import { useTranslations } from "next-intl";
 import { authClient } from "@/lib/auth-client";
 import { User, LogOut } from "lucide-react";
 
-export function HamburgerMenuContent() {
+interface HamburgerMenuContentProps {
+  onClose?: () => void;
+}
+
+export function HamburgerMenuContent({ onClose }: HamburgerMenuContentProps) {
   const t = useTranslations("Header");
   const { data: session } = authClient.useSession();
   const router = useRouter();
 
   const handleLogout = async () => {
     await authClient.signOut();
+    onClose?.();
     router.push("/");
     router.refresh();
+  };
+
+  const handleLinkClick = () => {
+    onClose?.();
   };
 
   return (
@@ -35,25 +44,25 @@ export function HamburgerMenuContent() {
         <div className="mb-4 flex justify-center">
           <Image src={logo} alt="IK ALUMNI CGT" width={200} height={112} className="h-auto" />
         </div>
-        <Link href="/" className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
+        <Link href="/" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
           {t("home")}
         </Link>
-        <Link href="/information" className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
+        <Link href="/information" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
           {t("information")}
         </Link>
-        <Link href="/schedule" className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
+        <Link href="/schedule" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
           {t("schedule")}
         </Link>
-        <Link href="/video" className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
+        <Link href="/video" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
           {t("video")}
         </Link>
-        <Link href="/blog" className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
+        <Link href="/blog" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
           {t("blog")}
         </Link>
-        <Link href="/profiles" className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
+        <Link href="/profiles" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
           {t("profiles")}
         </Link>
-        <Link href="/contact" className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
+        <Link href="/contact" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
           {t("contact")}
         </Link>
 
@@ -82,7 +91,7 @@ export function HamburgerMenuContent() {
         </div>
         {session?.user ? (
           <div className="flex flex-col md:flex-row gap-4">
-            <Link href="/mypage" className="w-full md:flex-1">
+            <Link href="/mypage" onClick={handleLinkClick} className="w-full md:flex-1">
               <Button variant="outline" className="w-full min-h-11 bg-white/20 border-white text-white hover:bg-white/30">
                 <User className="h-4 w-4 mr-2" />
                 {t("mypage")}
@@ -99,12 +108,12 @@ export function HamburgerMenuContent() {
           </div>
         ) : (
           <div className="flex flex-col md:flex-row gap-4">
-            <Link href="/supporters" className="w-full md:flex-1">
+            <Link href="/supporters" onClick={handleLinkClick} className="w-full md:flex-1">
               <Button className="w-full min-h-11 bg-white text-blue-500 hover:bg-white/90">
                 {t("joinUs")}
               </Button>
             </Link>
-            <Link href="/login" className="w-full md:flex-1">
+            <Link href="/login" onClick={handleLinkClick} className="w-full md:flex-1">
               <Button variant="outline" className="w-full min-h-11 bg-white/20 border-white text-white hover:bg-white/30">
                 {t("login")}
               </Button>
@@ -117,16 +126,16 @@ export function HamburgerMenuContent() {
         </div>
         {/* コンテンツリンク */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-full bg-blue-500 rounded-lg p-4">
-          <Link href="/video" className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
+          <Link href="/video" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             VIDEO
           </Link>
-          <Link href="/newsletter" className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
+          <Link href="/newsletter" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             NEWS LETTER
           </Link>
-          <Link href="/photos" className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
+          <Link href="/photos" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             PHOTO LIBRARY
           </Link>
-          <Link href="/blog" className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
+          <Link href="/blog" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             EXCLUSIVE BLOG
           </Link>
         </div>
