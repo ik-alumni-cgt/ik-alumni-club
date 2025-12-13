@@ -29,8 +29,10 @@ export default async function InformationDetailPage({
   }
 
   return (
-    <div className="container max-w-full items-center justify-between pt-10 pb-32">
-      <InformationDetail item={item} />
+    <div className="pt-10 pb-32">
+      <div className="container-detail mx-auto">
+        <InformationDetail item={item} />
+      </div>
     </div>
   );
 }
