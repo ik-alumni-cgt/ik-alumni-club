@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { getSponsor } from "@/data/sponsor"
-import { ArrowLeft, CheckCircle, XCircle, Flag } from "lucide-react"
+import { ArrowLeft, CheckCircle, XCircle, Flag, Download } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import {
@@ -51,7 +51,7 @@ export default async function SponsorDetailPage({
           </CardHeader>
           <CardContent className="space-y-4">
             {sponsor.logoUrl && (
-              <div className="flex justify-center">
+              <div className="flex flex-col items-center gap-4">
                 <div className="relative h-32 w-32 rounded-lg overflow-hidden bg-muted">
                   <Image
                     src={sponsor.logoUrl}
@@ -60,6 +60,14 @@ export default async function SponsorDetailPage({
                     className="object-contain"
                   />
                 </div>
+                <Button asChild variant="outline" size="sm">
+                  <a
+                    href={`/api/download-image?url=${encodeURIComponent(sponsor.logoUrl)}&filename=${encodeURIComponent(sponsor.companyName + "_logo")}`}
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    ロゴをダウンロード
+                  </a>
+                </Button>
               </div>
             )}
             <div className="grid grid-cols-3 gap-4">
