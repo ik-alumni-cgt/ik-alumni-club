@@ -10,6 +10,7 @@ import {
   Newspaper,
   Image,
   Settings,
+  Building2,
 } from "lucide-react";
 import {
   Sidebar,
@@ -65,6 +66,11 @@ const menuItems = [
     title: "フォトライブラリ管理",
     icon: Image,
     url: "/admin/photo-library",
+  },
+  {
+    title: "スポンサー回答管理",
+    icon: Building2,
+    url: "/admin/sponsors",
   },
   {
     title: "設定",

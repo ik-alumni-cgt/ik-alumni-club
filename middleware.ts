@@ -17,6 +17,7 @@ const publicRoutes = [
   "/register/terms",
   "/register/plan",
   "/register/auth",
+  "/sponsor-form",
 ];
 const adminRoutes = ["/admin/login"]; // 管理者ログインページは認証不要
 

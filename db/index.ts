@@ -11,6 +11,7 @@ import * as videoSchema from './schemas/videos';
 import * as blogSchema from './schemas/blogs';
 import * as newsletterSchema from './schemas/newsletters';
 import * as photoLibrarySchema from './schemas/photo-library';
+import * as sponsorSchema from './schemas/sponsors';
 
 config({ path: '.env' });
 
@@ -27,6 +28,7 @@ export const db = drizzle({
         ...videoSchema,
         ...blogSchema,
         ...newsletterSchema,
-        ...photoLibrarySchema
+        ...photoLibrarySchema,
+        ...sponsorSchema
     },
 });
