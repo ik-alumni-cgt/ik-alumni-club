@@ -10,6 +10,7 @@ import * as scheduleSchema from './schemas/schedules';
 import * as videoSchema from './schemas/videos';
 import * as blogSchema from './schemas/blogs';
 import * as newsletterSchema from './schemas/newsletters';
+import * as photoLibrarySchema from './schemas/photo-library';
 
 config({ path: '.env' });
 
@@ -25,6 +26,7 @@ export const db = drizzle({
         ...scheduleSchema,
         ...videoSchema,
         ...blogSchema,
-        ...newsletterSchema
+        ...newsletterSchema,
+        ...photoLibrarySchema
     },
 });

@@ -1,5 +1,4 @@
-import { ContentsCard } from "@/components/contents/contents-card";
-import Link from "next/link";
+import { InformationCard } from "@/components/information/information-card";
 
 type Information = {
   id: string;
@@ -17,13 +16,12 @@ export function InformationList({ items }: { items: Information[] }) {
         <p className="text-center text-gray-500">お知らせはありません</p>
       ) : (
         items.map((item) => (
-          <Link key={item.id} href={`/information/${item.id}`}>
-            <ContentsCard
-              title={item.title}
-              date={item.date}
-              isMemberOnly={item.isMemberOnly}
-            />
-          </Link>
+          <InformationCard
+            key={item.id}
+            id={item.id}
+            date={item.date}
+            title={item.title}
+          />
         ))
       )}
     </div>

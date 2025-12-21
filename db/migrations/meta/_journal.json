@@ -92,6 +92,13 @@
       "when": 1763789576224,
       "tag": "0012_magenta_champions",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1765630287494,
+      "tag": "0013_wet_smiling_tiger",
+      "breakpoints": true
     }
   ]
 }

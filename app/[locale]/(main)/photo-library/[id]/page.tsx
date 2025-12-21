@@ -1,20 +1,20 @@
 import { setLocale } from "@/app/web/i18n/set-locale";
-import { InformationDetail } from "@/components/information/detail";
-import { getInformation } from "@/data/information";
+import { PhotoLibraryDetail } from "@/components/photo-library/detail";
+import { getPhoto } from "@/data/photo-library";
 import { canAccessMemberContent } from "@/lib/session";
 import { notFound } from "next/navigation";
 import { MemberOnlyContent } from "@/components/member-only-content";
 
 export const dynamic = 'force-dynamic';
 
-export default async function InformationDetailPage({
+export default async function PhotoLibraryDetailPage({
   params,
 }: {
   params: Promise<{ locale: string; id: string }>;
 }) {
   await setLocale(params);
   const { id } = await params;
-  const item = await getInformation(id);
+  const item = await getPhoto(id);
 
   if (!item) {
     notFound();
@@ -24,15 +24,13 @@ export default async function InformationDetailPage({
   if (item.isMemberOnly) {
     const isMember = await canAccessMemberContent();
     if (!isMember) {
-      return <MemberOnlyContent contentType="お知らせ" />;
+      return <MemberOnlyContent contentType="フォト" />;
     }
   }
 
   return (
-    <div className="pt-10 pb-32">
-      <div className="container-detail mx-auto">
-        <InformationDetail item={item} />
-      </div>
+    <div className="container max-w-full items-center justify-between pt-10 pb-32">
+      <PhotoLibraryDetail item={item} />
     </div>
   );
 }
