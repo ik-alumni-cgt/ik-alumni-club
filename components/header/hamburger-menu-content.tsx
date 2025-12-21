@@ -132,7 +132,7 @@ export function HamburgerMenuContent({ onClose }: HamburgerMenuContentProps) {
           <Link href="/newsletter" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             NEWS LETTER
           </Link>
-          <Link href="/photos" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
+          <Link href="/photo-library" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             PHOTO LIBRARY
           </Link>
           <Link href="/blog" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">

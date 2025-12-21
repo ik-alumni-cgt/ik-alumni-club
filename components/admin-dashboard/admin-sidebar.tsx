@@ -8,6 +8,7 @@ import {
   Video,
   FileText,
   Newspaper,
+  Image,
   Settings,
 } from "lucide-react";
 import {
@@ -59,6 +60,11 @@ const menuItems = [
     title: "ブログ管理",
     icon: FileText,
     url: "/admin/blogs",
+  },
+  {
+    title: "フォトライブラリ管理",
+    icon: Image,
+    url: "/admin/photo-library",
   },
   {
     title: "設定",
