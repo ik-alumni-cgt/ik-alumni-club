@@ -6,6 +6,8 @@ import xBlack from "../sns-icon/x-black.png";
 import instagramBlack from "../sns-icon/instagram-black.png";
 import youtubeBlack from "../sns-icon/youtube-black.png";
 import tiktokBlack from "../sns-icon/tiktok-black.png";
+import PcFooter from "./PcFooter.jpg";
+import SpFooter from "./SpFooter.jpg";
 
 export function Footer() {
   const links = [
@@ -45,11 +47,20 @@ export function Footer() {
           ))}
         </div>
 
-        {/* コピーライト */}
-        <div className="flex justify-center pb-4 md:pb-0">
-          <div className="header-text py-4">
-            ©️IK ALUMNI CGT
-          </div>
+        {/* Footer画像 */}
+        <div className="w-full">
+          {/* SP用 */}
+          <Image
+            src={SpFooter}
+            alt="IK ALUMNI CGT"
+            className="w-full md:hidden"
+          />
+          {/* PC用 */}
+          <Image
+            src={PcFooter}
+            alt="IK ALUMNI CGT"
+            className="w-full hidden md:block"
+          />
         </div>
       </div>
     </footer>

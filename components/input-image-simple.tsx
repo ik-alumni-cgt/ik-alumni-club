@@ -1,0 +1,114 @@
+"use client"
+
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { ImagePlus, X, Loader2 } from "lucide-react"
+import Image from "next/image"
+import { useState } from "react"
+import { useDropzone } from "react-dropzone"
+import { toast } from "sonner"
+
+type Props = {
+  width?: string | number
+  aspectRatio?: number
+  value: string | null | undefined
+  onChange: (value: string) => void
+  maxSize?: number
+}
+
+export function InputImageSimple({
+  width = "100%",
+  aspectRatio = 1,
+  maxSize = 1024 * 1024 * 10, // 10MB
+  value = "",
+  onChange,
+}: Props) {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const { getRootProps, getInputProps, isDragAccept } = useDropzone({
+    maxSize,
+    multiple: false,
+    accept: {
+      "image/jpeg": [],
+      "image/png": [],
+      "image/webp": [],
+      "image/gif": [],
+    },
+    useFsAccessApi: false,
+    onDropAccepted: (dropped) => {
+      setIsLoading(true)
+      const reader = new FileReader()
+      reader.onload = () => {
+        onChange(reader.result as string)
+        setIsLoading(false)
+      }
+      reader.onerror = () => {
+        toast.error("画像の読み込みに失敗しました")
+        setIsLoading(false)
+      }
+      reader.readAsDataURL(dropped[0])
+    },
+    onDropRejected: (rejections) => {
+      const error = rejections[0]?.errors[0]
+      if (error?.code === "file-too-large") {
+        toast.error(`ファイルサイズが大きすぎます（最大${Math.round(maxSize / 1024 / 1024)}MB）`)
+      } else {
+        toast.error("このファイル形式はサポートされていません")
+      }
+    },
+  })
+
+  return (
+    <div>
+      <div className="relative w-fit">
+        <div
+          className={cn(
+            "border overflow-hidden cursor-pointer rounded-md grid place-content-center relative",
+            "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:outline-none ring-offset-background",
+            isDragAccept ? "bg-primary scale-105" : "bg-muted",
+            isLoading && "pointer-events-none opacity-50",
+          )}
+          style={{
+            aspectRatio,
+            width,
+          }}
+          {...getRootProps()}
+        >
+          {!value && !isLoading && (
+            <ImagePlus className="size-8 text-muted-foreground opacity-30" />
+          )}
+          {isLoading && (
+            <Loader2 className="size-8 text-muted-foreground animate-spin" />
+          )}
+          {value && !isLoading && (
+            <Image
+              unoptimized
+              className="object-contain"
+              fill
+              src={value}
+              alt=""
+            />
+          )}
+          <input {...getInputProps()} />
+          <span className="sr-only">画像を選択</span>
+        </div>
+
+        {value && !isLoading && (
+          <Button
+            type="button"
+            variant="outline"
+            className="absolute top-2 right-2 size-8 text-muted-foreground"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation()
+              onChange("")
+            }}
+          >
+            <X size={20} />
+            <span className="sr-only">イメージを削除</span>
+          </Button>
+        )}
+      </div>
+    </div>
+  )
+}

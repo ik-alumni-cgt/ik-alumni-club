@@ -8,7 +8,6 @@ import hero1 from "./hero1.jpg";
 import hero2 from "./hero2.jpg";
 import hero3 from "./hero3.jpg";
 import hero4 from "./hero4.jpg";
-import hero5 from "./hero5.jpg";
 
 export function HeroCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,7 +17,6 @@ export function HeroCarousel() {
     { src: hero2, alt: "Hero 2" },
     { src: hero3, alt: "Hero 3" },
     { src: hero4, alt: "Hero 4" },
-    { src: hero5, alt: "Hero 5" },
   ];
 
   const handleNext = () => {

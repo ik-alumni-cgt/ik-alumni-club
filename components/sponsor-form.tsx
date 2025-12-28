@@ -19,7 +19,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { createSponsor } from "@/actions/sponsor"
 import { toast } from "sonner"
-import { InputImage } from "@/components/input-image"
+import { InputImageSimple } from "@/components/input-image-simple"
 import { useState } from "react"
 import { CheckCircle } from "lucide-react"
 
@@ -117,16 +117,14 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
             <FormItem>
               <FormLabel>会社ロゴ（任意）</FormLabel>
               <FormControl>
-                <InputImage
+                <InputImageSimple
                   width={300}
-                  aspectRatio={1}
-                  resultWidth={400}
                   value={field.value}
                   onChange={field.onChange}
                 />
               </FormControl>
               <FormDescription>
-                会社のロゴ画像をアップロードしてください（推奨: 正方形）
+                会社のロゴ画像をアップロードしてください
               </FormDescription>
               <FormMessage />
             </FormItem>
