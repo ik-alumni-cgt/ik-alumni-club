@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ImagePlus, X, Loader2 } from "lucide-react"
 import Image from "next/image"
-import { useState, useCallback } from "react"
+import { useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { toast } from "sonner"
 
@@ -23,29 +23,7 @@ export function InputImageSimple({
   value = "",
   onChange,
 }: Props) {
-  const [isUploading, setIsUploading] = useState(false)
-
-  const uploadToCloudinary = useCallback(async (file: File): Promise<string> => {
-    const formData = new FormData()
-    formData.append("file", file)
-    formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "")
-
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error("Upload failed")
-    }
-
-    const data = await response.json()
-    return data.secure_url
-  }, [])
+  const [isLoading, setIsLoading] = useState(false)
 
   const { getRootProps, getInputProps, isDragAccept } = useDropzone({
     maxSize,
@@ -57,17 +35,18 @@ export function InputImageSimple({
       "image/gif": [],
     },
     useFsAccessApi: false,
-    onDropAccepted: async (dropped) => {
-      setIsUploading(true)
-      try {
-        const url = await uploadToCloudinary(dropped[0])
-        onChange(url)
-      } catch (error) {
-        console.error("Upload error:", error)
-        toast.error("画像のアップロードに失敗しました")
-      } finally {
-        setIsUploading(false)
+    onDropAccepted: (dropped) => {
+      setIsLoading(true)
+      const reader = new FileReader()
+      reader.onload = () => {
+        onChange(reader.result as string)
+        setIsLoading(false)
       }
+      reader.onerror = () => {
+        toast.error("画像の読み込みに失敗しました")
+        setIsLoading(false)
+      }
+      reader.readAsDataURL(dropped[0])
     },
     onDropRejected: (rejections) => {
       const error = rejections[0]?.errors[0]
@@ -87,7 +66,7 @@ export function InputImageSimple({
             "border overflow-hidden cursor-pointer rounded-md grid place-content-center relative",
             "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:outline-none ring-offset-background",
             isDragAccept ? "bg-primary scale-105" : "bg-muted",
-            isUploading && "pointer-events-none opacity-50",
+            isLoading && "pointer-events-none opacity-50",
           )}
           style={{
             aspectRatio,
@@ -95,13 +74,13 @@ export function InputImageSimple({
           }}
           {...getRootProps()}
         >
-          {!value && !isUploading && (
+          {!value && !isLoading && (
             <ImagePlus className="size-8 text-muted-foreground opacity-30" />
           )}
-          {isUploading && (
+          {isLoading && (
             <Loader2 className="size-8 text-muted-foreground animate-spin" />
           )}
-          {value && !isUploading && (
+          {value && !isLoading && (
             <Image
               unoptimized
               className="object-contain"
@@ -114,7 +93,7 @@ export function InputImageSimple({
           <span className="sr-only">画像を選択</span>
         </div>
 
-        {value && !isUploading && (
+        {value && !isLoading && (
           <Button
             type="button"
             variant="outline"
