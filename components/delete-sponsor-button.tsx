@@ -22,7 +22,7 @@ export function DeleteSponsorButton({
   companyName,
 }: {
   sponsorId: string
-  companyName: string
+  companyName: string | null
 }) {
   const router = useRouter()
 
@@ -30,7 +30,7 @@ export function DeleteSponsorButton({
     try {
       await deleteSponsor(sponsorId)
       toast.success("スポンサー回答を削除しました", {
-        description: `${companyName}の回答を削除しました`,
+        description: `${companyName ?? "個人会員"}の回答を削除しました`,
       })
       router.push("/admin/sponsors")
       router.refresh()
@@ -54,7 +54,7 @@ export function DeleteSponsorButton({
         <AlertDialogHeader>
           <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
           <AlertDialogDescription>
-            「{companyName}」の回答を削除します。この操作は取り消せません。
+            「{companyName ?? "個人会員"}」の回答を削除します。この操作は取り消せません。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

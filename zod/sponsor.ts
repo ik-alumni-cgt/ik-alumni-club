@@ -6,8 +6,8 @@ export const sponsorFormSchema = createInsertSchema(sponsors, {
   companyName: z
     .string()
     .trim()
-    .min(1, "会社名を入力してください")
-    .max(255, "会社名は255文字以内で入力してください"),
+    .max(255, "会社名は255文字以内で入力してください")
+    .optional(),
   logoUrl: z
     .string()
     .optional()

@@ -19,6 +19,7 @@ export async function createSponsor(formData: SponsorFormData) {
 
   await db.insert(sponsors).values({
     ...data,
+    companyName: data.companyName || null,
     logoUrl,
   })
 }
