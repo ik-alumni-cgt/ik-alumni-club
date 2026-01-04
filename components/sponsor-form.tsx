@@ -98,12 +98,12 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
           name="companyName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>会社名 *</FormLabel>
+              <FormLabel>会社名</FormLabel>
               <FormControl>
                 <Input placeholder="例: 株式会社〇〇" {...field} />
               </FormControl>
               <FormDescription>
-                正式な会社名を入力してください
+                正式な会社名を入力してください（プラチナ個人会員の方は記入不要です）
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -154,6 +154,9 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
           render={({ field }) => (
             <FormItem className="space-y-4">
               <FormLabel>フラッグの希望 *</FormLabel>
+              <FormDescription>
+                フラッグを希望されますか？
+              </FormDescription>
               <FormControl>
                 <RadioGroup
                   onValueChange={(value) => field.onChange(value === "true")}
@@ -170,9 +173,6 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
                   </div>
                 </RadioGroup>
               </FormControl>
-              <FormDescription>
-                フラッグを希望されますか？
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
