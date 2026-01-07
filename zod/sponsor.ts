@@ -29,8 +29,12 @@ export const sponsorFormSchema = createInsertSchema(sponsors, {
     .min(1, "代表者名を入力してください")
     .max(255, "代表者名は255文字以内で入力してください"),
   hasFlag: z.boolean(),
-  programConsent: z.boolean(),
-  websiteConsent: z.boolean(),
+  programConsent: z
+    .boolean()
+    .refine((val) => val === true, "プログラム掲載への同意が必要です"),
+  websiteConsent: z
+    .boolean()
+    .refine((val) => val === true, "ホームページ掲載への同意が必要です"),
 }).omit({
   id: true,
   createdAt: true,

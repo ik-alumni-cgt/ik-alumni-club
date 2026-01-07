@@ -95,15 +95,31 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
+          name="representativeName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                登録されているサポーターズクラブ会員様のお名前
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="例: 山田 太郎" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="companyName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>会社名</FormLabel>
+              <FormLabel>会社名（任意）</FormLabel>
               <FormControl>
                 <Input placeholder="例: 株式会社〇〇" {...field} />
               </FormControl>
               <FormDescription>
-                正式な会社名を入力してください（プラチナ個人会員の方は記入不要です）
+                法人の場合は正式な会社名を入力してください
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -115,7 +131,7 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
           name="logoUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>会社ロゴ（任意）</FormLabel>
+              <FormLabel>ロゴ添付（任意）</FormLabel>
               <FormControl>
                 <InputImageSimple
                   width={300}
@@ -124,24 +140,7 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
                 />
               </FormControl>
               <FormDescription>
-                会社のロゴ画像をアップロードしてください
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="representativeName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>代表者名 *</FormLabel>
-              <FormControl>
-                <Input placeholder="例: 山田 太郎" {...field} />
-              </FormControl>
-              <FormDescription>
-                代表者のお名前を入力してください
+                ロゴがある場合のみ添付をお願いします
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -153,9 +152,12 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
           name="hasFlag"
           render={({ field }) => (
             <FormItem className="space-y-4">
-              <FormLabel>フラッグの希望 *</FormLabel>
+              <FormLabel>フラッグの希望</FormLabel>
               <FormDescription>
-                フラッグを希望されますか？
+                ロゴが記載されたオリジナルフラッグを作成いたします。フラッグを希望されますか？
+                <br />
+                （画像の添付がない場合は、IK ALUMNI
+                CGTのロゴが記載されたフラッグを贈呈いたします。）
               </FormDescription>
               <FormControl>
                 <RadioGroup
@@ -165,11 +167,11 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="true" id="flag-yes" />
-                    <Label htmlFor="flag-yes">はい</Label>
+                    <Label htmlFor="flag-yes">希望する</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="false" id="flag-no" />
-                    <Label htmlFor="flag-no">いいえ</Label>
+                    <Label htmlFor="flag-no">希望しない</Label>
                   </div>
                 </RadioGroup>
               </FormControl>
@@ -178,51 +180,47 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="programConsent"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  コンサートのプログラムへの記載に同意する
-                </FormLabel>
-                <FormDescription>
-                  コンサートのプログラムに会社名を記載してもよい場合はチェックしてください
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            また、特典としてコンサートのプログラムとホームページへのロゴ（ロゴがない場合は会社名）を掲載させていただきますので、下記に同意をお願いします。
+          </p>
 
-        <FormField
-          control={form.control}
-          name="websiteConsent"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  ホームページへの記載に同意する
-                </FormLabel>
-                <FormDescription>
-                  ホームページに会社名・ロゴを掲載してもよい場合はチェックしてください
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="programConsent"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>コンサートのプログラムへの記載に同意する</FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="websiteConsent"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>ホームページへの記載に同意する</FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
 
         <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? "送信中..." : "回答を送信"}
