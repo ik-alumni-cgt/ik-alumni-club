@@ -23,8 +23,9 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '25mb', // Server Actionsのボディサイズ制限を25MBに設定
+      bodySizeLimit: '100mb', // Server Actionsのボディサイズ制限
     },
+    middlewareClientMaxBodySize: '100mb', // Middlewareのリクエストボディ制限
   },
 };
 
