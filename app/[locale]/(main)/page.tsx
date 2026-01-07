@@ -21,11 +21,11 @@ export default async function Home({
 
   return (
     <div className="font-sans max-w-full">
-      <div className="relative w-full mb-8 md:mb-12 lg:mb-16">
+      <div className="relative w-full mb-8 md:mb-12 lg:mb-16 bg-gradient-red pt-[156px] md:pt-[164px] pb-4 md:pb-8 -mt-[140px]">
         <Image
           src={heroBg}
           alt="Hero Background"
-          className="w-full h-auto"
+          className="w-full h-auto mx-auto px-4 md:px-8"
           priority
         />
       </div>

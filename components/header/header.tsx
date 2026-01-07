@@ -77,10 +77,10 @@ export function Header() {
           <Image
             src={logo}
             alt=""
-            width={100}
-            height={100}
+            width={400}
+            height={46}
             placeholder="blur"
-            className="w-[80px] h-auto md:w-[100px] object-contain dark:brightness-[0.2] dark:grayscale"
+            className="h-auto object-contain dark:brightness-[0.2] dark:grayscale"
           />
         </div>
       </header>

@@ -114,7 +114,7 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
           name="companyName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>会社名（任意）</FormLabel>
+              <FormLabel>会社名</FormLabel>
               <FormControl>
                 <Input placeholder="例: 株式会社〇〇" {...field} />
               </FormControl>
