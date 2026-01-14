@@ -123,12 +123,6 @@ export function PaymentForm() {
     }
   };
 
-  // あとで支払う（スキップ）
-  const handleSkip = () => {
-    toast.info("支払いはマイページから行えます");
-    router.push("/mypage");
-  };
-
   if (isInitializing) {
     return (
       <>
@@ -208,20 +202,11 @@ export function PaymentForm() {
           </Alert>
         </CardContent>
 
-        <CardFooter className="flex flex-col sm:flex-row gap-3">
-          <Button
-            onClick={handleSkip}
-            variant="outline"
-            className="w-full sm:w-auto"
-            disabled={isLoading}
-          >
-            あとで支払う
-          </Button>
-
+        <CardFooter>
           <Button
             onClick={handlePayment}
             disabled={isLoading}
-            className="w-full sm:flex-1"
+            className="w-full"
           >
             {isLoading ? (
               <>
