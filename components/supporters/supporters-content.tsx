@@ -24,6 +24,7 @@ import photo15 from "@/components/supporters/photo/img_6213.jpg";
 import photo16 from "@/components/supporters/photo/img_6218.jpg";
 import photo17 from "@/components/supporters/photo/img_6219.jpg";
 
+import { getRecentBlogs } from "@/data/blog";
 import { VideoCard } from "./cards/video-card";
 import { NewsletterCard } from "./cards/newsletter-card";
 import { PhotoLibraryCard } from "./cards/photo-library-card";
@@ -37,7 +38,9 @@ const photoImages = [
   photo13, photo14, photo15, photo16, photo17
 ];
 
-export function SupportersContent() {
+export async function SupportersContent() {
+  const sampleBlogs = await getRecentBlogs(1);
+  const sampleBlog = sampleBlogs[0] ?? null;
 
   return (
     <div className="mb-16 md:mb-24">
@@ -49,7 +52,7 @@ export function SupportersContent() {
         <VideoCard videoImages={videoImages} />
         <NewsletterCard newsletterImages={newsletterImages} />
         <PhotoLibraryCard photoImages={photoImages} />
-        <ExclusiveBlogCard />
+        <ExclusiveBlogCard sampleBlog={sampleBlog} />
       </div>
     </div>
   );
