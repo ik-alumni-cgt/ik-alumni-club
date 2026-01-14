@@ -30,6 +30,13 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true, // メール＋パスワード認証を有効化
   },
+  account: {
+    // 同じメールアドレスの既存アカウントにソーシャルログインを自動リンク
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "line"],
+    },
+  },
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -40,6 +47,12 @@ export const auth = betterAuth({
     line: {
       clientId: process.env.LINE_CLIENT_ID!,
       clientSecret: process.env.LINE_CLIENT_SECRET!,
+      // LINEはデフォルトでメールを返さないため、メールなしでも許可
+      requireEmail: false,
+      // LINE公式アカウントの友だち追加オプションを表示
+      // normal: 同意画面に友だち追加オプションを表示
+      // aggressive: 同意画面の後に確認画面を表示
+      botPrompt: "aggressive",
     },
   },
   plugins: [

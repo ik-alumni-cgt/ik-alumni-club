@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,7 +63,7 @@ export function RegisterAuthForm({
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
-  const { selectedPlanId, setAccountCreated, setUserId } = useRegistration();
+  const { selectedPlanId, setAccountCreated, setUserId, isInitialized } = useRegistration();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isLineLoading, setIsLineLoading] = useState(false);
 
@@ -76,10 +76,25 @@ export function RegisterAuthForm({
     },
   });
 
-  // プランが選択されていない場合はリダイレクト
-  if (!selectedPlanId) {
-    router.push("/register/plan");
-    return null;
+  // プランが選択されていない場合はリダイレクト（初期化完了後のみ）
+  useEffect(() => {
+    if (isInitialized && !selectedPlanId) {
+      router.push("/register/plan");
+    }
+  }, [isInitialized, selectedPlanId, router]);
+
+  // 初期化中またはプラン未選択の場合はローディング表示
+  if (!isInitialized || !selectedPlanId) {
+    return (
+      <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <RegistrationProgress currentStep={3} className="mb-8" />
+        <Card>
+          <CardContent className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   const handleGoogleSignup = async () => {
@@ -87,7 +102,7 @@ export function RegisterAuthForm({
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/register/payment",
+        callbackURL: `/register/callback?planId=${selectedPlanId}`,
         errorCallbackURL: "/register/auth",
       });
     } catch (error) {
@@ -102,7 +117,7 @@ export function RegisterAuthForm({
     try {
       await authClient.signIn.social({
         provider: "line",
-        callbackURL: "/register/payment",
+        callbackURL: `/register/callback?planId=${selectedPlanId}`,
         errorCallbackURL: "/register/auth",
       });
     } catch (error) {

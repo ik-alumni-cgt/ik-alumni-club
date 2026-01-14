@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useRegistration } from "@/contexts/RegistrationContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { getMemberPlanById } from "@/actions/member-plans/get-member-plans";
 import { Loader2, CreditCard, AlertCircle } from "lucide-react";
 import { RegistrationProgress } from "./registration-progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { authClient } from "@/lib/auth-client";
 
 interface PlanData {
   id: number;
@@ -30,31 +31,53 @@ interface PlanData {
 
 export function PaymentForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { selectedPlanId, userId, accountCreated } = useRegistration();
   const [plan, setPlan] = useState<PlanData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
+  const [effectiveUserId, setEffectiveUserId] = useState<string | null>(null);
+  const [effectivePlanId, setEffectivePlanId] = useState<number | null>(null);
 
   // 初期チェック
   useEffect(() => {
     async function initialize() {
+      // URLパラメータからplanIdを取得（ソーシャルログイン用フォールバック）
+      const planIdFromUrl = searchParams.get("planId");
+      const resolvedPlanId = selectedPlanId || (planIdFromUrl ? parseInt(planIdFromUrl) : null);
+
+      // セッションからユーザー情報を取得（ソーシャルログイン用フォールバック）
+      let resolvedUserId = userId;
+      let isAuthenticated = accountCreated;
+
+      if (!resolvedUserId || !isAuthenticated) {
+        const session = await authClient.getSession();
+        if (session?.data?.user) {
+          resolvedUserId = session.data.user.id;
+          isAuthenticated = true;
+        }
+      }
+
       // アカウント作成済みかチェック
-      if (!accountCreated || !userId) {
+      if (!isAuthenticated || !resolvedUserId) {
         toast.error("先にアカウントを作成してください");
         router.push("/register/auth");
         return;
       }
 
       // プラン選択済みかチェック
-      if (!selectedPlanId) {
+      if (!resolvedPlanId) {
         toast.error("先にプランを選択してください");
         router.push("/register/plan");
         return;
       }
 
+      setEffectiveUserId(resolvedUserId);
+      setEffectivePlanId(resolvedPlanId);
+
       // プラン情報を取得
       try {
-        const result = await getMemberPlanById(selectedPlanId);
+        const result = await getMemberPlanById(resolvedPlanId);
 
         if (!result.success || !result.data) {
           toast.error("プラン情報が見つかりません");
@@ -79,11 +102,11 @@ export function PaymentForm() {
     }
 
     initialize();
-  }, [selectedPlanId, userId, accountCreated, router]);
+  }, [selectedPlanId, userId, accountCreated, router, searchParams]);
 
   // Stripe Checkoutセッションを作成してリダイレクト
   const handlePayment = async () => {
-    if (!plan?.stripePriceId) return;
+    if (!plan?.stripePriceId || !effectiveUserId || !effectivePlanId) return;
 
     try {
       setIsLoading(true);
@@ -96,10 +119,10 @@ export function PaymentForm() {
         body: JSON.stringify({
           priceId: plan.stripePriceId,
           successUrl: `${window.location.origin}/register/payment/success`,
-          cancelUrl: `${window.location.origin}/register/payment`,
+          cancelUrl: `${window.location.origin}/register/payment?planId=${effectivePlanId}`,
           metadata: {
-            planId: selectedPlanId,
-            userId: userId,
+            planId: effectivePlanId,
+            userId: effectiveUserId,
           },
         }),
       });
