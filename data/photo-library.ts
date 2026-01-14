@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "@/db";
 import { photoLibrary } from "@/db/schemas/photo-library";
-import { desc, eq, asc } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 /**
  * 公開されているフォトライブラリ一覧を取得（一般ユーザー向け）
@@ -10,6 +10,44 @@ import { desc, eq, asc } from "drizzle-orm";
 export const getPublishedPhotos = async () => {
   return db.query.photoLibrary.findMany({
     where: eq(photoLibrary.published, true),
+    orderBy: [desc(photoLibrary.createdAt)],
+    with: {
+      creator: true,
+      images: {
+        orderBy: (images, { asc }) => [asc(images.sortOrder)],
+      },
+    },
+  });
+};
+
+/**
+ * 一般公開フォトライブラリ一覧を取得（isMemberOnly = false のみ）
+ */
+export const getPublicPhotos = async () => {
+  return db.query.photoLibrary.findMany({
+    where: and(
+      eq(photoLibrary.published, true),
+      eq(photoLibrary.isMemberOnly, false)
+    ),
+    orderBy: [desc(photoLibrary.createdAt)],
+    with: {
+      creator: true,
+      images: {
+        orderBy: (images, { asc }) => [asc(images.sortOrder)],
+      },
+    },
+  });
+};
+
+/**
+ * 会員限定フォトライブラリ一覧を取得（isMemberOnly = true のみ）
+ */
+export const getMemberOnlyPhotos = async () => {
+  return db.query.photoLibrary.findMany({
+    where: and(
+      eq(photoLibrary.published, true),
+      eq(photoLibrary.isMemberOnly, true)
+    ),
     orderBy: [desc(photoLibrary.createdAt)],
     with: {
       creator: true,

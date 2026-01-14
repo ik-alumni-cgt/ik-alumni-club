@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { videos } from "@/db/schemas/videos";
-import { eq, desc } from "drizzle-orm";
+import { and, eq, desc } from "drizzle-orm";
 import "server-only";
 
 // 公開済み動画一覧を取得（一般公開用）
@@ -8,6 +8,22 @@ import "server-only";
 export const getVideos = async () => {
   return db.query.videos.findMany({
     where: eq(videos.published, true),
+    orderBy: [desc(videos.videoDate)],
+  });
+};
+
+// 一般公開動画一覧を取得（isMemberOnly = false のみ）
+export const getPublicVideos = async () => {
+  return db.query.videos.findMany({
+    where: and(eq(videos.published, true), eq(videos.isMemberOnly, false)),
+    orderBy: [desc(videos.videoDate)],
+  });
+};
+
+// 会員限定動画一覧を取得（isMemberOnly = true のみ）
+export const getMemberOnlyVideos = async () => {
+  return db.query.videos.findMany({
+    where: and(eq(videos.published, true), eq(videos.isMemberOnly, true)),
     orderBy: [desc(videos.videoDate)],
   });
 };
