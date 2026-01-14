@@ -396,7 +396,7 @@ export default function SupportersPage() {
       </div>
 
       {/* 登録手続きへのリンク */}
-      <div className="mb-16 text-center">
+      <div className="text-center pb-16">
         <p className="text-lg md:text-xl text-white mb-8">
           IK ALUMNI CGTを一緒に応援しませんか？
         </p>
