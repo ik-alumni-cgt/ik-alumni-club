@@ -30,6 +30,18 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true, // メール＋パスワード認証を有効化
   },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      accessType: "offline",
+      prompt: "select_account",
+    },
+    line: {
+      clientId: process.env.LINE_CLIENT_ID!,
+      clientSecret: process.env.LINE_CLIENT_SECRET!,
+    },
+  },
   plugins: [
     anonymous(),
     nextCookies(),
