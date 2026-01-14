@@ -2,11 +2,9 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
-import coverImage from "./login-form-cover.jpg";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -120,98 +118,84 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <form onSubmit={handleEmailLogin} className="p-6 md:p-8">
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-bold">ようこそ</h1>
-                <p className="text-muted-foreground text-balance">
-                  IK同窓会クラブにログイン
-                </p>
-              </div>
-              {error && (
-                <div className="text-red-500 text-sm text-center">{error}</div>
+      <Card>
+        <CardHeader>
+          <CardTitle>ようこそ</CardTitle>
+          <CardDescription>IK同窓会クラブにログイン</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleEmailLogin} className="space-y-6">
+            {error && (
+              <div className="text-red-500 text-sm text-center">{error}</div>
+            )}
+            <div className="grid gap-2">
+              <Label htmlFor="email">メールアドレス</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">パスワード</Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <Button type="submit" className="w-full min-h-11" disabled={isLoading || isGoogleLoading || isLineLoading}>
+              {isLoading ? "ログイン中..." : "ログイン"}
+            </Button>
+            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+              <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                または
+              </span>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full min-h-11"
+              onClick={handleGoogleLogin}
+              disabled={isLoading || isGoogleLoading || isLineLoading}
+            >
+              {isGoogleLoading ? (
+                "接続中..."
+              ) : (
+                <>
+                  <GoogleIcon className="mr-2 h-4 w-4" />
+                  Googleでログイン
+                </>
               )}
-              <div className="grid gap-2">
-                <Label htmlFor="email">メールアドレス</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">パスワード</Label>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <Button type="submit" className="w-full min-h-11" disabled={isLoading || isGoogleLoading || isLineLoading}>
-                {isLoading ? "ログイン中..." : "ログイン"}
-              </Button>
-              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                  または
-                </span>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full min-h-11"
-                onClick={handleGoogleLogin}
-                disabled={isLoading || isGoogleLoading || isLineLoading}
-              >
-                {isGoogleLoading ? (
-                  "接続中..."
-                ) : (
-                  <>
-                    <GoogleIcon className="mr-2 h-4 w-4" />
-                    Googleでログイン
-                  </>
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full min-h-11"
-                onClick={handleLineLogin}
-                disabled={isLoading || isGoogleLoading || isLineLoading}
-              >
-                {isLineLoading ? (
-                  "接続中..."
-                ) : (
-                  <>
-                    <LineIcon className="mr-2 h-5 w-5" />
-                    LINEでログイン
-                  </>
-                )}
-              </Button>
-              <div className="text-center text-sm">
-                アカウントをお持ちでないですか?{" "}
-                <Link href="/signup" className="underline underline-offset-4">
-                  登録
-                </Link>
-              </div>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full min-h-11"
+              onClick={handleLineLogin}
+              disabled={isLoading || isGoogleLoading || isLineLoading}
+            >
+              {isLineLoading ? (
+                "接続中..."
+              ) : (
+                <>
+                  <LineIcon className="mr-2 h-5 w-5" />
+                  LINEでログイン
+                </>
+              )}
+            </Button>
+            <div className="text-center text-sm">
+              アカウントをお持ちでないですか?{" "}
+              <Link href="/signup" className="underline underline-offset-4">
+                登録
+              </Link>
             </div>
           </form>
-          <div className="bg-muted relative hidden md:block">
-            <Image
-              src={coverImage}
-              alt=""
-              placeholder="blur"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            />
-          </div>
         </CardContent>
       </Card>
     </div>

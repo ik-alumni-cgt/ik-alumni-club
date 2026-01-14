@@ -12,9 +12,8 @@ export default async function PaymentSuccessPage({
   await setLocale(params);
 
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-2xl">
-        <Card>
+    <div className="w-full max-w-4xl">
+      <Card>
           <CardHeader className="text-center pb-4">
             <div className="flex justify-center mb-4">
               <div className="rounded-full bg-green-100 p-3">
@@ -47,7 +46,6 @@ export default async function PaymentSuccessPage({
             </div>
           </CardContent>
         </Card>
-      </div>
     </div>
   );
 }
