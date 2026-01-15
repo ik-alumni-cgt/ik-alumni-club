@@ -2,7 +2,7 @@ import { setLocale } from "@/app/web/i18n/set-locale";
 import { getTranslations } from "next-intl/server";
 import Image, { StaticImageData } from "next/image";
 import profileImage from "./profile.jpg";
-import logo from "@/components/header/logo.png";
+import logo from "@/components/header/logo_main.png";
 
 // メンバー画像
 import shoImage from "./member/sho.jpg";

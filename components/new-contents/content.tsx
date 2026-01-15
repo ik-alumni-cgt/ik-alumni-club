@@ -3,37 +3,51 @@ import { ContentsCard } from "@/components/contents/contents-card";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import Image from "next/image";
-import content1Image from "./content1.jpg";
-import content2Image from "./content2.jpg";
-import content3Image from "./content3.jpg";
+import { getLatestNewsletters } from "@/data/newsletter";
+import { getRecentVideos } from "@/data/video";
+import { getRecentPhotos } from "@/data/photo-library";
+
+const formatDate = (date: Date | string | null) => {
+  if (!date) return "";
+  const d = new Date(date);
+  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
+};
 
 export async function NewContents() {
   const t = await getTranslations("Contents");
 
-  // 仮データ
+  const [newsletters, videos, photos] = await Promise.all([
+    getLatestNewsletters(1),
+    getRecentVideos(1),
+    getRecentPhotos(1),
+  ]);
+
   const newItems = [
-    {
-      id: 1,
-      title: "News Latter Vol.2",
-      date: "2024/01/15",
-      imageUrl: content1Image,
+    newsletters[0] && {
+      id: newsletters[0].id,
+      title: newsletters[0].title,
+      date: formatDate(newsletters[0].publishedAt ?? newsletters[0].createdAt),
+      imageUrl: newsletters[0].thumbnailUrl,
       category: "News Letter",
+      href: `/newsletter/${newsletters[0].id}`,
     },
-    {
-      id: 2,
-      title: "柏de吹奏楽Party Video Content",
-      date: "2024/01/10",
-      imageUrl: content2Image,
+    videos[0] && {
+      id: videos[0].id,
+      title: videos[0].title,
+      date: formatDate(videos[0].videoDate),
+      imageUrl: videos[0].thumbnailUrl,
       category: "Video",
+      href: `/video/${videos[0].id}`,
     },
-    {
-      id: 3,
-      title: "Phot library",
-      date: "2024/01/05",
-      imageUrl: content3Image,
+    photos[0] && {
+      id: photos[0].id,
+      title: photos[0].title,
+      date: formatDate(photos[0].createdAt),
+      imageUrl: photos[0].coverImageUrl ?? photos[0].images?.[0]?.imageUrl,
       category: "Photo",
+      href: `/photo-library/${photos[0].id}`,
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <div className="flex flex-col text-white">
@@ -43,19 +57,25 @@ export async function NewContents() {
           <p>新着情報はありません</p>
         ) : (
           newItems.map((item) => (
-            <Link key={item.id} href={`/new/${item.id}`}>
+            <Link key={item.id} href={item.href}>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <h3 className="text-xl font-bold text-white uppercase tracking-wide">
                     {item.category}
                   </h3>
-                  <div className="relative w-full aspect-video rounded-lg overflow-hidden">
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-700">
+                    {item.imageUrl ? (
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        No Image
+                      </div>
+                    )}
                   </div>
                 </div>
                 <ContentsCard title={item.title} date={item.date} />

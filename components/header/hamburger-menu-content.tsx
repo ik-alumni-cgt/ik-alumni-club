@@ -7,7 +7,7 @@ import xBlack from "../sns-icon/x-black.png";
 import instagramBlack from "../sns-icon/instagram-black.png";
 import youtubeBlack from "../sns-icon/youtube-black.png";
 import tiktokBlack from "../sns-icon/tiktok-black.png";
-import logo from "./logo.png";
+import logo from "./logo_main.png";
 import supportersLogo from "@/app/[locale]/(main)/supporters/top_supporter's.jpg";
 import supportersSamune from "@/components/supporters/samune.jpg";
 
