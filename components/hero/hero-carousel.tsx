@@ -16,10 +16,10 @@ const images = [
   { src: hero4, alt: "Hero 4" },
 ];
 
-// SP: 50vw、PC: 33.333%
-const SP_IMAGE_WIDTH = 50;
+// SP: 35vw、PC: 33.333%
+const SP_IMAGE_WIDTH = 35;
 const PC_IMAGE_WIDTH = 33.333;
-const SP_GAP = 2; // SP版のギャップ（2vw）
+const SP_GAP = 4; // SP版のギャップ（4vw）
 const PC_GAP = 1; // PC版のギャップ（1vw）
 
 export function HeroCarousel() {
@@ -27,6 +27,11 @@ export function HeroCarousel() {
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // ドラッグ/スワイプ用の状態
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
 
   // 3セット複製（無限ループ用）
   const extendedImages = [...images, ...images, ...images];
@@ -76,21 +81,93 @@ export function HeroCarousel() {
     const width = getImageWidth();
     const gap = getGap();
     const offset = currentIndex * (width + gap) + width / 2;
-    return `calc(-${offset}vw + 50vw)`;
+    // SP: 50vw（ビューポート基準）、PC: 50%（コンテナ基準）
+    const center = isMobile ? "50vw" : "50%";
+    // ドラッグ中はオフセットを加算
+    if (isDragging) {
+      return `calc(-${offset}vw + ${center} + ${dragOffset}px)`;
+    }
+    return `calc(-${offset}vw + ${center})`;
+  };
+
+  // ドラッグ開始（マウス）
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault(); // テキスト選択を防ぐ
+    setIsDragging(true);
+    setStartX(e.clientX);
+    setIsTransitioning(false);
+  };
+
+  // ドラッグ中（マウス）
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    const diff = e.clientX - startX;
+    setDragOffset(diff);
+  };
+
+  // ドラッグ終了（マウス）
+  const handleMouseUp = () => {
+    if (!isDragging) return;
+    finishDrag();
+  };
+
+  // タッチ開始
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setStartX(e.touches[0].clientX);
+    setIsTransitioning(false);
+  };
+
+  // タッチ中
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    const diff = e.touches[0].clientX - startX;
+    setDragOffset(diff);
+  };
+
+  // タッチ終了
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    finishDrag();
+  };
+
+  // ドラッグ終了時の処理
+  const finishDrag = () => {
+    setIsDragging(false);
+    setIsTransitioning(true);
+
+    // スワイプ距離に応じてスライド
+    const threshold = 50; // px
+    if (dragOffset > threshold) {
+      handlePrev();
+    } else if (dragOffset < -threshold) {
+      handleNext();
+    }
+
+    setDragOffset(0);
   };
 
   // 実際のインデックス（インジケーター用）
   const actualIndex = currentIndex % images.length;
 
   return (
-    <div className="w-full mb-8 md:mb-12 lg:mb-16 -mt-16 md:-mt-20 lg:-mt-24">
+    <div className="w-full mb-8 md:mb-12 lg:mb-16 -mt-16 md:-mt-20 lg:-mt-24 overflow-x-clip">
       {/* SP: 全幅、PC: container */}
       <div className="md:container md:mx-auto md:px-4">
         {/* 画像カルーセル */}
-        <div className="overflow-hidden pb-4">
+        <div
+          className="overflow-hidden md:overflow-visible pb-4 cursor-grab active:cursor-grabbing"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div
             ref={containerRef}
-            className="flex items-center"
+            className="flex items-center select-none"
             style={{
               gap: `${getGap()}vw`,
               transform: `translateX(${getTransform()})`,
@@ -103,7 +180,7 @@ export function HeroCarousel() {
               return (
                 <div
                   key={`${index}-${image.alt}`}
-                  className="flex-shrink-0 cursor-pointer"
+                  className="flex-shrink-0"
                   style={{
                     width: `${getImageWidth()}vw`,
                   }}
@@ -113,7 +190,8 @@ export function HeroCarousel() {
                       src={image.src}
                       alt={image.alt}
                       fill
-                      className="object-cover"
+                      className="object-cover pointer-events-none"
+                      draggable={false}
                       placeholder="blur"
                       sizes="(max-width: 768px) 85vw, 33vw"
                     />
