@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "@/db";
 import { blogs } from "@/db/schemas/blogs";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 /**
  * 公開されているブログ一覧を取得（一般ユーザー向け）
@@ -10,6 +10,32 @@ import { desc, eq } from "drizzle-orm";
 export const getPublishedBlogs = async () => {
   return db.query.blogs.findMany({
     where: eq(blogs.published, true),
+    orderBy: [desc(blogs.createdAt)],
+    with: {
+      author: true,
+    },
+  });
+};
+
+/**
+ * 一般公開ブログ一覧を取得（isMemberOnly = false のみ）
+ */
+export const getPublicBlogs = async () => {
+  return db.query.blogs.findMany({
+    where: and(eq(blogs.published, true), eq(blogs.isMemberOnly, false)),
+    orderBy: [desc(blogs.createdAt)],
+    with: {
+      author: true,
+    },
+  });
+};
+
+/**
+ * 会員限定ブログ一覧を取得（isMemberOnly = true のみ）
+ */
+export const getMemberOnlyBlogs = async () => {
+  return db.query.blogs.findMany({
+    where: and(eq(blogs.published, true), eq(blogs.isMemberOnly, true)),
     orderBy: [desc(blogs.createdAt)],
     with: {
       author: true,

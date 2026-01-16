@@ -26,7 +26,9 @@
     "video": "VIDEO",
     "profiles": "PROFILES",
     "photoLibrary": "PHOTO LIBRARY",
-    "click_here_for_details" : "詳細はこちら"
+    "click_here_for_details" : "詳細はこちら",
+    "publicContent": "一般公開",
+    "memberOnlyContent": "会員限定"
   },
   "Footer": {
     "about": "アバウト",

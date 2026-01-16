@@ -72,6 +72,8 @@ async function handleCheckoutSessionCompleted(
 ) {
   const userId = session.client_reference_id || session.metadata?.userId;
   const subscriptionId = session.subscription as string;
+  const planId = session.metadata?.planId;
+  const email = session.customer_email;
 
   if (!userId) {
     console.error("No user ID found in checkout session");
@@ -88,15 +90,41 @@ async function handleCheckoutSessionCompleted(
       current_period_end: number;
     };
 
-    await db
-      .update(members)
-      .set({
+    // 既存のmemberレコードをチェック
+    const existingMember = await db
+      .select()
+      .from(members)
+      .where(eq(members.userId, userId))
+      .limit(1);
+
+    if (existingMember.length === 0) {
+      // memberレコードが存在しない場合は作成（ソーシャルログインのフォールバック）
+      console.log(`Creating new member record for user: ${userId}`);
+      await db.insert(members).values({
+        userId,
+        email: email || "",
+        planId: planId ? parseInt(planId) : null,
+        role: "member",
+        status: "pending_profile",
+        profileCompleted: false,
+        isActive: true,
         paymentStatus: "completed",
         stripeSubscriptionId: subscriptionId,
         subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
         subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
-      })
-      .where(eq(members.userId, userId));
+      });
+    } else {
+      // 既存のmemberレコードを更新
+      await db
+        .update(members)
+        .set({
+          paymentStatus: "completed",
+          stripeSubscriptionId: subscriptionId,
+          subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
+          subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
+        })
+        .where(eq(members.userId, userId));
+    }
 
     console.log(`Payment completed for user: ${userId}`);
   } catch (error) {

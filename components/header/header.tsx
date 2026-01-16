@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import logo from "./logo.png";
+import logoRed from "./logo_red.png";
 
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { HamburgerMenuContent } from "./hamburger-menu-content";
@@ -40,9 +42,9 @@ function MenuButton({
       onClick={handleClick}
       onPointerDown={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
-      className="fixed top-0 right-0 z-[60] h-[140px] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[60px] bg-transparent border-none cursor-pointer"
+      className="fixed top-0 right-0 z-[60] h-[80px] md:h-[140px] flex items-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[60px] bg-transparent border-none cursor-pointer"
     >
-      <span className="w-[70px] h-[70px] rounded-full border border-red-500 bg-white hover:bg-white flex items-center justify-center">
+      <span className="w-[50px] h-[50px] md:w-[70px] md:h-[70px] rounded-full border border-red-500 bg-white hover:bg-white flex items-center justify-center">
         {isOpen ? (
           <span className="relative w-6 h-6">
             <span className="absolute top-1/2 left-0 w-6 h-0.5 bg-red-500 -translate-y-1/2 rotate-45"></span>
@@ -66,21 +68,39 @@ function MenuButton({
   return createPortal(button, document.body);
 }
 
+// 白背景のページパス（赤ロゴを表示）
+const WHITE_BACKGROUND_PATHS = [
+  "/profiles",
+  "/blog",
+  "/video",
+  "/newsletter",
+  "/photo-library",
+  "/information",
+  "/schedule",
+];
+
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  // 白背景のページでは赤いロゴを表示
+  const isWhiteBackground = WHITE_BACKGROUND_PATHS.some(
+    (path) => pathname?.includes(path)
+  );
+  const logoSrc = isWhiteBackground ? logoRed : logo;
 
   return (
     <>
-      <header className="fixed top-0 z-40 w-full h-[140px]">
+      <header className="relative z-10 w-full h-[80px] md:h-[140px]">
         <div className="container max-w-full h-full flex items-center justify-between">
           {/* ロゴ */}
           <Image
-            src={logo}
+            src={logoSrc}
             alt=""
             width={400}
             height={46}
             placeholder="blur"
-            className="h-auto object-contain dark:brightness-[0.2] dark:grayscale"
+            className="h-auto w-[200px] md:w-[400px] object-contain dark:brightness-[0.2] dark:grayscale"
           />
         </div>
       </header>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Lock } from "lucide-react";
 
 type Newsletter = {
   id: string;
@@ -13,6 +14,7 @@ type Newsletter = {
   category: string | null;
   viewCount: number;
   published: boolean;
+  isMemberOnly: boolean;
   publishedAt: Date | null;
   createdAt: Date;
 };
@@ -39,9 +41,23 @@ export function NewsletterList({ items }: { items: Newsletter[] }) {
                   fill
                   className="object-cover group-hover:scale-105 transition-transform"
                 />
+                {item.isMemberOnly && (
+                  <div className="absolute top-2 right-2 bg-amber-500/90 text-white px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
+                    <Lock className="h-3 w-3" />
+                    会員限定
+                  </div>
+                )}
               </div>
             )}
             <div className="p-4 flex flex-col gap-2 flex-1">
+              {!item.thumbnailUrl && item.isMemberOnly && (
+                <div className="mb-2">
+                  <span className="inline-flex items-center gap-1 bg-amber-500/90 text-white px-2 py-1 rounded-md text-xs font-medium">
+                    <Lock className="h-3 w-3" />
+                    会員限定
+                  </span>
+                </div>
+              )}
               <div className="text-sm font-medium text-blue-600">
                 第{item.issueNumber}号
               </div>

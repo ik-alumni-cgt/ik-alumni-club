@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,59 +9,201 @@ import hero2 from "./hero2.jpg";
 import hero3 from "./hero3.jpg";
 import hero4 from "./hero4.jpg";
 
-export function HeroCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const images = [
+  { src: hero1, alt: "Hero 1" },
+  { src: hero2, alt: "Hero 2" },
+  { src: hero3, alt: "Hero 3" },
+  { src: hero4, alt: "Hero 4" },
+];
 
-  const images = [
-    { src: hero1, alt: "Hero 1" },
-    { src: hero2, alt: "Hero 2" },
-    { src: hero3, alt: "Hero 3" },
-    { src: hero4, alt: "Hero 4" },
-  ];
+// SP: 35vw、PC: 33.333%
+const SP_IMAGE_WIDTH = 35;
+const PC_IMAGE_WIDTH = 33.333;
+const SP_GAP = 4; // SP版のギャップ（4vw）
+const PC_GAP = 1; // PC版のギャップ（1vw）
+
+export function HeroCarousel() {
+  const [currentIndex, setCurrentIndex] = useState(images.length);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // ドラッグ/スワイプ用の状態
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+
+  // 3セット複製（無限ループ用）
+  const extendedImages = [...images, ...images, ...images];
+
+  // レスポンシブ判定
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    // 無限ループ処理
+    if (currentIndex >= images.length * 2) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrentIndex(images.length);
+        requestAnimationFrame(() => setIsTransitioning(true));
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+    if (currentIndex < images.length) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrentIndex(images.length);
+        requestAnimationFrame(() => setIsTransitioning(true));
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex]);
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev + 1);
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev - 1);
   };
 
-  // 現在のインデックスから3枚を取得（ループ処理）
-  const getVisibleImages = () => {
-    const visible = [];
-    for (let i = 0; i < 3; i++) {
-      const index = (currentIndex + i) % images.length;
-      visible.push({ ...images[index], originalIndex: index });
+  const getImageWidth = () => (isMobile ? SP_IMAGE_WIDTH : PC_IMAGE_WIDTH);
+  const getGap = () => (isMobile ? SP_GAP : PC_GAP);
+
+  const getTransform = () => {
+    const width = getImageWidth();
+    const gap = getGap();
+    const offset = currentIndex * (width + gap) + width / 2;
+    // SP: 50vw（ビューポート基準）、PC: 50%（コンテナ基準）
+    const center = isMobile ? "50vw" : "50%";
+    // ドラッグ中はオフセットを加算
+    if (isDragging) {
+      return `calc(-${offset}vw + ${center} + ${dragOffset}px)`;
     }
-    return visible;
+    return `calc(-${offset}vw + ${center})`;
   };
+
+  // ドラッグ開始（マウス）
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault(); // テキスト選択を防ぐ
+    setIsDragging(true);
+    setStartX(e.clientX);
+    setIsTransitioning(false);
+  };
+
+  // ドラッグ中（マウス）
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    const diff = e.clientX - startX;
+    setDragOffset(diff);
+  };
+
+  // ドラッグ終了（マウス）
+  const handleMouseUp = () => {
+    if (!isDragging) return;
+    finishDrag();
+  };
+
+  // タッチ開始
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setStartX(e.touches[0].clientX);
+    setIsTransitioning(false);
+  };
+
+  // タッチ中
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    const diff = e.touches[0].clientX - startX;
+    setDragOffset(diff);
+  };
+
+  // タッチ終了
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    finishDrag();
+  };
+
+  // ドラッグ終了時の処理
+  const finishDrag = () => {
+    setIsDragging(false);
+    setIsTransitioning(true);
+
+    // スワイプ距離に応じてスライド
+    const threshold = 50; // px
+    if (dragOffset > threshold) {
+      handlePrev();
+    } else if (dragOffset < -threshold) {
+      handleNext();
+    }
+
+    setDragOffset(0);
+  };
+
+  // 実際のインデックス（インジケーター用）
+  const actualIndex = currentIndex % images.length;
 
   return (
-    <div className="w-full mb-8 md:mb-12 lg:mb-16 -mt-16 md:-mt-20 lg:-mt-24">
-      <div className="container mx-auto px-4">
-        {/* 画像の横スクロール表示 */}
-        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4">
-          {getVisibleImages().map((image, idx) => (
-            <div
-              key={`${image.originalIndex}-${idx}`}
-              className="flex-shrink-0 w-[calc(33.333%-0.75rem)] snap-start cursor-pointer transition-transform hover:scale-105"
-            >
-              <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden shadow-lg">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover"
-                  placeholder="blur"
-                />
-              </div>
-            </div>
-          ))}
+    <div className="w-full mb-8 md:mb-12 lg:mb-16 -mt-16 md:-mt-20 lg:-mt-24 overflow-x-clip">
+      {/* SP: 全幅、PC: container */}
+      <div className="md:container md:mx-auto md:px-4">
+        {/* 画像カルーセル */}
+        <div
+          className="overflow-hidden md:overflow-visible pb-4 cursor-grab active:cursor-grabbing"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            ref={containerRef}
+            className="flex items-center select-none"
+            style={{
+              gap: `${getGap()}vw`,
+              transform: `translateX(${getTransform()})`,
+              transition: isTransitioning
+                ? "transform 500ms ease-in-out"
+                : "none",
+            }}
+          >
+            {extendedImages.map((image, index) => {
+              return (
+                <div
+                  key={`${index}-${image.alt}`}
+                  className="flex-shrink-0"
+                  style={{
+                    width: `${getImageWidth()}vw`,
+                  }}
+                >
+                  <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden shadow-lg">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      className="object-cover pointer-events-none"
+                      draggable={false}
+                      placeholder="blur"
+                      sizes="(max-width: 768px) 85vw, 33vw"
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* インジケーターと矢印ボタン */}
-        <div className="flex justify-center items-center gap-4 mt-4">
+        <div className="flex justify-center items-center gap-4 mt-4 px-4">
           <Button
             variant="ghost"
             size="icon"
@@ -76,9 +218,9 @@ export function HeroCarousel() {
             {images.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => setCurrentIndex(idx)}
+                onClick={() => setCurrentIndex(images.length + idx)}
                 className={`w-2 h-2 rounded-full transition-all ${
-                  idx === currentIndex
+                  idx === actualIndex
                     ? "bg-red-500 w-6"
                     : "bg-gray-300 dark:bg-gray-600"
                 }`}

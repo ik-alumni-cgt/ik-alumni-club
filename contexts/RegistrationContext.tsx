@@ -8,6 +8,9 @@ const STORAGE_KEY = "registration_flow";
  * 会員登録フローの状態管理
  */
 type RegistrationContextType = {
+  // 初期化完了フラグ
+  isInitialized: boolean;
+
   // 会員規約同意
   termsAgreed: boolean;
   termsAgreedAt: Date | null;
@@ -143,6 +146,7 @@ export function RegistrationProvider({
   return (
     <RegistrationContext.Provider
       value={{
+        isInitialized,
         termsAgreed,
         termsAgreedAt,
         setTermsAgreed,

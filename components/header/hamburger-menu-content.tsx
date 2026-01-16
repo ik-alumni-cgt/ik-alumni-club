@@ -7,7 +7,7 @@ import xBlack from "../sns-icon/x-black.png";
 import instagramBlack from "../sns-icon/instagram-black.png";
 import youtubeBlack from "../sns-icon/youtube-black.png";
 import tiktokBlack from "../sns-icon/tiktok-black.png";
-import logo from "./logo.png";
+import logo from "./logo_main.png";
 import supportersLogo from "@/app/[locale]/(main)/supporters/top_supporter's.jpg";
 import supportersSamune from "@/components/supporters/samune.jpg";
 
@@ -124,18 +124,18 @@ export function HamburgerMenuContent({ onClose }: HamburgerMenuContentProps) {
         <div className="mt-4 flex justify-center">
           <Image src={supportersSamune} alt="Supporter's Club" width={360} height={202} className="h-auto rounded-lg" />
         </div>
-        {/* コンテンツリンク */}
+        {/* コンテンツリンク（会員限定） */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-full bg-blue-500 rounded-lg p-4">
-          <Link href="/video" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
+          <Link href="/member/video" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             VIDEO
           </Link>
-          <Link href="/newsletter" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
+          <Link href="/member/newsletter" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             NEWS LETTER
           </Link>
-          <Link href="/photo-library" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
+          <Link href="/member/photo-library" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             PHOTO LIBRARY
           </Link>
-          <Link href="/blog" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
+          <Link href="/member/blog" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             EXCLUSIVE BLOG
           </Link>
         </div>

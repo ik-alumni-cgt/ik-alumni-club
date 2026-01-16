@@ -1,9 +1,9 @@
 import { setLocale } from "@/app/web/i18n/set-locale";
 import { NewsletterList } from "@/components/newsletters/list";
-import { getPublishedNewsletters } from "@/data/newsletter";
+import { getPublicNewsletters } from "@/data/newsletter";
 import { getTranslations } from "next-intl/server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function NewsletterPage({
   params,
@@ -12,11 +12,11 @@ export default async function NewsletterPage({
 }) {
   await setLocale(params);
   const t = await getTranslations("Contents");
-  const items = await getPublishedNewsletters();
+  const items = await getPublicNewsletters();
 
   return (
     <div className="container mx-auto px-4 pt-10 pb-32">
-      <h1 className="main-text mb-10">{t("newsletter")}</h1>
+      <h1 className="main-text mb-10">{t("newsletters")}</h1>
       <NewsletterList items={items} />
     </div>
   );

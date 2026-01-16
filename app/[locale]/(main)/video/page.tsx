@@ -1,9 +1,9 @@
 import { setLocale } from "@/app/web/i18n/set-locale";
 import { VideoList } from "@/components/video/list";
-import { getVideos } from "@/data/video";
+import { getPublicVideos } from "@/data/video";
 import { getTranslations } from "next-intl/server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function VideoPage({
   params,
@@ -12,7 +12,7 @@ export default async function VideoPage({
 }) {
   await setLocale(params);
   const t = await getTranslations("Contents");
-  const items = await getVideos();
+  const items = await getPublicVideos();
 
   return (
     <div className="container mx-auto px-4 pt-10 pb-32">
