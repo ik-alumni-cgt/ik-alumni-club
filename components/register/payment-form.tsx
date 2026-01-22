@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { getMemberPlanById } from "@/actions/member-plans/get-member-plans";
-import { Loader2, CreditCard, AlertCircle } from "lucide-react";
+import { Loader2, CreditCard, Building, AlertCircle } from "lucide-react";
 import { RegistrationProgress } from "./registration-progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { authClient } from "@/lib/auth-client";
@@ -25,6 +25,7 @@ interface PlanData {
   color: string | null;
   isActive: boolean;
   stripePriceId: string | null;
+  stripeOneTimePriceId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,7 +35,8 @@ export function PaymentForm() {
   const searchParams = useSearchParams();
   const { selectedPlanId, userId, accountCreated } = useRegistration();
   const [plan, setPlan] = useState<PlanData | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSubscription, setIsLoadingSubscription] = useState(false);
+  const [isLoadingOneTime, setIsLoadingOneTime] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [effectiveUserId, setEffectiveUserId] = useState<string | null>(null);
   const [effectivePlanId, setEffectivePlanId] = useState<number | null>(null);
@@ -105,11 +107,14 @@ export function PaymentForm() {
   }, [selectedPlanId, userId, accountCreated, router, searchParams]);
 
   // Stripe Checkoutセッションを作成してリダイレクト
-  const handlePayment = async () => {
-    if (!plan?.stripePriceId || !effectiveUserId || !effectivePlanId) return;
+  const handlePayment = async (mode: "subscription" | "payment") => {
+    const priceId = mode === "subscription" ? plan?.stripePriceId : plan?.stripeOneTimePriceId;
+    if (!priceId || !effectiveUserId || !effectivePlanId) return;
+
+    const setLoading = mode === "subscription" ? setIsLoadingSubscription : setIsLoadingOneTime;
 
     try {
-      setIsLoading(true);
+      setLoading(true);
 
       const response = await fetch("/api/stripe/create-checkout", {
         method: "POST",
@@ -117,7 +122,8 @@ export function PaymentForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          priceId: plan.stripePriceId,
+          priceId,
+          mode,
           successUrl: `${window.location.origin}/register/payment/success`,
           cancelUrl: `${window.location.origin}/register/payment?planId=${effectivePlanId}`,
           metadata: {
@@ -142,7 +148,7 @@ export function PaymentForm() {
     } catch (error) {
       console.error("Payment error:", error);
       toast.error("支払い処理の開始に失敗しました");
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -225,24 +231,57 @@ export function PaymentForm() {
           </Alert>
         </CardContent>
 
-        <CardFooter>
-          <Button
-            onClick={handlePayment}
-            disabled={isLoading}
-            className="w-full"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                処理中...
-              </>
-            ) : (
-              <>
-                <CreditCard className="mr-2 h-4 w-4" />
-                ¥{Number(plan.price).toLocaleString()} を支払う
-              </>
-            )}
-          </Button>
+        <CardFooter className="flex flex-col gap-4">
+          {/* サブスクリプション決済（クレジットカード） */}
+          <div className="w-full space-y-2">
+            <Button
+              onClick={() => handlePayment("subscription")}
+              disabled={isLoadingSubscription || isLoadingOneTime}
+              className="w-full"
+            >
+              {isLoadingSubscription ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  処理中...
+                </>
+              ) : (
+                <>
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  クレジットカードで支払う
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-muted-foreground text-center">
+              毎年自動更新されます
+            </p>
+          </div>
+
+          {/* 単発決済（銀行振込・コンビニ） */}
+          {plan.stripeOneTimePriceId && (
+            <div className="w-full space-y-2">
+              <Button
+                onClick={() => handlePayment("payment")}
+                disabled={isLoadingSubscription || isLoadingOneTime}
+                variant="outline"
+                className="w-full"
+              >
+                {isLoadingOneTime ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    処理中...
+                  </>
+                ) : (
+                  <>
+                    <Building className="mr-2 h-4 w-4" />
+                    銀行振込・コンビニで支払う
+                  </>
+                )}
+              </Button>
+              <p className="text-xs text-muted-foreground text-center">
+                1年間有効・更新時は再度お支払いが必要です
+              </p>
+            </div>
+          )}
         </CardFooter>
       </Card>
     </>

@@ -71,9 +71,9 @@ async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session
 ) {
   const userId = session.client_reference_id || session.metadata?.userId;
-  const subscriptionId = session.subscription as string;
   const planId = session.metadata?.planId;
   const email = session.customer_email;
+  const mode = session.mode; // "subscription" or "payment"
 
   if (!userId) {
     console.error("No user ID found in checkout session");
@@ -81,15 +81,6 @@ async function handleCheckoutSessionCompleted(
   }
 
   try {
-    // サブスクリプション情報を取得
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-
-    // Stripe APIのレスポンスには current_period_start/end が含まれる
-    const subscriptionData = subscription as unknown as Stripe.Subscription & {
-      current_period_start: number;
-      current_period_end: number;
-    };
-
     // 既存のmemberレコードをチェック
     const existingMember = await db
       .select()
@@ -97,36 +88,78 @@ async function handleCheckoutSessionCompleted(
       .where(eq(members.userId, userId))
       .limit(1);
 
-    if (existingMember.length === 0) {
-      // memberレコードが存在しない場合は作成（ソーシャルログインのフォールバック）
-      console.log(`Creating new member record for user: ${userId}`);
-      await db.insert(members).values({
-        userId,
-        email: email || "",
-        planId: planId ? parseInt(planId) : null,
-        role: "member",
-        status: "pending_profile",
-        profileCompleted: false,
-        isActive: true,
-        paymentStatus: "completed",
-        stripeSubscriptionId: subscriptionId,
-        subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
-        subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
-      });
-    } else {
-      // 既存のmemberレコードを更新
-      await db
-        .update(members)
-        .set({
+    if (mode === "subscription") {
+      // サブスクリプション決済の処理
+      const subscriptionId = session.subscription as string;
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+      const subscriptionData = subscription as unknown as Stripe.Subscription & {
+        current_period_start: number;
+        current_period_end: number;
+      };
+
+      if (existingMember.length === 0) {
+        console.log(`Creating new member record for user: ${userId}`);
+        await db.insert(members).values({
+          userId,
+          email: email || "",
+          planId: planId ? parseInt(planId) : null,
+          role: "member",
+          status: "pending_profile",
+          profileCompleted: false,
+          isActive: true,
           paymentStatus: "completed",
           stripeSubscriptionId: subscriptionId,
           subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
           subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
-        })
-        .where(eq(members.userId, userId));
-    }
+        });
+      } else {
+        await db
+          .update(members)
+          .set({
+            paymentStatus: "completed",
+            stripeSubscriptionId: subscriptionId,
+            subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
+            subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
+          })
+          .where(eq(members.userId, userId));
+      }
 
-    console.log(`Payment completed for user: ${userId}`);
+      console.log(`Subscription payment completed for user: ${userId}`);
+    } else if (mode === "payment") {
+      // 単発決済の処理（1年間有効）
+      const oneYearLater = new Date();
+      oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+
+      if (existingMember.length === 0) {
+        console.log(`Creating new member record for user (one-time): ${userId}`);
+        await db.insert(members).values({
+          userId,
+          email: email || "",
+          planId: planId ? parseInt(planId) : null,
+          role: "member",
+          status: "pending_profile",
+          profileCompleted: false,
+          isActive: true,
+          paymentStatus: "completed",
+          stripeSubscriptionId: null,
+          subscriptionStartDate: new Date(),
+          subscriptionEndDate: oneYearLater,
+        });
+      } else {
+        await db
+          .update(members)
+          .set({
+            paymentStatus: "completed",
+            stripeSubscriptionId: null,
+            subscriptionStartDate: new Date(),
+            subscriptionEndDate: oneYearLater,
+          })
+          .where(eq(members.userId, userId));
+      }
+
+      console.log(`One-time payment completed for user: ${userId}, valid until: ${oneYearLater.toISOString()}`);
+    }
   } catch (error) {
     console.error("Error updating member after checkout:", error);
     throw error;

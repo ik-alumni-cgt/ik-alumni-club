@@ -15,6 +15,7 @@ export const memberPlans = pgTable("member_plans", {
 
   // Stripe連携
   stripePriceId: varchar("stripe_price_id", { length: 255 }),
+  stripeOneTimePriceId: varchar("stripe_one_time_price_id", { length: 255 }),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")

@@ -67,7 +67,7 @@ export const auth = betterAuth({
         plans: [
           {
             name: "annual",
-            priceId: "price_1SNbQqFhSXHz6aqQCpwfWg47",
+            priceId: "price_1SsFKvFyvqHGbm7Rl0qwmXjx",
           }
         ]
       },
