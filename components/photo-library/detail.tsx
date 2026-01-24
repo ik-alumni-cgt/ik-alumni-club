@@ -76,7 +76,7 @@ export function PhotoLibraryDetail({ item }: { item: PhotoLibraryWithImages }) {
       {/* ライトボックス */}
       {selectedIndex !== null && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+          className="fixed inset-0 z-[70] bg-black/90 flex items-center justify-center"
           onClick={closeLightbox}
         >
           <Button
@@ -93,24 +93,24 @@ export function PhotoLibraryDetail({ item }: { item: PhotoLibraryWithImages }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute left-4 text-white hover:bg-white/20"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 text-white bg-black/50 hover:bg-black/70 h-10 w-10 sm:h-12 sm:w-12 rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
                   goToPrevious();
                 }}
               >
-                <ChevronLeft className="h-8 w-8" />
+                <ChevronLeft className="h-6 w-6 sm:h-8 sm:w-8" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-4 text-white hover:bg-white/20"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 text-white bg-black/50 hover:bg-black/70 h-10 w-10 sm:h-12 sm:w-12 rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
                   goToNext();
                 }}
               >
-                <ChevronRight className="h-8 w-8" />
+                <ChevronRight className="h-6 w-6 sm:h-8 sm:w-8" />
               </Button>
             </>
           )}
