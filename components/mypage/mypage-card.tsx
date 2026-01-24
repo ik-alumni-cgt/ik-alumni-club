@@ -13,7 +13,7 @@ import { ChevronRight } from "lucide-react";
 
 type MypageCardProps = {
   user: User;
-  member: Member | null;
+  member: (Member & { plan?: unknown }) | null;
 };
 
 export function MypageCard({ user, member }: MypageCardProps) {

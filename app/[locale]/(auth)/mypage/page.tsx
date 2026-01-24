@@ -14,7 +14,7 @@ export default async function MypagePage({
 
   // member情報を取得
   const memberResult = await getCurrentMember();
-  const member = memberResult.success ? memberResult.data : null;
+  const member = memberResult.success && memberResult.data ? memberResult.data : null;
 
   return (
     <div className="w-full max-w-4xl">
