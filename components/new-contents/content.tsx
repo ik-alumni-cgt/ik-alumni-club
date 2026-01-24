@@ -54,7 +54,7 @@ export async function NewContents() {
       <ContentsHeader title="New Content" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-[60px]">
         {newItems.length === 0 ? (
-          <p>新着情報はありません</p>
+          <p>配信までしばらくお待ちください</p>
         ) : (
           newItems.map((item) => (
             <Link key={item.id} href={item.href}>

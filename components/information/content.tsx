@@ -17,7 +17,7 @@ export async function InformationContents() {
       </div>
       <div className="flex flex-col md:grid md:grid-cols-3 gap-[30px] mt-[60px]">
         {items.length === 0 ? (
-          <p className="text-black">お知らせはありません</p>
+          <p className="text-black">配信までしばらくお待ちください</p>
         ) : (
           items.map((item) => (
             <InformationCard

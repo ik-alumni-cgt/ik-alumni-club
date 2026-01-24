@@ -33,7 +33,7 @@ export function VideoContentsWrapper({ title, items }: VideoContentsWrapperProps
       <ContentsHeader title={title} viewAllHref="/video" />
       {items.length === 0 ? (
         <div className="mt-[60px]">
-          <p>動画はありません</p>
+          <p>配信までしばらくお待ちください</p>
         </div>
       ) : (
         <>

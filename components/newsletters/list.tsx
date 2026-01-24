@@ -24,7 +24,7 @@ export function NewsletterList({ items }: { items: Newsletter[] }) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.length === 0 ? (
         <p className="col-span-full text-center text-gray-500">
-          ニュースレターはありません
+          配信までしばらくお待ちください
         </p>
       ) : (
         items.map((item) => (

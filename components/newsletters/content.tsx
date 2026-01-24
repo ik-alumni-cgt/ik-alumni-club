@@ -14,7 +14,7 @@ export async function NewsLettersContents() {
       <ContentsHeader title={t("newsletters")} viewAllHref="/newsletter" />
       <div className="flex flex-col gap-[30px] mt-[60px]">
         {newsletters.length === 0 ? (
-          <p>ニュースレターはありません</p>
+          <p>配信までしばらくお待ちください</p>
         ) : (
           newsletters.map((newsletter) => (
             <Link key={newsletter.id} href={`/newsletter/${newsletter.id}`}>
