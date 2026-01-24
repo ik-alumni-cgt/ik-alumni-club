@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import type { Member } from "@/types/member";
 
-type ProfileCompleteFormProps = {
+type ProfileEditFormProps = {
   member: Member;
 };
 
@@ -31,9 +31,12 @@ const PREFECTURES = [
   "沖縄県",
 ];
 
-export function ProfileCompleteForm({ member }: ProfileCompleteFormProps) {
+export function ProfileEditForm({ member }: ProfileEditFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  // 初回入力かどうか
+  const isFirstTime = member.status === "pending_profile";
 
   const form = useForm<MemberProfileFormData>({
     resolver: zodResolver(memberProfileFormSchema),
@@ -60,28 +63,38 @@ export function ProfileCompleteForm({ member }: ProfileCompleteFormProps) {
         throw new Error(result.error || "更新に失敗しました");
       }
 
-      toast.success("プロフィール情報を登録しました", {
-        description: "会員限定コンテンツにアクセスできるようになりました",
+      toast.success(isFirstTime ? "プロフィール情報を登録しました" : "プロフィール情報を更新しました", {
+        description: isFirstTime ? "会員限定コンテンツにアクセスできるようになりました" : undefined,
       });
 
-      router.push("/mypage");
+      router.push(isFirstTime ? "/mypage" : "/profile");
       router.refresh();
     } catch (error) {
       toast.error("エラーが発生しました", {
-        description: error instanceof Error ? error.message : "プロフィールの登録に失敗しました",
+        description: error instanceof Error ? error.message : "プロフィールの更新に失敗しました",
       });
-      console.error("プロフィール登録エラー:", error);
+      console.error("プロフィール更新エラー:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    if (isFirstTime) {
+      router.push("/mypage");
+    } else {
+      router.push("/profile");
     }
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>詳細情報</CardTitle>
+        <CardTitle>{isFirstTime ? "プロフィール情報の入力" : "会員情報の編集"}</CardTitle>
         <CardDescription>
-          必要事項を入力してください。入力いただいた情報は厳重に管理いたします。
+          {isFirstTime
+            ? "会員限定コンテンツにアクセスするため、詳細な情報を入力してください。"
+            : "会員情報を編集できます。"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -254,18 +267,18 @@ export function ProfileCompleteForm({ member }: ProfileCompleteFormProps) {
               />
             </div>
 
-            <div className="flex justify-end gap-4">
+            <div className="flex flex-col gap-4">
+              <Button type="submit" className="w-full min-h-11" disabled={isLoading}>
+                {isLoading ? "保存中..." : "保存する"}
+              </Button>
               <Button
                 type="button"
                 variant="outline"
-                className="min-h-11"
-                onClick={() => router.push("/mypage")}
+                className="w-full min-h-11"
+                onClick={handleCancel}
                 disabled={isLoading}
               >
-                後で入力する
-              </Button>
-              <Button type="submit" className="min-h-11" disabled={isLoading}>
-                {isLoading ? "登録中..." : "登録する"}
+                {isFirstTime ? "後で入力する" : "キャンセル"}
               </Button>
             </div>
           </form>

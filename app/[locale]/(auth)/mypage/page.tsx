@@ -1,4 +1,4 @@
-import { UserCard } from "@/components/user-card";
+import { MypageCard } from "@/components/mypage/mypage-card";
 import { ProfileCompletionBanner } from "@/components/profile-completion-banner";
 import { verifySession } from "@/lib/session";
 import { getCurrentMember } from "@/actions/members/get-member";
@@ -17,15 +17,13 @@ export default async function MypagePage({
   const member = memberResult.success ? memberResult.data : null;
 
   return (
-    <div className="container py-4 md:py-6">
-      <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">マイページ</h1>
-
+    <div className="w-full max-w-4xl">
       {/* プロフィール未完成の場合は促進バナーを表示 */}
       {member && member.status === "pending_profile" && (
-        <ProfileCompletionBanner />
+        <ProfileCompletionBanner className="mb-6" />
       )}
 
-      <UserCard user={session.user} />
+      <MypageCard user={session.user} member={member} />
     </div>
   );
 }
