@@ -1,6 +1,6 @@
 {
-  "id": "c3d4e5f6-0016-4000-8000-000000000016",
-  "prevId": "b2c3d4e5-0015-4000-8000-000000000015",
+  "id": "a1b2c3d4-0014-4000-8000-000000000014",
+  "prevId": "ea0c2b22-a6d9-4f4a-9749-1d9cf4e88836",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -750,12 +750,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "stripe_one_time_price_id": {
-          "name": "stripe_one_time_price_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -1541,78 +1535,6 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.sponsors": {
-      "name": "sponsors",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "company_name": {
-          "name": "company_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "logo_url": {
-          "name": "logo_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "representative_name": {
-          "name": "representative_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "has_flag": {
-          "name": "has_flag",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "program_consent": {
-          "name": "program_consent",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "website_consent": {
-          "name": "website_consent",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

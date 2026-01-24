@@ -1,6 +1,6 @@
 {
-  "id": "c3d4e5f6-0016-4000-8000-000000000016",
-  "prevId": "b2c3d4e5-0015-4000-8000-000000000015",
+  "id": "b2c3d4e5-0015-4000-8000-000000000015",
+  "prevId": "a1b2c3d4-0014-4000-8000-000000000014",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -750,12 +750,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "stripe_one_time_price_id": {
-          "name": "stripe_one_time_price_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
