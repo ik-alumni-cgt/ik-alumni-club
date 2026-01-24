@@ -51,6 +51,33 @@ export function MypageCard({ user, member }: MypageCardProps) {
                 <ChevronRight className="h-4 w-4 text-muted-foreground" />
               </Link>
             </li>
+            <li>
+              <Link
+                href="/privacy"
+                className="flex items-center justify-between px-6 py-4 hover:bg-muted/50 transition-colors"
+              >
+                <span className="text-sm">プライバシーポリシー</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/legal"
+                className="flex items-center justify-between px-6 py-4 hover:bg-muted/50 transition-colors"
+              >
+                <span className="text-sm">特定商取引法に基づく表記</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/refund"
+                className="flex items-center justify-between px-6 py-4 hover:bg-muted/50 transition-colors"
+              >
+                <span className="text-sm">返金・解約ポリシー</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </Link>
+            </li>
           </ul>
         </CardContent>
       </Card>
