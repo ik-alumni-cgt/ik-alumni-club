@@ -13,7 +13,7 @@ export function InformationList({ items }: { items: Information[] }) {
   return (
     <div className="flex flex-col gap-[30px]">
       {items.length === 0 ? (
-        <p className="text-center text-gray-500">お知らせはありません</p>
+        <p className="text-center text-gray-500">配信までしばらくお待ちください</p>
       ) : (
         items.map((item) => (
           <InformationCard

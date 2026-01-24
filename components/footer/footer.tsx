@@ -9,6 +9,8 @@ export function Footer() {
   const links = [
     { label: "お問い合わせ", href: "/contact" },
     { label: "利用規約", href: "/terms" },
+    { label: "プライバシーポリシー", href: "/privacy" },
+    { label: "特定商取引法に基づく表記", href: "/legal" },
   ];
 
   return (

@@ -45,7 +45,18 @@ export default function SubscribePage() {
             </li>
           </ul>
 
-          <SubscribeButton priceId="price_1SNbQqFhSXHz6aqQCpwfWg47" />
+          <div className="space-y-4">
+            <SubscribeButton
+              priceId="price_1SsFKvFyvqHGbm7Rl0qwmXjx"
+              mode="subscription"
+              description="毎年自動更新されます"
+            />
+            <SubscribeButton
+              priceId="price_1SsMW0FyvqHGbm7RavWqX97G"
+              mode="payment"
+              description="1年間有効・更新時は再度お支払いが必要です"
+            />
+          </div>
         </div>
       </div>
 

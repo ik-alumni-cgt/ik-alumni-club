@@ -115,8 +115,9 @@ export function RegisterAuthForm({
   const handleLineSignup = async () => {
     setIsLineLoading(true);
     try {
-      await authClient.signIn.social({
-        provider: "line",
+      // genericOAuth プラグインを使用（bot_prompt パラメータをサポート）
+      await authClient.signIn.oauth2({
+        providerId: "line",
         callbackURL: `/register/callback?planId=${selectedPlanId}`,
         errorCallbackURL: "/register/auth",
       });

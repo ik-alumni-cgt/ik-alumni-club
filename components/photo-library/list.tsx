@@ -8,7 +8,7 @@ export function PhotoLibraryList({ items }: { items: PhotoLibraryWithImages[] })
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {items.length === 0 ? (
         <p className="col-span-full text-center text-gray-500">
-          写真はありません
+          配信までしばらくお待ちください
         </p>
       ) : (
         items.map((item) => {

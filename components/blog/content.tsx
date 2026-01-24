@@ -14,7 +14,7 @@ export async function BlogContents() {
       <ContentsHeader title={t("blog")} viewAllHref="/blog" />
       <div className="flex flex-col gap-[30px] mt-[60px]">
         {blogs.length === 0 ? (
-          <p>ブログ記事はありません</p>
+          <p>配信までしばらくお待ちください</p>
         ) : (
           blogs.map((blog) => (
             <Link key={blog.id} href={`/blog/${blog.id}`}>

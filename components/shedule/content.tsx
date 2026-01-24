@@ -14,7 +14,7 @@ export async function ScheduleContents() {
       </div>
       <div className="flex flex-col gap-[30px] mt-[60px]">
         {items.length === 0 ? (
-          <p className="text-white">予定されているイベントはありません</p>
+          <p className="text-white">配信までしばらくお待ちください</p>
         ) : (
           items.map((schedule) => {
             const dateObj = new Date(schedule.eventDate);

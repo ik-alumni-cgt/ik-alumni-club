@@ -103,8 +103,9 @@ export function LoginForm({
     setIsLineLoading(true);
 
     try {
-      await authClient.signIn.social({
-        provider: "line",
+      // genericOAuth プラグインを使用（bot_prompt パラメータをサポート）
+      await authClient.signIn.oauth2({
+        providerId: "line",
         callbackURL: returnUrl || "/mypage",
         newUserCallbackURL: "/register/terms",
         errorCallbackURL: "/login",

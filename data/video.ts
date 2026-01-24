@@ -43,10 +43,10 @@ export const getVideo = async (id: string) => {
 };
 
 // 最新の動画を取得（Home画面表示用）
-// 会員限定コンテンツも一覧には表示（詳細ページでアクセス制御）
+// 会員限定コンテンツは除外（isMemberOnly = false のみ）
 export const getRecentVideos = async (limit: number = 3) => {
   return db.query.videos.findMany({
-    where: eq(videos.published, true),
+    where: and(eq(videos.published, true), eq(videos.isMemberOnly, false)),
     orderBy: [desc(videos.videoDate)],
     limit,
   });
