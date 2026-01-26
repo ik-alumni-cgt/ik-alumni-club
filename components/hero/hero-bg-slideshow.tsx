@@ -29,32 +29,57 @@ const images = imageNumbers.map(
 );
 
 export function HeroBgSlideshow() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [displayIndex, setDisplayIndex] = useState(0);
+  const [nextIndex, setNextIndex] = useState<number | null>(null);
+  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      const next = (displayIndex + 1) % images.length;
+      setNextIndex(next);
+      // 少し遅延してフェードを開始（次の画像がロードされるのを待つ）
+      setTimeout(() => {
+        setIsFading(true);
+      }, 50);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [displayIndex]);
+
+  // フェード完了後にインデックスを更新
+  useEffect(() => {
+    if (isFading && nextIndex !== null) {
+      const timer = setTimeout(() => {
+        setDisplayIndex(nextIndex);
+        setNextIndex(null);
+        setIsFading(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isFading, nextIndex]);
 
   return (
-    <div className="relative w-full">
-      {images.map((src, index) => (
+    <div className="relative w-full overflow-hidden">
+      {/* 現在の画像（背面） */}
+      <Image
+        src={images[displayIndex]}
+        alt={`Hero Background ${displayIndex + 1}`}
+        width={1920}
+        height={1080}
+        className="w-full h-auto mx-auto px-4 md:px-8"
+        priority
+      />
+      {/* 次の画像（前面でフェードイン） */}
+      {nextIndex !== null && (
         <Image
-          key={index}
-          src={src}
-          alt={`Hero Background ${index + 1}`}
+          src={images[nextIndex]}
+          alt={`Hero Background ${nextIndex + 1}`}
           width={1920}
           height={1080}
-          className={`w-full h-auto mx-auto px-4 md:px-8 transition-opacity duration-1000 ${
-            index === currentIndex
-              ? "opacity-100 relative"
-              : "opacity-0 absolute top-0 left-0"
+          className={`w-full h-auto mx-auto px-4 md:px-8 absolute top-0 left-0 z-10 transition-opacity duration-1000 ${
+            isFading ? "opacity-100" : "opacity-0"
           }`}
-          priority={index === 0}
         />
-      ))}
+      )}
     </div>
   );
 }
