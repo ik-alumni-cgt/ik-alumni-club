@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { setLocale } from "@/app/web/i18n/set-locale";
 import { InformationContents } from "@/components/information/content";
 import { BlogContents } from "@/components/blog/content";
@@ -8,6 +9,7 @@ import { VideoContents } from "@/components/video/content";
 import { HeroCarousel } from "@/components/hero/hero-carousel";
 import { AboutSection } from "@/components/hero/about-section";
 import { SupportersContents } from "@/components/supporters/content";
+import { MaintenancePage } from "@/components/maintenance/maintenance-page";
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +19,16 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   await setLocale(params);
+
+  // プレビューモードの判定
+  const isPreviewMode = process.env.PREVIEW_MODE === "true";
+  if (isPreviewMode) {
+    const cookieStore = await cookies();
+    const isAuthenticated = cookieStore.get("preview_authenticated")?.value === "true";
+    if (!isAuthenticated) {
+      return <MaintenancePage />;
+    }
+  }
 
   return (
     <div className="font-sans max-w-full">
