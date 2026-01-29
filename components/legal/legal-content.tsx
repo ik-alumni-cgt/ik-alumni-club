@@ -29,7 +29,7 @@ export function LegalContent() {
               <dl className="space-y-2 text-muted-foreground">
                 <div className="flex flex-col sm:flex-row sm:gap-4">
                   <dt className="font-medium min-w-[200px]">販売事業者名（正式名称）</dt>
-                  <dd>確認中</dd>
+                  <dd>IK ALUMNI CGT Supporters Club</dd>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:gap-4">
                   <dt className="font-medium min-w-[200px]">販売事業者名（表示名）</dt>
@@ -37,15 +37,15 @@ export function LegalContent() {
                 </div>
                 <div className="flex flex-col sm:flex-row sm:gap-4">
                   <dt className="font-medium min-w-[200px]">運営責任者</dt>
-                  <dd>確認中</dd>
+                  <dd>細沼桂一</dd>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:gap-4">
                   <dt className="font-medium min-w-[200px]">所在地</dt>
-                  <dd>確認中</dd>
+                  <dd>茨城県つくば市谷田部3018-9</dd>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:gap-4">
                   <dt className="font-medium min-w-[200px]">電話番号</dt>
-                  <dd>確認中</dd>
+                  <dd>09015098810</dd>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:gap-4">
                   <dt className="font-medium min-w-[200px]">メールアドレス</dt>
@@ -76,9 +76,11 @@ export function LegalContent() {
 
             <section>
               <h2 className="font-bold text-lg mb-3 mt-6">支払方法</h2>
-              <p className="text-muted-foreground">
-                クレジットカード決済（Stripe）
-              </p>
+              <div className="text-muted-foreground space-y-1 ml-4">
+                <p>・クレジットカード決済（Stripe）</p>
+                <p>・コンビニ決済（Stripe）</p>
+                <p>・銀行振込（Stripe）</p>
+              </div>
             </section>
 
             <section>
