@@ -10,40 +10,45 @@ import { Separator } from "@/components/ui/separator";
 import { PhotoCarousel } from "@/components/supporters/photo-carousel";
 import { SupportersContent } from "@/components/supporters/supporters-content";
 
+// 特典画像のインポート
+import tokuten_IMG_3582 from "./tokuten/IMG_3582-scaled.jpg";
+import tokuten_3O6A8935 from "./tokuten/3O6A8935.jpg";
+import tokuten_fcd9a261 from "./tokuten/fcd9a261c2f0348d1f29ddfb2a06cc8c-scaled.jpg";
+import tokuten_logo from "./tokuten/後援会ロゴ　訂正-4-scaled.png";
+import tokuten_117213171 from "./tokuten/117213171e45978db06a80dbc1715843-scaled.jpg";
+import tokuten_IMG_2202 from "./tokuten/IMG_2202-scaled.jpg";
+import tokuten_IMG_2221 from "./tokuten/IMG_2221-scaled.jpg";
+import tokuten_IMG_5737 from "./tokuten/IMG_5737-scaled.jpg";
+
 const benefits = {
   individual: [
     {
       title: "会員限定グッズ",
       description: "会員しか持っていない、限定グッズをプレゼント！",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/07/IMG_3582-scaled.jpg",
+      image: tokuten_IMG_3582,
     },
     {
       title: "コンサート映像の配信",
       description:
         "過去のコンサート映像から、最新のコンサート映像までいつでもどこでもご覧いただけます！",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/07/3O6A8935.jpg",
+      image: tokuten_3O6A8935,
     },
     {
       title: "会員ページ限定コンテンツ",
       description:
         "イベントの様子や、SNSでは発信していない限定コンテンツをお届けします！",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/07/fcd9a261c2f0348d1f29ddfb2a06cc8c-scaled.jpg",
+      image: tokuten_fcd9a261,
     },
     {
       title: "会報の配信",
       description: "活動内容の報告や、イベントの最新情報をお届けします！",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/06/後援会ロゴ　訂正-4-scaled.png",
+      image: tokuten_logo,
     },
     {
       title: "コンサート優先入場権",
       description:
         "2月に行われる自主公演にて、他のお客様よりも一足先に、入場をし、席を確保することができます！",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/07/117213171e45978db06a80dbc1715843-scaled.jpg",
+      image: tokuten_117213171,
     },
   ],
   business: [
@@ -51,21 +56,18 @@ const benefits = {
       title: "ホームページへの掲載",
       description:
         "企業様向けに、企業のロゴとHPをALUMNI HPおよびALUMNI CGT Supporter's Club HPに掲載することができます！",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/06/後援会ロゴ　訂正-4-scaled.png",
+      image: tokuten_logo,
     },
     {
       title: "コンサートプログラムへの掲載（企業名）",
       description:
         "支援してくださる企業様向けに、コンサートプログラムへの掲載をいたします。",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/07/IMG_2202-scaled.jpg",
+      image: tokuten_IMG_2202,
     },
     {
       title: "企業ロゴ入りオリジナルフラッグ",
       description: "企業のロゴが入ったオリジナルフラッグを作成します！",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/07/IMG_2221-scaled.jpg",
+      image: tokuten_IMG_2221,
     },
   ],
   platinum: [
@@ -73,21 +75,18 @@ const benefits = {
       title: "コンサートプログラムへの広告掲載",
       description:
         "2月に行われる自主公演のプログラムに、企業様の広告を掲載することができます。",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/07/IMG_2202-scaled.jpg",
+      image: tokuten_IMG_2202,
     },
     {
       title: "プラチナ会員限定オリジナルウェア",
       description:
         "プラチナ会員限定のオリジナルウェアをプレゼントします。（1着）",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/06/後援会ロゴ　訂正-4-scaled.png",
+      image: tokuten_logo,
     },
     {
       title: "メンバーからのお礼動画",
       description: "メンバーからのオリジナルお礼動画を配信します！",
-      image:
-        "https://ik-alumni-cgt.com/wp-content/uploads/2025/07/IMG_5737-scaled.jpg",
+      image: tokuten_IMG_5737,
     },
   ],
 };
@@ -207,7 +206,7 @@ export default function SupportersPage() {
                       src={benefit.image}
                       alt={benefit.title}
                       fill
-                      className="object-cover rounded-lg"
+                      className="object-contain rounded-lg"
                     />
                   </div>
                   <h4 className="text-base font-bold text-white mb-2">
@@ -238,7 +237,7 @@ export default function SupportersPage() {
                       src={benefit.image}
                       alt={benefit.title}
                       fill
-                      className="object-cover rounded-lg"
+                      className="object-contain rounded-lg"
                     />
                   </div>
                   <h4 className="text-base font-bold text-white mb-2">
@@ -267,7 +266,7 @@ export default function SupportersPage() {
                       src={benefit.image}
                       alt={benefit.title}
                       fill
-                      className="object-cover rounded-lg"
+                      className="object-contain rounded-lg"
                     />
                   </div>
                   <h4 className="text-base font-bold text-white mb-2">
