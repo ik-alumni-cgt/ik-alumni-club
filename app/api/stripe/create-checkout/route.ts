@@ -65,9 +65,9 @@ export async function POST(request: NextRequest) {
       customer: mode === "payment" ? customer : undefined,
       customer_email: mode === "subscription" ? (session.user.email || undefined) : undefined,
       client_reference_id: session.user.id,
-      // 単発決済時は銀行振込・コンビニのみ（クレジットカード非表示）
+      // 単発決済時は銀行振込のみ（クレジットカード非表示）
       payment_method_types: mode === "payment"
-        ? ["customer_balance", "konbini"]
+        ? ["customer_balance"]
         : undefined,
       // 銀行振込の設定
       ...(mode === "payment" && {
