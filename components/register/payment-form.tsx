@@ -199,7 +199,7 @@ export function PaymentForm() {
                 <div className="text-2xl font-bold">
                   ¥{Number(plan.price).toLocaleString()}
                 </div>
-                <div className="text-xs text-muted-foreground">/月</div>
+                <div className="text-xs text-muted-foreground">/年</div>
               </div>
             </div>
 
@@ -273,7 +273,7 @@ export function PaymentForm() {
                 ) : (
                   <>
                     <Building className="mr-2 h-4 w-4" />
-                    銀行振込・コンビニで支払う
+                    銀行振込で支払う
                   </>
                 )}
               </Button>
