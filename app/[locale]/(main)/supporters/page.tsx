@@ -108,7 +108,7 @@ export default function SupportersPage() {
         />
       </div>
       <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Link href="/supporters" className="w-full sm:w-auto">
+            <Link href="/register/terms" className="w-full sm:w-auto">
               <Button className="w-full sm:min-w-[200px] min-h-11 bg-brand">
                 入会はこちら
               </Button>
