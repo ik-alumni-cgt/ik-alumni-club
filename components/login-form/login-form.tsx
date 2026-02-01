@@ -192,8 +192,8 @@ export function LoginForm({
             </Button>
             <div className="text-center text-sm">
               アカウントをお持ちでないですか?{" "}
-              <Link href="/signup" className="underline underline-offset-4">
-                登録
+              <Link href="/supporters" className="underline underline-offset-4">
+                サポーターズクラブについて
               </Link>
             </div>
           </form>

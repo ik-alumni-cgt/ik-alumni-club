@@ -2,18 +2,17 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import hero1 from "./hero1.jpg";
 import hero2 from "./hero2.jpg";
-import hero3 from "./hero3.jpg";
 import hero4 from "./hero4.jpg";
 
 const images = [
-  { src: hero1, alt: "Hero 1" },
-  { src: hero2, alt: "Hero 2" },
-  { src: hero3, alt: "Hero 3" },
-  { src: hero4, alt: "Hero 4" },
+  { src: hero1, alt: "Hero 1", href: "https://www.ik-alumni-cgt.com/information/Il0DGd6QZGhxKkKZNh9qy" },
+  { src: hero2, alt: "Hero 2", href: "https://www.ik-alumni-cgt.com/supporters" },
+  { src: hero4, alt: "Hero 4", href: "https://linktr.ee/ik_alumni_2022" },
 ];
 
 // SP: 35vw、PC: 33.333%
@@ -32,6 +31,7 @@ export function HeroCarousel() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
+  const [hasDragged, setHasDragged] = useState(false); // ドラッグしたかどうか
 
   // 3セット複製（無限ループ用）
   const extendedImages = [...images, ...images, ...images];
@@ -96,6 +96,7 @@ export function HeroCarousel() {
     setIsDragging(true);
     setStartX(e.clientX);
     setIsTransitioning(false);
+    setHasDragged(false);
   };
 
   // ドラッグ中（マウス）
@@ -103,6 +104,9 @@ export function HeroCarousel() {
     if (!isDragging) return;
     const diff = e.clientX - startX;
     setDragOffset(diff);
+    if (Math.abs(diff) > 5) {
+      setHasDragged(true);
+    }
   };
 
   // ドラッグ終了（マウス）
@@ -116,6 +120,7 @@ export function HeroCarousel() {
     setIsDragging(true);
     setStartX(e.touches[0].clientX);
     setIsTransitioning(false);
+    setHasDragged(false);
   };
 
   // タッチ中
@@ -123,6 +128,9 @@ export function HeroCarousel() {
     if (!isDragging) return;
     const diff = e.touches[0].clientX - startX;
     setDragOffset(diff);
+    if (Math.abs(diff) > 5) {
+      setHasDragged(true);
+    }
   };
 
   // タッチ終了
@@ -185,17 +193,29 @@ export function HeroCarousel() {
                     width: `${getImageWidth()}vw`,
                   }}
                 >
-                  <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden shadow-lg">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      className="object-cover pointer-events-none"
-                      draggable={false}
-                      placeholder="blur"
-                      sizes="(max-width: 768px) 85vw, 33vw"
-                    />
-                  </div>
+                  <Link
+                    href={image.href}
+                    target={image.href.startsWith("http") ? "_blank" : undefined}
+                    rel={image.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    onClick={(e) => {
+                      if (hasDragged) {
+                        e.preventDefault();
+                      }
+                    }}
+                    className="block"
+                  >
+                    <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden shadow-lg">
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        fill
+                        className="object-cover pointer-events-none"
+                        draggable={false}
+                        placeholder="blur"
+                        sizes="(max-width: 768px) 85vw, 33vw"
+                      />
+                    </div>
+                  </Link>
                 </div>
               );
             })}
