@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { getMemberPlanById } from "@/actions/member-plans/get-member-plans";
+import { getCurrentMember } from "@/actions/members/get-member";
 import { Loader2, CreditCard, Building, AlertCircle } from "lucide-react";
 import { RegistrationProgress } from "./registration-progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -40,13 +41,14 @@ export function PaymentForm() {
   const [isInitializing, setIsInitializing] = useState(true);
   const [effectiveUserId, setEffectiveUserId] = useState<string | null>(null);
   const [effectivePlanId, setEffectivePlanId] = useState<number | null>(null);
+  const [isMigratedUser, setIsMigratedUser] = useState(false);
 
   // 初期チェック
   useEffect(() => {
     async function initialize() {
       // URLパラメータからplanIdを取得（ソーシャルログイン用フォールバック）
       const planIdFromUrl = searchParams.get("planId");
-      const resolvedPlanId = selectedPlanId || (planIdFromUrl ? parseInt(planIdFromUrl) : null);
+      let resolvedPlanId = selectedPlanId || (planIdFromUrl ? parseInt(planIdFromUrl) : null);
 
       // セッションからユーザー情報を取得（ソーシャルログイン用フォールバック）
       let resolvedUserId = userId;
@@ -65,6 +67,18 @@ export function PaymentForm() {
         toast.error("先にアカウントを作成してください");
         router.push("/register/auth");
         return;
+      }
+
+      // 移行ユーザーの場合、memberレコードからplanIdを取得
+      if (!resolvedPlanId) {
+        const memberResult = await getCurrentMember();
+        if (memberResult.success && memberResult.data) {
+          const member = memberResult.data;
+          if (member.isMigrated && member.planId) {
+            resolvedPlanId = member.planId;
+            setIsMigratedUser(true);
+          }
+        }
       }
 
       // プラン選択済みかチェック
@@ -124,7 +138,10 @@ export function PaymentForm() {
         body: JSON.stringify({
           priceId,
           mode,
-          successUrl: `${window.location.origin}/register/payment/success`,
+          // 移行ユーザーはマイページに戻る、新規ユーザーは登録成功ページへ
+          successUrl: isMigratedUser
+            ? `${window.location.origin}/mypage`
+            : `${window.location.origin}/register/payment/success`,
           cancelUrl: `${window.location.origin}/register/payment?planId=${effectivePlanId}`,
           metadata: {
             planId: effectivePlanId,
@@ -155,7 +172,7 @@ export function PaymentForm() {
   if (isInitializing) {
     return (
       <>
-        <RegistrationProgress currentStep={4} className="mb-8" />
+        {!isMigratedUser && <RegistrationProgress currentStep={4} className="mb-8" />}
         <Card>
           <CardContent className="flex justify-center items-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -171,7 +188,8 @@ export function PaymentForm() {
 
   return (
     <>
-      <RegistrationProgress currentStep={4} className="mb-8" />
+      {/* 移行ユーザーの場合は登録プログレスを非表示 */}
+      {!isMigratedUser && <RegistrationProgress currentStep={4} className="mb-8" />}
 
       <Card>
         <CardHeader>

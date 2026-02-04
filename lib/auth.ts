@@ -9,6 +9,7 @@ import { anonymous, genericOAuth } from "better-auth/plugins";
 import { stripe as stripePlugin } from "@better-auth/stripe";
 import Stripe from "stripe";
 import { eq } from "drizzle-orm";
+import { sendPasswordResetEmail } from "@/lib/email";
 
 // Stripe クライアントを初期化
 const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -29,6 +30,12 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true, // メール＋パスワード認証を有効化
+    sendResetPassword: async ({ user, url }) => {
+      await sendPasswordResetEmail({
+        email: user.email,
+        resetLink: url,
+      });
+    },
   },
   account: {
     // 同じメールアドレスの既存アカウントにソーシャルログインを自動リンク

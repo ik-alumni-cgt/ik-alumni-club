@@ -52,6 +52,10 @@ export const members = pgTable("members", {
   subscriptionStartDate: timestamp("subscription_start_date"),
   subscriptionEndDate: timestamp("subscription_end_date"),
 
+  // 移行情報
+  isMigrated: boolean("is_migrated").default(false).notNull(),
+  migratedAt: timestamp("migrated_at"),
+
   // メタデータ
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
