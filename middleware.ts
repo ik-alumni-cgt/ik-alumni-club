@@ -19,6 +19,11 @@ const publicRoutes = [
   "/register/auth",
   "/sponsor-form",
   "/goods/thank-you",
+  "/migrate-login",
+  "/migrate-login/callback",
+  "/forgot-password",
+  "/reset-password",
+  "/register/email",
 ];
 const adminRoutes = ["/admin/login"]; // 管理者ログインページは認証不要
 

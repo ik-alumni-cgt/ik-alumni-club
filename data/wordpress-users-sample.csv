@@ -1,0 +1,4 @@
+email,lastName,firstName,lastNameKana,firstNameKana,postalCode,prefecture,city,address,building,phoneNumber,planCode
+sample1@example.com,山田,太郎,ヤマダ,タロウ,1000001,東京都,千代田区,丸の内1-1-1,ABCビル101,09012345678,individual
+sample2@example.com,鈴木,花子,スズキ,ハナコ,1500001,東京都,渋谷区,渋谷1-2-3,,08012345678,business
+sample3@example.com,佐藤,一郎,サトウ,イチロウ,5300001,大阪府,大阪市北区,梅田1-1-1,大阪ビル505,07012345678,platinum_individual

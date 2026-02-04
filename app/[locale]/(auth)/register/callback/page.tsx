@@ -20,6 +20,14 @@ export default async function RegisterCallbackPage({
     redirect("/register/auth");
   }
 
+  // LINEログインでダミーメールアドレスの場合はメール入力ページへリダイレクト
+  if (session.user.email.endsWith("@line.me")) {
+    const emailUrl = planId
+      ? `/register/email?planId=${planId}`
+      : "/register/email";
+    redirect(emailUrl);
+  }
+
   // memberレコードを作成
   const memberResult = await createMemberAfterSignup(
     session.user.id,

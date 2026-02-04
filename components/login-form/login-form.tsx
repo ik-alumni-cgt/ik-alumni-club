@@ -141,7 +141,15 @@ export function LoginForm({
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">パスワード</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">パスワード</Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-muted-foreground underline underline-offset-4 hover:text-primary"
+                >
+                  パスワードをお忘れですか？
+                </Link>
+              </div>
               <Input
                 id="password"
                 type="password"
@@ -190,11 +198,19 @@ export function LoginForm({
                 </>
               )}
             </Button>
-            <div className="text-center text-sm">
-              アカウントをお持ちでないですか?{" "}
-              <Link href="/supporters" className="underline underline-offset-4">
-                サポーターズクラブについて
-              </Link>
+            <div className="text-center text-sm space-y-2">
+              <p>
+                アカウントをお持ちでないですか?{" "}
+                <Link href="/supporters" className="underline underline-offset-4">
+                  サポーターズクラブについて
+                </Link>
+              </p>
+              <p className="text-muted-foreground">
+                旧システムからの移行の方は{" "}
+                <Link href="/migrate-login" className="underline underline-offset-4 text-primary">
+                  こちら
+                </Link>
+              </p>
             </div>
           </form>
         </CardContent>
