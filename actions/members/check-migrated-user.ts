@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { members } from "@/db/schemas/member";
-import { users } from "@/db/schemas/auth";
+import { users, accounts } from "@/db/schemas/auth";
 import { eq, and } from "drizzle-orm";
 
 /**
@@ -25,12 +25,31 @@ export async function checkMigratedUser(email: string) {
       where: and(eq(members.userId, user.id), eq(members.isMigrated, true)),
     });
 
+    if (!member) {
+      return {
+        success: true,
+        isMigrated: false,
+        userExists: true,
+        needsPasswordReset: false,
+      };
+    }
+
+    // 移行ユーザーの場合、パスワードが設定されているかチェック
+    const credentialAccount = await db.query.accounts.findFirst({
+      where: and(
+        eq(accounts.userId, user.id),
+        eq(accounts.providerId, "credential")
+      ),
+    });
+
+    // パスワードがnullまたは空の場合はパスワード設定が必要
+    const needsPasswordReset = !credentialAccount?.password;
+
     return {
       success: true,
-      isMigrated: !!member,
+      isMigrated: true,
       userExists: true,
-      // 移行ユーザーの場合、パスワードが設定されていないかチェック
-      needsPasswordReset: !!member,
+      needsPasswordReset,
     };
   } catch (error) {
     console.error("Failed to check migrated user:", error);
