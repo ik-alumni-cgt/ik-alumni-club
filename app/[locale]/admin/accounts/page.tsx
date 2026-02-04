@@ -68,6 +68,8 @@ export default async function AdminAccountsPage() {
                 <TableHead>プラン</TableHead>
                 <TableHead>権限</TableHead>
                 <TableHead>ステータス</TableHead>
+                <TableHead>移行</TableHead>
+                <TableHead>ログイン</TableHead>
                 <TableHead>登録日</TableHead>
                 <TableHead className="text-right">操作</TableHead>
               </TableRow>
@@ -86,6 +88,20 @@ export default async function AdminAccountsPage() {
                   </TableCell>
                   <TableCell>{getRoleBadge(account.role)}</TableCell>
                   <TableCell>{getStatusBadge(account.status || "pending_profile")}</TableCell>
+                  <TableCell>
+                    {account.isMigrated ? (
+                      <Badge variant="secondary" className="bg-amber-100 text-amber-800">移行</Badge>
+                    ) : (
+                      <span className="text-muted-foreground">-</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {account.hasLoginSetup ? (
+                      <Badge variant="default" className="bg-green-100 text-green-800">設定済</Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-muted-foreground">未設定</Badge>
+                    )}
+                  </TableCell>
                   <TableCell>
                     {new Date(account.createdAt).toLocaleDateString("ja-JP")}
                   </TableCell>
