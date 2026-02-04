@@ -65,6 +65,8 @@ export async function POST(request: NextRequest) {
       customer: mode === "payment" ? customer : undefined,
       customer_email: mode === "subscription" ? (session.user.email || undefined) : undefined,
       client_reference_id: session.user.id,
+      // プロモーションコード入力欄を表示
+      allow_promotion_codes: true,
       // 単発決済時は銀行振込のみ（クレジットカード非表示）
       payment_method_types: mode === "payment"
         ? ["customer_balance"]
