@@ -5,6 +5,7 @@ import kojinImg from "./kojin.png";
 import houjinImg from "./houjin.png";
 import puratinaImg from "./puratina.png";
 import tokutenImg from "./tokuten.jpg";
+import kessaiImg from "@/components/supporters/kessai.jpg";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PhotoCarousel } from "@/components/supporters/photo-carousel";
@@ -325,19 +326,10 @@ export default function SupportersPage() {
         <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-8 overflow-hidden group hover:bg-white/15 transition-all duration-300">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
           <div className="relative z-10">
-            <div className="mb-8">
-              <h3 className="text-lg font-bold text-white mb-3">決済方法</h3>
-              <p className="text-base text-white/90">銀行振込</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white mb-3">
-                支払いサイクル
-              </h3>
-              <p className="text-base text-white/90">年払い（一括）</p>
-              <p className="text-sm text-white/70 mt-2">
-                ※分割払いは承っておりません
-              </p>
-            </div>
+            <Image src={kessaiImg} alt="決済方法" className="w-full h-auto rounded-lg" />
+            <p className="text-sm text-white mt-4 text-center">
+              ※コンビニ決済は3月中旬より利用可能
+            </p>
           </div>
         </div>
       </div>
