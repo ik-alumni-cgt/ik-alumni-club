@@ -364,9 +364,9 @@ export default function SupportersPage() {
             </div>
             <div className="mb-8">
               <h3 className="text-lg font-bold text-white mb-3">会報</h3>
-              <p className="text-base text-white/90">毎月月末に配信</p>
+              <p className="text-base text-white/90">季節ごとに4回配信</p>
               <p className="text-sm text-white/70 mt-2">
-                ※メールまたは会員サイトでご確認いただけます
+                ※時期によって配信日は異なりますのでご了承ください
               </p>
             </div>
             <div className="mb-8">
@@ -376,6 +376,9 @@ export default function SupportersPage() {
               <p className="text-base text-white/90">入会後2ヶ月以内に発送</p>
               <p className="text-sm text-white/70 mt-2">
                 ※サイズ確認のご連絡をさせていただきます
+              </p>
+              <p className="text-sm text-white/70 mt-1">
+                ※在庫状況によって発送時期が変わる可能性がありますのでご了承ください
               </p>
             </div>
             <div className="pt-6 border-t border-white/20 space-y-1 text-sm text-white/70">
