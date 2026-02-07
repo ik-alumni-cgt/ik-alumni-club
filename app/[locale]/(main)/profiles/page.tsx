@@ -37,7 +37,7 @@ export default async function ProfilesPage({
     {
       id: "1",
       name: "SHO",
-      description: "代表であり、カラーガードの振り付けや構成までなんでもござれまる。",
+      description: "カラーガードの振り付けや構成までなんでもできる頼れるリーダー。",
       image: shoImage,
     },
     {
@@ -61,7 +61,7 @@ export default async function ProfilesPage({
     {
       id: "5",
       name: "RIN",
-      description: "ライブ、アニメ大好き！こう見えてインテリエンジニア。",
+      description: "ライブ、アニメ大好き！こう見えてインテリエンジニアなんです。",
       image: rinImage,
     },
     {
@@ -73,7 +73,7 @@ export default async function ProfilesPage({
     {
       id: "7",
       name: "YUNA",
-      description: "マーチング大好き！某マーチング団体のリーダーもやってます。",
+      description: "このチーム唯一のカラーガード未経験者！ライフルまでできるようになりました！",
       image: yunaImage,
     },
     {
@@ -97,7 +97,7 @@ export default async function ProfilesPage({
     },
     {
       id: "11",
-      name: "AOKI",
+      name: "AOI",
       description:
         "貴公子と天才と同じ3年間同じ楽器でした。本人曰く大変だったそうです。",
       image: aokiImage,
@@ -110,7 +110,7 @@ export default async function ProfilesPage({
     },
     {
       id: "13",
-      name: "KAHO",
+      name: "CAHO",
       description:
         "Msゲラ。笑いすぎて腹筋がめっちゃ割れているという噂も...",
       image: kahoImage,
