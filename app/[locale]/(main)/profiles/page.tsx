@@ -54,7 +54,7 @@ export default async function ProfilesPage({
     },
     {
       id: "4",
-      name: "NATUKI",
+      name: "NATSUKI",
       description: "アルムナイの優しい姉さん的存在。ダンスの振り付けもします。",
       image: natukiImage,
     },
@@ -99,7 +99,7 @@ export default async function ProfilesPage({
       id: "11",
       name: "AOI",
       description:
-        "貴公子と天才と同じ3年間同じ楽器でした。本人曰く大変だったそうです。",
+        "貴公子と天才と3年間同じ楽器でした。本人曰く大変だったそうです。",
       image: aokiImage,
     },
     {
@@ -112,7 +112,7 @@ export default async function ProfilesPage({
       id: "13",
       name: "CAHO",
       description:
-        "Msゲラ。笑いすぎて腹筋がめっちゃ割れているという噂も...",
+        "Ms.ゲラ。笑いすぎて腹筋がめっちゃ割れているという噂も...",
       image: kahoImage,
     },
     {
@@ -126,7 +126,7 @@ export default async function ProfilesPage({
       id: "15",
       name: "YUMA",
       description:
-        "アルムナイの父。包容力と優しが溢れ出る。実はバク転できます。",
+        "アルムナイの父。包容力と優しさが溢れ出る。実はバク転できます。",
       image: yumaImage,
     },
     {
