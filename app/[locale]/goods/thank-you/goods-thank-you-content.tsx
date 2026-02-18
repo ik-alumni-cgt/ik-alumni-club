@@ -334,7 +334,7 @@ export function GoodsThankYouContent() {
               preload="metadata"
               className="w-full rounded-xl"
             >
-              <source src="/videos/thank-you-message.mp4" type="video/mp4" />
+              <source src="/videos/thank-you-message.mp4#t=0.001" type="video/mp4" />
             </video>
           </FadeInElement>
         </section>
