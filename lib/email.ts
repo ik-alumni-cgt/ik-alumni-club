@@ -98,3 +98,37 @@ export async function sendPasswordResetEmail({
 
   return data;
 }
+
+const TEST_EMAIL_TO = "cgt.ik.est2022@gmail.com";
+
+/**
+ * テストメールを送信（管理画面用）
+ */
+export async function sendTestEmail() {
+  const resend = getResendClient();
+
+  if (!resend) {
+    // 開発環境ではコンソールにログを出力
+    console.log("=".repeat(50));
+    console.log("📧 Test Email (Development Mode)");
+    console.log("=".repeat(50));
+    console.log(`To: ${TEST_EMAIL_TO}`);
+    console.log("Subject: テストメール");
+    console.log("=".repeat(50));
+    return { id: "dev-mode" };
+  }
+
+  const { data, error } = await resend.emails.send({
+    from: "IK ALUMNI CGT <info@ik-alumni-cgt.com>",
+    to: TEST_EMAIL_TO,
+    subject: "テストメール",
+    html: "<p>送信テストです</p>",
+  });
+
+  if (error) {
+    console.error("Failed to send test email:", error);
+    throw new Error("メールの送信に失敗しました");
+  }
+
+  return data;
+}

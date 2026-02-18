@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getAllAccounts } from "@/data/account";
+import { SendTestEmailButton } from "@/components/admin/send-test-email-button";
 import Link from "next/link";
 import {
   Table,
@@ -47,6 +48,7 @@ export default async function AdminAccountsPage() {
             会員の一覧・詳細・編集・削除ができます
           </p>
         </div>
+        <SendTestEmailButton />
       </div>
 
       {accounts.length === 0 ? (
