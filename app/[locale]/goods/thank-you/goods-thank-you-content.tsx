@@ -328,12 +328,14 @@ export function GoodsThankYouContent() {
             <h2 className="text-xl md:text-2xl font-bold text-white mb-6 text-center">
               MESSAGE
             </h2>
-            <div className="aspect-video flex items-center justify-center bg-black/20 rounded-xl">
-              <div className="text-center text-white/70">
-                <p className="text-lg font-medium">動画準備中</p>
-                <p className="text-sm mt-2">Coming Soon...</p>
-              </div>
-            </div>
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              className="w-full rounded-xl"
+            >
+              <source src="/videos/thank-you-message.mp4" type="video/mp4" />
+            </video>
           </FadeInElement>
         </section>
 
