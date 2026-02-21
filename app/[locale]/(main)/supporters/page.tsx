@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PhotoCarousel } from "@/components/supporters/photo-carousel";
 import { SupportersContent } from "@/components/supporters/supporters-content";
+import { InAppBrowserNotice } from "@/components/supporters/in-app-browser-notice";
 
 // 特典画像のインポート
 import tokuten_IMG_3582 from "./tokuten/IMG_3582-scaled.jpg";
@@ -107,13 +108,14 @@ export default function SupportersPage() {
           priority
         />
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-4">
             <Link href="/register/terms" className="w-full sm:w-auto">
               <Button className="w-full sm:min-w-[200px] min-h-11 bg-brand">
                 入会はこちら
               </Button>
             </Link>
           </div>
+          <InAppBrowserNotice />
       </div>
 
       {/* フォトカルーセル - containerの外に配置 */}
