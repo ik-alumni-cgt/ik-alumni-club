@@ -4,7 +4,7 @@ import { memberPlans } from "./member-plans";
 import { nanoid } from "nanoid";
 import { relations } from "drizzle-orm";
 
-export const membersRole = ["admin", "member"] as const;
+export const membersRole = ["admin", "officer", "member"] as const;
 export const membersStatus = ["pending_profile", "active", "inactive"] as const;
 export const paymentStatus = ["pending", "completed", "failed", "canceled"] as const;
 
@@ -55,6 +55,9 @@ export const members = pgTable("members", {
   // 移行情報
   isMigrated: boolean("is_migrated").default(false).notNull(),
   migratedAt: timestamp("migrated_at"),
+
+  // 初回特典
+  welcomeGiftSent: boolean("welcome_gift_sent").default(false).notNull(),
 
   // メタデータ
   createdAt: timestamp("created_at").defaultNow().notNull(),

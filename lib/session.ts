@@ -35,6 +35,21 @@ export const verifyAdmin = async() => {
   return { userId, memberId: member.id, member };
 }
 
+export const verifyOfficer = async() => {
+  const session = await verifySession();
+  const userId = session.user.id;
+
+  const member = await db.query.members.findFirst({
+    where: eq(members.userId, userId),
+  });
+
+  if (!member || (member.role !== "admin" && member.role !== "officer")) {
+    throw new Error("役員権限が必要です");
+  }
+
+  return { userId, memberId: member.id, member };
+}
+
 /**
  * アクティブな会員であることを確認
  * status === 'active' の場合のみアクセス可能

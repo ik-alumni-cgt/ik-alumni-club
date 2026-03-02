@@ -271,6 +271,7 @@ export function AccountForm({
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="member">会員</SelectItem>
+                    <SelectItem value="officer">役員</SelectItem>
                     <SelectItem value="admin">管理者</SelectItem>
                   </SelectContent>
                 </Select>

@@ -11,6 +11,7 @@ import {
   Image,
   Settings,
   Building2,
+  ClipboardList,
 } from "lucide-react";
 import {
   Sidebar,
@@ -71,6 +72,11 @@ const menuItems = [
     title: "スポンサー回答管理",
     icon: Building2,
     url: "/admin/sponsors",
+  },
+  {
+    title: "役員ビュー",
+    icon: ClipboardList,
+    url: "/officer/members",
   },
   {
     title: "設定",

@@ -8,7 +8,7 @@ export type NewMember = typeof members.$inferInsert;
 export type MemberStatus = "pending_profile" | "active" | "inactive";
 
 // 会員ロールの型
-export type MemberRole = "admin" | "member";
+export type MemberRole = "admin" | "officer" | "member";
 
 // プラン情報を含む会員型
 export type MemberWithPlan = Member & {

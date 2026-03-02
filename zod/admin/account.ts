@@ -10,7 +10,7 @@ export const adminAccountFormSchema = memberProfileFormSchema.extend({
   planId: z.number().nullable().optional(),
 
   // 権限設定
-  role: z.enum(["admin", "member"], {
+  role: z.enum(["admin", "officer", "member"], {
     message: "権限を選択してください",
   }),
 
