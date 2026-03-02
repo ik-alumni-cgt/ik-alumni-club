@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DeleteAccountButton } from "@/components/delete-account-button";
+import { ResetPaymentButton } from "@/components/admin/reset-payment-button";
 
 export default async function AccountDetailPage({
   params,
@@ -244,6 +245,51 @@ export default async function AccountDetailPage({
                 )}
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>支払い管理</CardTitle>
+            <CardDescription>
+              返金対応後に再度手続きしてもらう場合はリセットを実行してください
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-sm font-medium text-muted-foreground">
+                支払いステータス
+              </div>
+              <div className="col-span-2 text-sm">
+                {account.paymentStatus ?? "未設定"}
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-sm font-medium text-muted-foreground">
+                サブスクリプションID
+              </div>
+              <div className="col-span-2 text-sm font-mono break-all">
+                {account.stripeSubscriptionId ?? "-"}
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-sm font-medium text-muted-foreground">
+                有効期間
+              </div>
+              <div className="col-span-2 text-sm">
+                {account.subscriptionStartDate && account.subscriptionEndDate
+                  ? `${new Date(account.subscriptionStartDate).toLocaleDateString("ja-JP")} 〜 ${new Date(account.subscriptionEndDate).toLocaleDateString("ja-JP")}`
+                  : "-"}
+              </div>
+            </div>
+            <ResetPaymentButton
+              accountId={account.id}
+              accountName={
+                account.lastName && account.firstName
+                  ? `${account.lastName} ${account.firstName}`
+                  : account.user.name
+              }
+            />
           </CardContent>
         </Card>
 
