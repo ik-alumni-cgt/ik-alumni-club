@@ -10,6 +10,7 @@ import { stripe as stripePlugin } from "@better-auth/stripe";
 import Stripe from "stripe";
 import { eq } from "drizzle-orm";
 import { sendPasswordResetEmail } from "@/lib/email";
+import { members } from "@/db/schemas/member";
 
 // Stripe クライアントを初期化
 const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -106,24 +107,126 @@ export const auth = betterAuth({
         ]
       },
       onEvent: async (event) => {
-        console.log('Stripe Event:', event.type, event.data.object);
+        console.log('Stripe Event:', event.type);
 
-        // checkout.session.completed イベントを処理
         if (event.type === 'checkout.session.completed') {
           const session = event.data.object as Stripe.Checkout.Session;
-          const userId = session.client_reference_id;
+          const userId = session.client_reference_id || session.metadata?.userId;
           const customerId = session.customer;
+          const planId = session.metadata?.planId;
+          const email = session.customer_email;
+          const mode = session.mode;
 
-          console.log('Saving customer ID:', { userId, customerId });
-
+          // stripeCustomerId を users テーブルに保存
           if (userId && customerId) {
-            // データベースに保存
             await db
               .update(schema.users)
               .set({ stripeCustomerId: customerId as string })
               .where(eq(schema.users.id, userId));
+          }
 
-            console.log('Customer ID saved successfully');
+          if (!userId) {
+            console.error('No user ID found in checkout session');
+            return;
+          }
+
+          const existingMember = await db
+            .select()
+            .from(members)
+            .where(eq(members.userId, userId))
+            .limit(1);
+
+          if (mode === 'subscription') {
+            const subscriptionId = session.subscription as string;
+            const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+            const subscriptionData = subscription as unknown as Stripe.Subscription & {
+              current_period_start: number;
+              current_period_end: number;
+            };
+
+            if (existingMember.length === 0) {
+              await db.insert(members).values({
+                userId,
+                email: email || '',
+                planId: planId ? parseInt(planId) : null,
+                role: 'member',
+                status: 'pending_profile',
+                profileCompleted: false,
+                isActive: true,
+                paymentStatus: 'completed',
+                stripeSubscriptionId: subscriptionId,
+                subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
+                subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
+              });
+            } else {
+              await db
+                .update(members)
+                .set({
+                  paymentStatus: 'completed',
+                  stripeSubscriptionId: subscriptionId,
+                  subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
+                  subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
+                })
+                .where(eq(members.userId, userId));
+            }
+            console.log(`Subscription payment completed for user: ${userId}`);
+
+          } else if (mode === 'payment') {
+            const oneYearLater = new Date();
+            oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+
+            if (existingMember.length === 0) {
+              await db.insert(members).values({
+                userId,
+                email: email || '',
+                planId: planId ? parseInt(planId) : null,
+                role: 'member',
+                status: 'pending_profile',
+                profileCompleted: false,
+                isActive: true,
+                paymentStatus: 'completed',
+                stripeSubscriptionId: null,
+                subscriptionStartDate: new Date(),
+                subscriptionEndDate: oneYearLater,
+              });
+            } else {
+              await db
+                .update(members)
+                .set({
+                  paymentStatus: 'completed',
+                  stripeSubscriptionId: null,
+                  subscriptionStartDate: new Date(),
+                  subscriptionEndDate: oneYearLater,
+                })
+                .where(eq(members.userId, userId));
+            }
+            console.log(`One-time payment completed for user: ${userId}`);
+          }
+
+        } else if (event.type === 'customer.subscription.deleted') {
+          const subscription = event.data.object as Stripe.Subscription;
+          await db
+            .update(members)
+            .set({
+              paymentStatus: 'canceled',
+              subscriptionEndDate: new Date(),
+            })
+            .where(eq(members.stripeSubscriptionId, subscription.id));
+          console.log(`Subscription canceled: ${subscription.id}`);
+
+        } else if (event.type === 'invoice.payment_failed') {
+          const invoice = event.data.object as unknown as { subscription?: string | Stripe.Subscription };
+          const subscriptionValue = invoice.subscription;
+          const subscriptionId = typeof subscriptionValue === 'string'
+            ? subscriptionValue
+            : subscriptionValue?.id;
+
+          if (subscriptionId) {
+            await db
+              .update(members)
+              .set({ paymentStatus: 'failed' })
+              .where(eq(members.stripeSubscriptionId, subscriptionId));
+            console.log(`Payment failed for subscription: ${subscriptionId}`);
           }
         }
       },
