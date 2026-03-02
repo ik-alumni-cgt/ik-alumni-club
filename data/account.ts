@@ -1,16 +1,38 @@
 import { db } from "@/db";
 import { members } from "@/db/schemas/member";
 import { accounts } from "@/db/schemas/auth";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
+import type { MemberStatus } from "@/types/member";
 import "server-only";
 
+type PaymentStatus = "pending" | "completed" | "failed" | "canceled";
+
+type AccountFilters = {
+  status?: MemberStatus;
+  paymentStatus?: PaymentStatus;
+  isMigrated?: boolean;
+};
+
 // 全会員一覧を取得（管理者用）
-export const getAllAccounts = async () => {
+export const getAllAccounts = async (filters?: AccountFilters) => {
+  const conditions = [];
+
+  if (filters?.status) {
+    conditions.push(eq(members.status, filters.status));
+  }
+  if (filters?.paymentStatus) {
+    conditions.push(eq(members.paymentStatus, filters.paymentStatus));
+  }
+  if (filters?.isMigrated !== undefined) {
+    conditions.push(eq(members.isMigrated, filters.isMigrated));
+  }
+
   const memberList = await db.query.members.findMany({
     with: {
       user: true,
       plan: true,
     },
+    where: conditions.length > 0 ? and(...conditions) : undefined,
     orderBy: [desc(members.createdAt)],
   });
 
