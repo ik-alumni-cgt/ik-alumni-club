@@ -3,6 +3,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 interface S3Config {
   endpoint: string;
@@ -102,6 +103,42 @@ export const upload = async (
   await S3.send(command);
 
   return `${config.publicUrl}/${key}`;
+};
+
+interface PresignedPutUrlOptions {
+  key: string;
+  contentType: string;
+}
+
+export interface PresignedPutUrlResult {
+  presignedUrl: string;
+  publicUrl: string;
+  key: string;
+}
+
+/**
+ * R2 への直接アップロード用 Presigned PUT URL を生成する
+ * クライアントがこのURLに直接PUTすることでサーバーを経由せずにアップロードできる
+ */
+export const generatePresignedPutUrl = async (
+  options: PresignedPutUrlOptions
+): Promise<PresignedPutUrlResult> => {
+  const extension = options.contentType.split("/")[1] ?? "jpg";
+  const key = `${options.key}.${extension}`;
+
+  const command = new PutObjectCommand({
+    Bucket: config.bucket,
+    Key: key,
+    ContentType: options.contentType,
+  });
+
+  const presignedUrl = await getSignedUrl(S3, command, { expiresIn: 300 });
+
+  return {
+    presignedUrl,
+    publicUrl: `${config.publicUrl}/${key}`,
+    key,
+  };
 };
 
 export const deleteFile = async (fileName: string): Promise<void> => {

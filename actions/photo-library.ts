@@ -6,8 +6,31 @@ import { photoLibraryFormSchema, type PhotoLibraryFormData } from "@/zod/photo-l
 import { verifyAdmin } from "@/lib/session";
 import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { resolveImageUpload } from "@/lib/storage";
+import { generatePresignedPutUrl, type PresignedPutUrlResult } from "@/lib/storage";
 import { nanoid } from "nanoid";
+
+/**
+ * Presigned PUT URL を一括生成する
+ * クライアントはこのURLに直接PUTしてR2にアップロードする（サーバー経由なし）
+ */
+export async function generatePresignedUrls(
+  requests: { contentType: string }[]
+): Promise<PresignedPutUrlResult[]> {
+  await verifyAdmin();
+
+  if (requests.length > 100) {
+    throw new Error("一度にアップロードできる画像は100枚までです");
+  }
+
+  return Promise.all(
+    requests.map((req) =>
+      generatePresignedPutUrl({
+        key: `photo-library/${nanoid()}`,
+        contentType: req.contentType,
+      })
+    )
+  );
+}
 
 /**
  * フォトを新規作成
@@ -19,35 +42,30 @@ export async function createPhoto(formData: PhotoLibraryFormData) {
   // 2. バリデーション
   const data = photoLibraryFormSchema.parse(formData);
 
-  // 3. カバー画像URLの処理
-  const coverImageUrl = data.coverImageUrl
-    ? await resolveImageUpload(`photo-library/${nanoid()}-cover`, data.coverImageUrl)
-    : null;
-
-  // 4. データベースに挿入
+  // 3. データベースに挿入（画像URLはクライアントがR2に直接アップロード済み）
   const [newPhoto] = await db
     .insert(photoLibrary)
     .values({
       title: data.title,
       description: data.description,
-      coverImageUrl,
+      coverImageUrl: data.coverImageUrl || null,
       published: data.published,
       isMemberOnly: data.isMemberOnly,
       createdBy: userId,
     })
     .returning();
 
-  // 5. 画像を挿入
-  for (let i = 0; i < data.images.length; i++) {
-    const image = data.images[i];
-    const imageUrl = await resolveImageUpload(`photo-library/${newPhoto.id}/${nanoid()}`, image.imageUrl);
-    await db.insert(photoLibraryImages).values({
-      photoLibraryId: newPhoto.id,
-      imageUrl,
-      caption: image.caption,
-      sortOrder: i,
-    });
-  }
+  // 4. 画像URLをDBに並列挿入
+  await Promise.all(
+    data.images.map(async (image, i) => {
+      await db.insert(photoLibraryImages).values({
+        photoLibraryId: newPhoto.id,
+        imageUrl: image.imageUrl,
+        caption: image.caption,
+        sortOrder: i,
+      });
+    })
+  );
 
   // 6. キャッシュ再検証
   revalidatePath("/admin/photo-library");
@@ -66,18 +84,13 @@ export async function updatePhoto(id: string, formData: PhotoLibraryFormData) {
   // 2. バリデーション
   const data = photoLibraryFormSchema.parse(formData);
 
-  // 3. カバー画像URLの処理
-  const coverImageUrl = data.coverImageUrl
-    ? await resolveImageUpload(`photo-library/${id}-cover`, data.coverImageUrl)
-    : null;
-
-  // 4. データベース更新
+  // 3. データベース更新（画像URLはクライアントがR2に直接アップロード済み）
   const [updatedPhoto] = await db
     .update(photoLibrary)
     .set({
       title: data.title,
       description: data.description,
-      coverImageUrl,
+      coverImageUrl: data.coverImageUrl || null,
       published: data.published,
       isMemberOnly: data.isMemberOnly,
     })
@@ -88,20 +101,20 @@ export async function updatePhoto(id: string, formData: PhotoLibraryFormData) {
     throw new Error("フォトが見つかりません");
   }
 
-  // 5. 既存の画像を削除
+  // 4. 既存の画像を削除
   await db.delete(photoLibraryImages).where(eq(photoLibraryImages.photoLibraryId, id));
 
-  // 6. 新しい画像を挿入
-  for (let i = 0; i < data.images.length; i++) {
-    const image = data.images[i];
-    const imageUrl = await resolveImageUpload(`photo-library/${id}/${nanoid()}`, image.imageUrl);
-    await db.insert(photoLibraryImages).values({
-      photoLibraryId: id,
-      imageUrl,
-      caption: image.caption,
-      sortOrder: i,
-    });
-  }
+  // 5. 新しい画像URLをDBに並列挿入
+  await Promise.all(
+    data.images.map(async (image, i) => {
+      await db.insert(photoLibraryImages).values({
+        photoLibraryId: id,
+        imageUrl: image.imageUrl,
+        caption: image.caption,
+        sortOrder: i,
+      });
+    })
+  );
 
   // 7. キャッシュ再検証
   revalidatePath("/admin/photo-library");

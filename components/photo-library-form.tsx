@@ -3,7 +3,7 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { photoLibraryFormSchema, type PhotoLibraryFormData } from "@/zod/photo-library";
-import { createPhoto, updatePhoto } from "@/actions/photo-library";
+import { createPhoto, updatePhoto, generatePresignedUrls } from "@/actions/photo-library";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,17 @@ import { InputImage } from "@/components/input-image";
 import { InputMultipleImages } from "@/components/input-multiple-images";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 import { useCallback } from "react";
+
+function dataUrlToBlob(dataUrl: string): Blob {
+  const [header, base64] = dataUrl.split(",");
+  const mimeType = header?.match(/:(.*?);/)?.[1] ?? "image/jpeg";
+  const binary = atob(base64 ?? "");
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new Blob([bytes], { type: mimeType });
+}
 
 interface PhotoLibraryFormProps {
   defaultValues?: PhotoLibraryFormData & { id?: string };
@@ -78,13 +89,71 @@ export function PhotoLibraryForm({ defaultValues, mode }: PhotoLibraryFormProps)
 
   const onSubmit = async (data: PhotoLibraryFormData) => {
     try {
+      // Step 1: 新規アップロードが必要な画像（dataURL）を特定
+      const newImages = data.images
+        .map((img, index) => ({ ...img, index }))
+        .filter((img) => img.imageUrl.startsWith("data:"));
+      const coverNeedsUpload =
+        data.coverImageUrl && data.coverImageUrl.startsWith("data:");
+
+      const presignedRequests = [
+        ...newImages.map(() => ({ contentType: "image/jpeg" as const })),
+        ...(coverNeedsUpload ? [{ contentType: "image/jpeg" as const }] : []),
+      ];
+
+      // Step 2: Presigned URL を取得（軽量リクエスト）
+      const presignedResults =
+        presignedRequests.length > 0
+          ? await generatePresignedUrls(presignedRequests)
+          : [];
+
+      // Step 3: クライアントから R2 に直接 PUT アップロード（並列）
+      await Promise.all(
+        presignedResults.map(async (result, i) => {
+          const isImageUpload = i < newImages.length;
+          const dataUrl = isImageUpload
+            ? newImages[i].imageUrl
+            : data.coverImageUrl!;
+          const blob = dataUrlToBlob(dataUrl);
+          const response = await fetch(result.presignedUrl, {
+            method: "PUT",
+            body: blob,
+            headers: { "Content-Type": "image/jpeg" },
+          });
+          if (!response.ok) {
+            throw new Error(`画像のアップロードに失敗しました (${response.status})`);
+          }
+        })
+      );
+
+      // Step 4: imageUrl を publicUrl に差し替え
+      let presignedIndex = 0;
+      const resolvedImages = data.images.map((img) => {
+        if (img.imageUrl.startsWith("data:")) {
+          const publicUrl = presignedResults[presignedIndex].publicUrl;
+          presignedIndex++;
+          return { ...img, imageUrl: publicUrl };
+        }
+        return img;
+      });
+      const resolvedCoverImageUrl = coverNeedsUpload
+        ? presignedResults[presignedResults.length - 1].publicUrl
+        : data.coverImageUrl;
+
+      const resolvedData = {
+        ...data,
+        images: resolvedImages,
+        coverImageUrl: resolvedCoverImageUrl,
+      };
+
+      // Step 5: DB 保存（URL文字列のみ送信）
       if (mode === "create") {
-        await createPhoto(data);
+        await createPhoto(resolvedData);
         toast.success("フォトを作成しました", {
           description: `${data.title}を作成しました`,
         });
       } else if (defaultValues?.id) {
-        await updatePhoto(defaultValues.id, data);
+        await updatePhoto(defaultValues.id, resolvedData);
         toast.success("フォトを更新しました", {
           description: `${data.title}を更新しました`,
         });
