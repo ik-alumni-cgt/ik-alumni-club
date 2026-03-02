@@ -127,6 +127,13 @@
       "when": 1772415299735,
       "tag": "0017_lonely_butterfly",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1772424798925,
+      "tag": "0018_gorgeous_queen_noir",
+      "breakpoints": true
     }
   ]
 }

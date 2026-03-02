@@ -20,3 +20,9 @@ export const isAdmin = async () => {
   const member = await getMemberByUserId(session.user.id);
   return member?.role === "admin";
 };
+
+export const isOfficerOrAdmin = async () => {
+  const session = await verifySession();
+  const member = await getMemberByUserId(session.user.id);
+  return member?.role === "admin" || member?.role === "officer";
+};
