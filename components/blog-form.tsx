@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { blogFormSchema, type BlogFormData } from "@/zod/blog";
@@ -20,6 +21,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { InputImage } from "@/components/input-image";
+
+const TiptapEditor = dynamic(
+  () => import("@/components/editor/tiptap-editor").then((m) => m.TiptapEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="border rounded-md min-h-64 bg-muted/30 animate-pulse" />
+    ),
+  }
+);
 
 interface BlogFormProps {
   defaultValues?: BlogFormData & { id?: string };
@@ -113,15 +124,11 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
             <FormItem>
               <FormLabel>本文 *</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="記事の本文（HTML形式）"
-                  rows={15}
-                  {...field}
+                <TiptapEditor
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               </FormControl>
-              <FormDescription>
-                HTML形式で入力できます（将来的にリッチエディタ対応予定）
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
