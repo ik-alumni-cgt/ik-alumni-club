@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BlogContent } from "./blog-content";
 
 type Blog = {
   id: string;
@@ -38,7 +39,7 @@ export function BlogDetail({ item }: { item: Blog }) {
 
       <div className="prose prose-lg max-w-none">
         <p className="text-xl text-gray-700 mb-8">{item.excerpt}</p>
-        <div className="whitespace-pre-wrap">{item.content}</div>
+        <BlogContent html={item.content} />
       </div>
     </article>
   );
