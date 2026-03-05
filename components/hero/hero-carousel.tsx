@@ -16,7 +16,7 @@ const images = [
 ];
 
 // SP: 35vw、PC: 33.333%
-const SP_IMAGE_WIDTH = 35;
+const SP_IMAGE_WIDTH = 50;
 const PC_IMAGE_WIDTH = 33.333;
 const SP_GAP = 4; // SP版のギャップ（4vw）
 const PC_GAP = 1; // PC版のギャップ（1vw）
@@ -49,7 +49,7 @@ export function HeroCarousel() {
     if (currentIndex >= images.length * 2) {
       const timer = setTimeout(() => {
         setIsTransitioning(false);
-        setCurrentIndex(images.length);
+        setCurrentIndex(currentIndex - images.length);
         requestAnimationFrame(() => setIsTransitioning(true));
       }, 500);
       return () => clearTimeout(timer);
@@ -57,7 +57,7 @@ export function HeroCarousel() {
     if (currentIndex < images.length) {
       const timer = setTimeout(() => {
         setIsTransitioning(false);
-        setCurrentIndex(images.length);
+        setCurrentIndex(currentIndex + images.length);
         requestAnimationFrame(() => setIsTransitioning(true));
       }, 500);
       return () => clearTimeout(timer);
@@ -159,7 +159,7 @@ export function HeroCarousel() {
   const actualIndex = currentIndex % images.length;
 
   return (
-    <div className="w-full mb-8 md:mb-12 lg:mb-16 -mt-16 md:-mt-20 lg:-mt-24 overflow-x-clip">
+    <div className="w-full mb-8 md:mb-12 lg:mb-16 -mt-24 md:-mt-20 lg:-mt-24 overflow-x-clip">
       {/* SP: 全幅、PC: container */}
       <div className="md:container md:mx-auto md:px-4">
         {/* 画像カルーセル */}
@@ -204,7 +204,7 @@ export function HeroCarousel() {
                     }}
                     className="block"
                   >
-                    <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden shadow-lg">
+                    <div className="relative aspect-[16/9] w-full overflow-hidden shadow-lg">
                       <Image
                         src={image.src}
                         alt={image.alt}
