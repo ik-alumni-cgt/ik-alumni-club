@@ -65,7 +65,7 @@ export function HeroBgSlideshow() {
         alt={`Hero Background ${displayIndex + 1}`}
         width={1920}
         height={1080}
-        className="w-full h-auto mx-auto px-4 md:px-8"
+        className="w-full h-auto mx-auto md:px-8"
         priority
       />
       {/* 次の画像（前面でフェードイン） */}
@@ -75,7 +75,7 @@ export function HeroBgSlideshow() {
           alt={`Hero Background ${nextIndex + 1}`}
           width={1920}
           height={1080}
-          className={`w-full h-auto mx-auto px-4 md:px-8 absolute top-0 left-0 z-10 transition-opacity duration-1000 ${
+          className={`w-full h-auto mx-auto md:px-8 absolute top-0 left-0 z-10 transition-opacity duration-1000 ${
             isFading ? "opacity-100" : "opacity-0"
           }`}
         />
