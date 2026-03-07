@@ -23,7 +23,7 @@ export function NewsletterCard({ newsletterImages }: NewsletterCardProps) {
     <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-8 overflow-visible group hover:bg-white/15 transition-all duration-300">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
       <div className="relative z-10">
-        <h3 className="text-2xl font-bold text-white mb-3">NEWS LETTER</h3>
+        <h3 className="text-2xl font-bold text-white mb-3">DIGITAL MAGAZINE</h3>
         <p className="text-white/90 mb-6 leading-relaxed">
           活動内容の報告や、<br />
           イベントの最新情報をお届け！
@@ -95,7 +95,7 @@ export function NewsletterCard({ newsletterImages }: NewsletterCardProps) {
                   <div className="relative w-auto h-full rounded-lg overflow-hidden shadow-2xl">
                     <Image
                       src={newsletter}
-                      alt={`ニュースレター${index + 1}`}
+                      alt={`Digital Magazine${index + 1}`}
                       height={400}
                       width={283}
                       className="object-contain h-full w-auto"
@@ -116,7 +116,7 @@ export function NewsletterCard({ newsletterImages }: NewsletterCardProps) {
           <button
             onClick={handlePrevNewsletter}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-40 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
-            aria-label="前のニュースレター"
+            aria-label="前のDigital Magazine"
           >
             <svg
               className="w-6 h-6 text-white"
@@ -135,7 +135,7 @@ export function NewsletterCard({ newsletterImages }: NewsletterCardProps) {
           <button
             onClick={handleNextNewsletter}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-40 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
-            aria-label="次のニュースレター"
+            aria-label="次のDigital Magazine"
           >
             <svg
               className="w-6 h-6 text-white"
@@ -163,7 +163,7 @@ export function NewsletterCard({ newsletterImages }: NewsletterCardProps) {
                   ? "bg-purple-400 w-6"
                   : "bg-white/40 hover:bg-white/60"
               }`}
-              aria-label={`ニュースレター${index + 1}へ移動`}
+              aria-label={`Digital Magazine${index + 1}へ移動`}
             />
           ))}
         </div>

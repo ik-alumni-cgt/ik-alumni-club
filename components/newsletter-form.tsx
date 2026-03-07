@@ -72,12 +72,12 @@ export function NewsletterForm({
     try {
       if (mode === "create") {
         await createNewsletter(data);
-        toast.success("ニュースレターを作成しました", {
+        toast.success("Digital Magazineを作成しました", {
           description: `第${data.issueNumber}号を作成しました`,
         });
       } else if (defaultValues?.id) {
         await updateNewsletter(defaultValues.id, data);
-        toast.success("ニュースレターを更新しました", {
+        toast.success("Digital Magazineを更新しました", {
           description: `第${data.issueNumber}号を更新しました`,
         });
       }
@@ -85,7 +85,7 @@ export function NewsletterForm({
       router.refresh();
     } catch (error) {
       toast.error("エラーが発生しました", {
-        description: `ニュースレターの${mode === "create" ? "作成" : "更新"}に失敗しました`,
+        description: `Digital Magazineの${mode === "create" ? "作成" : "更新"}に失敗しました`,
       });
       console.error(error);
     }
@@ -167,7 +167,7 @@ export function NewsletterForm({
               <FormLabel>本文 *</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="ニュースレターの本文をHTML形式で入力..."
+                  placeholder="Digital Magazineの本文をHTML形式で入力..."
                   rows={15}
                   className="font-mono"
                   {...field}

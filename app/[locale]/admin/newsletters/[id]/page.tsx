@@ -55,7 +55,7 @@ export default async function EditNewsletterPage({
             一覧に戻る
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold">ニュースレター編集</h1>
+        <h1 className="text-3xl font-bold">Digital Magazine編集</h1>
         <p className="text-muted-foreground">
           第{newsletter.issueNumber}号を編集します
         </p>

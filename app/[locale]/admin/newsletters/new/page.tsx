@@ -16,9 +16,9 @@ export default async function NewNewsletterPage() {
             一覧に戻る
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold">ニュースレター作成</h1>
+        <h1 className="text-3xl font-bold">Digital Magazine作成</h1>
         <p className="text-muted-foreground">
-          新しいニュースレター（第{nextIssueNumber}号）を作成します
+          新しいDigital Magazine（第{nextIssueNumber}号）を作成します
         </p>
       </div>
 

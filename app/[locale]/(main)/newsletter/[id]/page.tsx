@@ -24,7 +24,7 @@ export default async function NewsletterDetailPage({
   if (item.isMemberOnly) {
     const isMember = await canAccessMemberContent();
     if (!isMember) {
-      return <MemberOnlyContent contentType="ニュースレター" />;
+      return <MemberOnlyContent contentType="Digital Magazine" />;
     }
   }
 

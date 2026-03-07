@@ -7,6 +7,7 @@ type Video = {
   videoUrl: string;
   thumbnailUrl: string | null;
   published: boolean;
+  isMemberOnly: boolean;
   authorName: string | null;
   viewCount: number;
 };
@@ -64,6 +65,12 @@ export function VideoDetail({ item }: { item: Video }) {
           </div>
         )}
       </div>
+
+      {item.isMemberOnly && (
+        <p className="text-sm text-gray-500 text-center">
+          この動画は会員限定コンテンツです。URLの共有や第三者への転送はご遠慮ください。
+        </p>
+      )}
     </article>
   );
 }
