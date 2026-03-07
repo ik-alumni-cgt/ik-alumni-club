@@ -32,10 +32,8 @@ export default async function Home({
 
   return (
     <div className="font-sans max-w-full">
-      <div className="relative w-full h-[60vh] md:h-auto mb-8 md:mb-12 lg:mb-16 bg-gradient-red pt-[156px] md:pt-[164px] pb-4 md:pb-8 -mt-[140px]">
+      <div className="relative w-full mb-16 md:mb-32 bg-gradient-red pt-[156px] md:pt-[164px] pb-8 md:pb-16 -mt-[140px]">
         <HeroBgSlideshow />
-      </div>
-      <div className="mb-16 md:mb-32">
         <HeroCarousel />
       </div>
       {/* <AboutSection /> */}

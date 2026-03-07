@@ -159,7 +159,7 @@ export function HeroCarousel() {
   const actualIndex = currentIndex % images.length;
 
   return (
-    <div className="w-full mb-8 md:mb-12 lg:mb-16 -mt-24 md:-mt-20 lg:-mt-24 overflow-x-clip">
+    <div className="w-full mt-8 md:mt-12 overflow-x-clip">
       {/* SP: 全幅、PC: container */}
       <div className="md:container md:mx-auto md:px-4">
         {/* 画像カルーセル */}
