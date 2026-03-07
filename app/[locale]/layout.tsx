@@ -5,6 +5,7 @@ import "../globals.css";
 import { getBaseURL } from "@/lib/get-base-url";
 import { Toaster } from "sonner";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Analytics } from "@vercel/analytics/next";
 import { routing } from "@/app/web/i18n/routing";
 import { setLocale } from "@/app/web/i18n/set-locale";
 import { NextIntlClientProvider } from "next-intl";
@@ -96,6 +97,7 @@ export default async function RootLayout({
           <NuqsAdapter>
             {children}
             <Toaster />
+            <Analytics />
           </NuqsAdapter>
         </NextIntlClientProvider>
       </body>
