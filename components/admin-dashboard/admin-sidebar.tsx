@@ -44,7 +44,7 @@ const menuItems = [
     url: "/admin/informations",
   },
   {
-    title: "ニュースレター管理",
+    title: "Digital Magazine管理",
     icon: Newspaper,
     url: "/admin/newsletters",
   },

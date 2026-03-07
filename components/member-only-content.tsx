@@ -39,7 +39,7 @@ export function MemberOnlyContent({ contentType }: MemberOnlyContentProps) {
             <h3 className="font-semibold mb-2">会員特典</h3>
             <ul className="space-y-1 text-sm text-muted-foreground">
               <li>• 会員限定コンテンツへのフルアクセス</li>
-              <li>• 最新情報やニュースレターの配信</li>
+              <li>• 最新情報やDigital Magazineの配信</li>
               <li>• 会員限定イベントへの参加</li>
               <li>• その他の特別な特典</li>
             </ul>

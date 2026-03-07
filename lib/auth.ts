@@ -76,18 +76,26 @@ export const auth = betterAuth({
             prompt: "consent",
           },
           async getUserInfo(tokens) {
-            const response = await fetch("https://api.line.me/v2/profile", {
-              headers: {
-                Authorization: `Bearer ${tokens.accessToken}`,
-              },
-            });
-            const profile = await response.json() as { userId: string; displayName: string; pictureUrl?: string; email?: string };
+            const response = await fetch(
+              "https://api.line.me/oauth2/v2.1/userinfo",
+              {
+                headers: {
+                  Authorization: `Bearer ${tokens.accessToken}`,
+                },
+              }
+            );
+            const userinfo = (await response.json()) as {
+              sub: string;
+              name?: string;
+              picture?: string;
+              email?: string;
+            };
             return {
-              id: profile.userId,
-              name: profile.displayName,
-              image: profile.pictureUrl,
-              email: profile.email || `${profile.userId}@line.me`,
-              emailVerified: false,
+              id: userinfo.sub,
+              name: userinfo.name,
+              image: userinfo.picture,
+              email: userinfo.email || `${userinfo.sub}@line.me`,
+              emailVerified: !!userinfo.email,
             };
           },
         },
@@ -96,7 +104,7 @@ export const auth = betterAuth({
     stripePlugin({
       stripeClient,
       stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
-      createCustomerOnSignUp: true,
+      createCustomerOnSignUp: false,
       subscription: {
         enabled: true,
         plans: [

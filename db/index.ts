@@ -12,6 +12,7 @@ import * as blogSchema from './schemas/blogs';
 import * as newsletterSchema from './schemas/newsletters';
 import * as photoLibrarySchema from './schemas/photo-library';
 import * as sponsorSchema from './schemas/sponsors';
+import * as emailSendSchema from './schemas/email-sends';
 
 config({ path: '.env' });
 
@@ -29,6 +30,7 @@ export const db = drizzle({
         ...blogSchema,
         ...newsletterSchema,
         ...photoLibrarySchema,
-        ...sponsorSchema
+        ...sponsorSchema,
+        ...emailSendSchema
     },
 });

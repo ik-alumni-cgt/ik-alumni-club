@@ -20,9 +20,9 @@ export default async function AdminNewslettersPage() {
     <div className="container py-10">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">ニュースレター管理</h1>
+          <h1 className="text-3xl font-bold">Digital Magazine管理</h1>
           <p className="text-muted-foreground">
-            ニュースレターの作成・編集・削除ができます
+            Digital Magazineの作成・編集・削除ができます
           </p>
         </div>
         <Button asChild>
@@ -36,9 +36,9 @@ export default async function AdminNewslettersPage() {
       {newsletters.length === 0 ? (
         <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
           <div className="text-center">
-            <h3 className="text-lg font-semibold">ニュースレターがありません</h3>
+            <h3 className="text-lg font-semibold">Digital Magazineがありません</h3>
             <p className="text-sm text-muted-foreground">
-              新しいニュースレターを作成してください
+              新しいDigital Magazineを作成してください
             </p>
             <Button asChild className="mt-4">
               <Link href="/admin/newsletters/new">
