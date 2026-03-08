@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 import { memberProfileFormSchema, type MemberProfileFormData } from "@/zod/member-profile";
 import { updateMemberProfile } from "@/actions/members/update-profile";
+import { usePostalCode } from "@/hooks/use-postal-code";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -53,6 +55,32 @@ export function ProfileEditForm({ member }: ProfileEditFormProps) {
       phoneNumber: member.phoneNumber || "",
     },
   });
+
+  // 郵便番号から住所を自動入力
+  const postalCode = form.watch("postalCode");
+
+  const handleAddressFound = useCallback(
+    (address: { prefecture: string; city: string; town: string }) => {
+      form.setValue("prefecture", address.prefecture, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+      form.setValue("city", address.city, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+      form.setValue("address", address.town, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    },
+    [form],
+  );
+
+  const { isLoading: isPostalCodeLoading } = usePostalCode(
+    postalCode,
+    handleAddressFound,
+  );
 
   const onSubmit = async (data: MemberProfileFormData) => {
     setIsLoading(true);
@@ -171,9 +199,16 @@ export function ProfileEditForm({ member }: ProfileEditFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>郵便番号</FormLabel>
-                    <FormControl>
-                      <Input placeholder="1234567" {...field} maxLength={7} />
-                    </FormControl>
+                    <div className="relative">
+                      <FormControl>
+                        <Input placeholder="1234567" {...field} maxLength={7} />
+                      </FormControl>
+                      {isPostalCodeLoading && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                        </div>
+                      )}
+                    </div>
                     <FormDescription>ハイフンなし7桁の数字</FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -186,7 +221,7 @@ export function ProfileEditForm({ member }: ProfileEditFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>都道府県</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="選択してください" />
