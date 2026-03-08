@@ -35,8 +35,8 @@ export function VideoDetail({ item }: { item: Video }) {
   return (
     <article className="flex flex-col gap-8 max-w-4xl mx-auto">
       <header>
-        <h1 className="main-text mb-4">{item.title}</h1>
-        <div className="flex items-center gap-4 text-sm text-gray-600">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl mb-4">{item.title}</h1>
+        <div className="flex items-center gap-4 text-sm text-white/70">
           {item.authorName && <span>{item.authorName}</span>}
           <span>{new Date(item.videoDate).toLocaleDateString("ja-JP")}</span>
           <span>{item.viewCount} views</span>
@@ -58,7 +58,7 @@ export function VideoDetail({ item }: { item: Video }) {
               href={item.videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-300 underline"
+              className="text-white hover:text-white/80 underline"
             >
               動画を見る
             </a>
@@ -67,7 +67,7 @@ export function VideoDetail({ item }: { item: Video }) {
       </div>
 
       {item.isMemberOnly && (
-        <p className="text-sm text-gray-500 text-center">
+        <p className="text-sm text-white/70 text-center">
           この動画は会員限定コンテンツです。URLの共有や第三者への転送はご遠慮ください。
         </p>
       )}

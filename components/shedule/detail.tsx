@@ -26,7 +26,7 @@ export function ScheduleDetail({ item }: { item: Schedule }) {
             minute: "2-digit",
           })}
         </div>
-        <h1 className="main-text mb-4">{item.title}</h1>
+        <h1 className="text-2xl md:text-3xl lg:text-4xl mb-4">{item.title}</h1>
         {item.authorName && (
           <div className="text-sm text-gray-600">
             主催者: {item.authorName}

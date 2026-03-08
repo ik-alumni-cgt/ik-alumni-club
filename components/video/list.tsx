@@ -18,7 +18,7 @@ export function VideoList({ items }: { items: Video[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.length === 0 ? (
-        <p className="col-span-full text-center text-gray-500">
+        <p className="col-span-full text-center text-white/70">
           配信までしばらくお待ちください
         </p>
       ) : (
@@ -39,7 +39,7 @@ export function VideoList({ items }: { items: Video[] }) {
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg
-                    className="w-16 h-16 text-gray-400"
+                    className="w-16 h-16 text-white/50"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -58,7 +58,7 @@ export function VideoList({ items }: { items: Video[] }) {
               <h3 className="font-semibold text-lg line-clamp-2">
                 {item.title}
               </h3>
-              <div className="flex items-center justify-between text-xs text-gray-500">
+              <div className="flex items-center justify-between text-xs text-white/60">
                 <span>{new Date(item.videoDate).toLocaleDateString("ja-JP")}</span>
                 <span>{item.viewCount} views</span>
               </div>
