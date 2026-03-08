@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Lock } from "lucide-react";
+import { ScrollStagger } from "@/components/scroll-animation/scroll-stagger";
 
 type Schedule = {
   id: string;
@@ -17,13 +18,14 @@ type Schedule = {
 
 export function ScheduleList({ items }: { items: Schedule[] }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <>
       {items.length === 0 ? (
-        <p className="col-span-full text-center text-gray-500">
+        <p className="text-center text-gray-500">
           配信までしばらくお待ちください
         </p>
       ) : (
-        items.map((item) => (
+        <ScrollStagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={100}>
+        {items.map((item) => (
           <Link
             key={item.id}
             href={`/schedule/${item.id}`}
@@ -78,8 +80,9 @@ export function ScheduleList({ items }: { items: Schedule[] }) {
               </p>
             </div>
           </Link>
-        ))
+        ))}
+        </ScrollStagger>
       )}
-    </div>
+    </>
   );
 }

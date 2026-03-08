@@ -3,6 +3,8 @@ import { getTranslations } from "next-intl/server";
 import Image, { StaticImageData } from "next/image";
 import profileImage from "./profile.jpg";
 import logo from "@/components/header/logo_main.png";
+import { ScrollFadeIn } from "@/components/scroll-animation/scroll-fade-in";
+import { ScrollStagger } from "@/components/scroll-animation/scroll-stagger";
 
 // メンバー画像
 import shoImage from "./member/sho.jpg";
@@ -169,7 +171,7 @@ export default async function ProfilesPage({
       </div>
 
       {/* ロゴ */}
-      <div className="flex justify-center mt-16">
+      <ScrollFadeIn className="flex justify-center mt-16">
         <Image
           src={logo}
           alt="IK ALUMNI CGT"
@@ -177,10 +179,10 @@ export default async function ProfilesPage({
           height={100}
           className="w-[120px] h-auto md:w-[150px] object-contain"
         />
-      </div>
+      </ScrollFadeIn>
 
       {/* チーム紹介文 */}
-      <div className="max-w-3xl mx-auto mt-8 text-center space-y-6">
+      <ScrollFadeIn className="max-w-3xl mx-auto mt-8 text-center space-y-6">
         <p>
           2022年に発足した、千葉県内唯一の一般カラーガードチーム。
           <br />
@@ -204,12 +206,14 @@ export default async function ProfilesPage({
         <p>
           カラーガードを趣味として楽しみつつ、唯一無二の新たなエンターテインメントを目指して活動しています！
         </p>
-      </div>
+      </ScrollFadeIn>
 
-      <h2 className="main-text mt-16 mb-10 text-center">MEMBER</h2>
-      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8">
+      <ScrollFadeIn>
+        <h2 className="main-text mt-16 mb-10 text-center">MEMBER</h2>
+      </ScrollFadeIn>
+      <ScrollStagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8" staggerDelay={80}>
         {members.map((member) => (
-          <li key={member.id} className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div key={member.id} className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
               <Image
                 src={member.image}
@@ -222,9 +226,9 @@ export default async function ProfilesPage({
               <h3 className="font-bold text-lg">{member.name}</h3>
               <p className="mt-1 text-sm text-gray-600">{member.description}</p>
             </div>
-          </li>
+          </div>
         ))}
-      </ul>
+      </ScrollStagger>
     </div>
   );
 }

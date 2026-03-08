@@ -14,6 +14,7 @@ import * as photoLibrarySchema from './schemas/photo-library';
 import * as sponsorSchema from './schemas/sponsors';
 import * as emailSendSchema from './schemas/email-sends';
 import * as categorySchema from './schemas/categories';
+import * as likeSchema from './schemas/likes';
 
 config({ path: '.env' });
 
@@ -33,6 +34,7 @@ export const db = drizzle({
         ...photoLibrarySchema,
         ...sponsorSchema,
         ...emailSendSchema,
-        ...categorySchema
+        ...categorySchema,
+        ...likeSchema,
     },
 });

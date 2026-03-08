@@ -1,7 +1,11 @@
 import { setLocale } from "@/app/web/i18n/set-locale";
 import { InformationDetail } from "@/components/information/detail";
+import { LikeButton } from "@/components/like-button";
 import { getInformation } from "@/data/information";
+import { getReactionCounts } from "@/data/like";
 import { canAccessMemberContent } from "@/lib/session";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { MemberOnlyContent } from "@/components/member-only-content";
 
@@ -28,10 +32,16 @@ export default async function InformationDetailPage({
     }
   }
 
+  const reactionCounts = await getReactionCounts("information", id);
+  const session = await auth.api.getSession({ headers: await headers() });
+
   return (
     <div className="pt-10 pb-32">
       <div className="container-detail mx-auto">
         <InformationDetail item={item} />
+        <div className="flex justify-center mt-8">
+          <LikeButton contentType="information" contentId={id} initialReactionCounts={reactionCounts} userId={session?.user?.id} />
+        </div>
       </div>
     </div>
   );
