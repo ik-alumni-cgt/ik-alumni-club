@@ -4,7 +4,7 @@ import { getPets, searchPets } from "@/data/pet";
 import { createSearchParamsCache, parseAsString } from "nuqs/server";
 import { setLocale } from "@/app/web/i18n/set-locale";
 
-export const searchParamsCache = createSearchParamsCache({
+const searchParamsCache = createSearchParamsCache({
   name: parseAsString.withDefault(""),
 });
 

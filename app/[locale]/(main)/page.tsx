@@ -1,13 +1,10 @@
 import { cookies } from "next/headers";
 import { setLocale } from "@/app/web/i18n/set-locale";
 import { InformationContents } from "@/components/information/content";
-import { BlogContents } from "@/components/blog/content";
-import { NewsLettersContents } from "@/components/newsletters/content";
 import { ScheduleContents } from "@/components/shedule/content";
 import { HeroBgSlideshow } from "@/components/hero/hero-bg-slideshow";
 import { VideoContents } from "@/components/video/content";
 import { HeroCarousel } from "@/components/hero/hero-carousel";
-import { AboutSection } from "@/components/hero/about-section";
 import { SupportersContents } from "@/components/supporters/content";
 import { MaintenancePage } from "@/components/maintenance/maintenance-page";
 

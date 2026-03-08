@@ -58,9 +58,8 @@ export function VideoList({ items }: { items: Video[] }) {
               <h3 className="font-semibold text-lg line-clamp-2">
                 {item.title}
               </h3>
-              <div className="flex items-center justify-between text-xs text-white/60">
+              <div className="text-xs text-white/60">
                 <span>{new Date(item.videoDate).toLocaleDateString("ja-JP")}</span>
-                <span>{item.viewCount} views</span>
               </div>
             </div>
           </Link>

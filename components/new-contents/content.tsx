@@ -1,6 +1,5 @@
 import { ContentsHeader } from "@/components/contents/contents-header";
 import { ContentsCard } from "@/components/contents/contents-card";
-import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import Image from "next/image";
 import { getLatestNewsletters } from "@/data/newsletter";
@@ -14,8 +13,6 @@ const formatDate = (date: Date | string | null) => {
 };
 
 export async function NewContents() {
-  const t = await getTranslations("Contents");
-
   const [newsletters, videos, photos] = await Promise.all([
     getLatestNewsletters(1),
     getRecentVideos(1),

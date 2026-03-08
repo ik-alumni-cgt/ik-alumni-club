@@ -1,11 +1,15 @@
 import { NewsletterForm } from "@/components/newsletter-form";
 import { Button } from "@/components/ui/button";
 import { getNextIssueNumber } from "@/data/newsletter";
+import { getCategoriesTree } from "@/data/category";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default async function NewNewsletterPage() {
-  const nextIssueNumber = await getNextIssueNumber();
+  const [nextIssueNumber, categoriesTree] = await Promise.all([
+    getNextIssueNumber(),
+    getCategoriesTree(),
+  ]);
 
   return (
     <div className="container max-w-3xl py-10">
@@ -22,7 +26,11 @@ export default async function NewNewsletterPage() {
         </p>
       </div>
 
-      <NewsletterForm mode="create" nextIssueNumber={nextIssueNumber} />
+      <NewsletterForm
+        mode="create"
+        nextIssueNumber={nextIssueNumber}
+        categoriesTree={categoriesTree}
+      />
     </div>
   );
 }

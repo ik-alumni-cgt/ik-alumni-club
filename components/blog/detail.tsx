@@ -22,7 +22,6 @@ export function BlogDetail({ item }: { item: Blog }) {
         <div className="flex items-center gap-4 text-sm text-gray-600">
           {item.authorName && <span>著者: {item.authorName}</span>}
           <span>{new Date(item.createdAt).toLocaleDateString("ja-JP")}</span>
-          <span>閲覧数: {item.viewCount}</span>
         </div>
       </header>
 

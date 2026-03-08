@@ -2,6 +2,7 @@ import { pgTable, text, date, boolean, integer, timestamp } from "drizzle-orm/pg
 import { users } from "./auth";
 import { nanoid } from "nanoid";
 import { relations } from "drizzle-orm";
+import { videoCategories } from "./categories";
 
 export const videos = pgTable("videos", {
   id: text("id").primaryKey().$defaultFn(() => nanoid()),
@@ -21,9 +22,10 @@ export const videos = pgTable("videos", {
     .notNull(),
 });
 
-export const videoRelations = relations(videos, ({ one }) => ({
+export const videoRelations = relations(videos, ({ one, many }) => ({
   author: one(users, {
     fields: [videos.authorId],
     references: [users.id],
   }),
+  videoCategories: many(videoCategories),
 }));

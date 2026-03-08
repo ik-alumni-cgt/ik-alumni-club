@@ -1,13 +1,19 @@
 import { getVideo } from "@/data/video";
 import { VideoForm } from "@/components/video-form";
+import { getCategoriesTree, getVideoCategoryIds } from "@/data/category";
 import { notFound } from "next/navigation";
 
 export default async function EditVideoPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const video = await getVideo(params.id);
+  const { id } = await params;
+  const [video, categoriesTree, initialCategoryIds] = await Promise.all([
+    getVideo(id),
+    getCategoriesTree(),
+    getVideoCategoryIds(id),
+  ]);
 
   if (!video) {
     notFound();
@@ -16,7 +22,11 @@ export default async function EditVideoPage({
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">動画編集</h1>
-      <VideoForm defaultValues={video} />
+      <VideoForm
+        defaultValues={video}
+        categoriesTree={categoriesTree}
+        initialCategoryIds={initialCategoryIds}
+      />
     </div>
   );
 }

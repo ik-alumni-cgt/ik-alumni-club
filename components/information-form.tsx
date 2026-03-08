@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { informationFormSchema } from "@/zod/information";
@@ -18,16 +19,24 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
 import { createInformation, updateInformation } from "@/actions/information";
+import { updateInformationCategories } from "@/actions/category";
 import { toast } from "sonner";
 import { Information, InformationFormData } from "@/types/information";
 import { InputImage } from "@/components/input-image";
+import { CategorySelect } from "@/components/admin/category-select";
+import type { CategoryWithChildren } from "@/types/category";
 
 export function InformationForm({
   defaultValues,
+  categoriesTree = [],
+  initialCategoryIds = [],
 }: {
   defaultValues?: Information;
+  categoriesTree?: CategoryWithChildren[];
+  initialCategoryIds?: string[];
 }) {
   const router = useRouter();
+  const [categoryIds, setCategoryIds] = useState<string[]>(initialCategoryIds);
   const form = useForm<InformationFormData>({
     resolver: zodResolver(informationFormSchema),
     defaultValues: defaultValues
@@ -55,11 +64,15 @@ export function InformationForm({
     try {
       if (defaultValues) {
         await updateInformation(defaultValues.id, data);
+        await updateInformationCategories(defaultValues.id, categoryIds);
         toast.success("お知らせを更新しました", {
           description: `${data.title}を更新しました`,
         });
       } else {
-        await createInformation(data);
+        const created = await createInformation(data);
+        if (created) {
+          await updateInformationCategories(created.id, categoryIds);
+        }
         toast.success("お知らせを作成しました", {
           description: `${data.title}を作成しました`,
         });
@@ -169,6 +182,21 @@ export function InformationForm({
             </FormItem>
           )}
         />
+
+        {/* カテゴリー */}
+        <FormItem>
+          <FormLabel>カテゴリー</FormLabel>
+          <FormControl>
+            <CategorySelect
+              categoriesTree={categoriesTree}
+              selectedIds={categoryIds}
+              onChange={setCategoryIds}
+            />
+          </FormControl>
+          <FormDescription>
+            コンテンツに関連するカテゴリーを選択してください
+          </FormDescription>
+        </FormItem>
 
         <FormField
           control={form.control}

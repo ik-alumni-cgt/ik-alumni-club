@@ -141,6 +141,20 @@
       "when": 1772874143486,
       "tag": "0019_spotty_hardball",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1772952856254,
+      "tag": "0020_workable_ikaris",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1772955210543,
+      "tag": "0021_magical_glorian",
+      "breakpoints": true
     }
   ]
 }

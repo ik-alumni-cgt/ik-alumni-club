@@ -12,6 +12,7 @@ import {
   Settings,
   Building2,
   ClipboardList,
+  Tags,
 } from "lucide-react";
 import {
   Sidebar,
@@ -62,6 +63,11 @@ const menuItems = [
     title: "ブログ管理",
     icon: FileText,
     url: "/admin/blogs",
+  },
+  {
+    title: "カテゴリー管理",
+    icon: Tags,
+    url: "/admin/categories",
   },
   {
     title: "フォトライブラリ管理",

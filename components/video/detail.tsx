@@ -39,7 +39,6 @@ export function VideoDetail({ item }: { item: Video }) {
         <div className="flex items-center gap-4 text-sm text-white/70">
           {item.authorName && <span>{item.authorName}</span>}
           <span>{new Date(item.videoDate).toLocaleDateString("ja-JP")}</span>
-          <span>{item.viewCount} views</span>
         </div>
       </header>
 

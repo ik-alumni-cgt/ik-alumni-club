@@ -3,6 +3,7 @@ import { PhotoLibraryCard } from "@/components/photo-library-card";
 import { DeletePhotoLibraryButton } from "@/components/delete-photo-library-button";
 import { Button } from "@/components/ui/button";
 import { getPhoto } from "@/data/photo-library";
+import { getCategoriesTree, getPhotoLibraryCategoryIds } from "@/data/category";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,7 +14,11 @@ export default async function EditPhotoLibraryPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const photo = await getPhoto(id);
+  const [photo, categoriesTree, initialCategoryIds] = await Promise.all([
+    getPhoto(id),
+    getCategoriesTree(),
+    getPhotoLibraryCategoryIds(id),
+  ]);
 
   if (!photo) {
     notFound();
@@ -53,6 +58,8 @@ export default async function EditPhotoLibraryPage({
               caption: img.caption || "",
             })),
           }}
+          categoriesTree={categoriesTree}
+          initialCategoryIds={initialCategoryIds}
         />
       </div>
 

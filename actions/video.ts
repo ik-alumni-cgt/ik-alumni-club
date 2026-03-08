@@ -17,11 +17,13 @@ export async function createVideo(formData: VideoFormData) {
     where: (users, { eq }) => eq(users.id, userId),
   });
 
-  await db.insert(videos).values({
+  const [newVideo] = await db.insert(videos).values({
     ...data,
     authorId: userId,
     authorName: user?.name || "",
-  });
+  }).returning();
+
+  return newVideo;
 }
 
 // 動画更新

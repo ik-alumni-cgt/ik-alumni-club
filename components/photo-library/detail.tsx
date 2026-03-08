@@ -30,7 +30,6 @@ export function PhotoLibraryDetail({ item }: { item: PhotoLibraryWithImages }) {
         <h1 className="text-2xl md:text-3xl lg:text-4xl mb-4">{item.title}</h1>
         <div className="flex items-center gap-4 text-sm text-white/70">
           <span>{new Date(item.createdAt).toLocaleDateString("ja-JP")}</span>
-          <span>閲覧数: {item.viewCount}</span>
           <span>{item.images.length}枚の写真</span>
         </div>
       </header>

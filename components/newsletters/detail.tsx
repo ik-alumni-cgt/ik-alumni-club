@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type Newsletter = {
   id: string;
@@ -33,7 +34,6 @@ export function NewsletterDetail({ item }: { item: Newsletter }) {
               {new Date(item.publishedAt).toLocaleDateString("ja-JP")}
             </span>
           )}
-          <span>閲覧数: {item.viewCount}</span>
         </div>
       </header>
 
@@ -54,14 +54,20 @@ export function NewsletterDetail({ item }: { item: Newsletter }) {
       </div>
 
       {item.pdfUrl && (
-        <div className="mt-6 p-4 bg-white/10 rounded-lg">
+        <div className="mt-6 p-4 bg-white/10 rounded-lg flex items-center gap-4">
+          <Link
+            href={`/newsletter/${item.id}/viewer`}
+            className="text-white hover:text-white/80 underline font-medium"
+          >
+            PDFを閲覧する
+          </Link>
           <a
             href={item.pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white hover:text-white/80 underline font-medium"
+            className="text-white/60 hover:text-white/80 text-sm underline"
           >
-            PDFをダウンロード
+            ダウンロード
           </a>
         </div>
       )}

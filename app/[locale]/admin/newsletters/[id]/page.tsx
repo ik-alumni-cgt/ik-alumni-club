@@ -1,6 +1,7 @@
 import { NewsletterForm } from "@/components/newsletter-form";
 import { Button } from "@/components/ui/button";
 import { getNewsletter } from "@/data/newsletter";
+import { getCategoriesTree, getNewsletterCategoryIds } from "@/data/category";
 import { ArrowLeft, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -33,7 +34,11 @@ export default async function EditNewsletterPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const newsletter = await getNewsletter(id);
+  const [newsletter, categoriesTree, initialCategoryIds] = await Promise.all([
+    getNewsletter(id),
+    getCategoriesTree(),
+    getNewsletterCategoryIds(id),
+  ]);
 
   if (!newsletter) {
     notFound();
@@ -108,6 +113,8 @@ export default async function EditNewsletterPage({
             published: newsletter.published,
             isMemberOnly: newsletter.isMemberOnly,
           }}
+          categoriesTree={categoriesTree}
+          initialCategoryIds={initialCategoryIds}
         />
       </div>
 

@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newsletterFormSchema, type NewsletterFormData } from "@/zod/newsletter";
 import { createNewsletter, updateNewsletter } from "@/actions/newsletter";
+import { updateNewsletterCategories } from "@/actions/category";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -28,19 +30,26 @@ import {
 } from "@/components/ui/form";
 import { InputImage } from "@/components/input-image";
 import { InputFile } from "@/components/input-file";
+import { CategorySelect } from "@/components/admin/category-select";
+import type { CategoryWithChildren } from "@/types/category";
 
 interface NewsletterFormProps {
   defaultValues?: NewsletterFormData & { id?: string };
   mode: "create" | "edit";
   nextIssueNumber?: number;
+  categoriesTree?: CategoryWithChildren[];
+  initialCategoryIds?: string[];
 }
 
 export function NewsletterForm({
   defaultValues,
   mode,
   nextIssueNumber,
+  categoriesTree = [],
+  initialCategoryIds = [],
 }: NewsletterFormProps) {
   const router = useRouter();
+  const [categoryIds, setCategoryIds] = useState<string[]>(initialCategoryIds);
   const form = useForm<NewsletterFormData>({
     resolver: zodResolver(newsletterFormSchema),
     defaultValues: defaultValues
@@ -71,12 +80,16 @@ export function NewsletterForm({
   const onSubmit = async (data: NewsletterFormData) => {
     try {
       if (mode === "create") {
-        await createNewsletter(data);
+        const created = await createNewsletter(data);
+        if (created) {
+          await updateNewsletterCategories(created.id, categoryIds);
+        }
         toast.success("Digital Magazineを作成しました", {
           description: `第${data.issueNumber}号を作成しました`,
         });
       } else if (defaultValues?.id) {
         await updateNewsletter(defaultValues.id, data);
+        await updateNewsletterCategories(defaultValues.id, categoryIds);
         toast.success("Digital Magazineを更新しました", {
           description: `第${data.issueNumber}号を更新しました`,
         });
@@ -250,6 +263,21 @@ export function NewsletterForm({
             </FormItem>
           )}
         />
+
+        {/* カテゴリー */}
+        <FormItem>
+          <FormLabel>カテゴリー</FormLabel>
+          <FormControl>
+            <CategorySelect
+              categoriesTree={categoriesTree}
+              selectedIds={categoryIds}
+              onChange={setCategoryIds}
+            />
+          </FormControl>
+          <FormDescription>
+            コンテンツに関連するカテゴリーを選択してください
+          </FormDescription>
+        </FormItem>
 
         {/* 公開状態 */}
         <FormField

@@ -13,7 +13,6 @@ type Props = {
 };
 
 export function InputMultipleImages({
-  aspectRatio = 4 / 3,
   resultWidth,
   onImagesAdded,
 }: Props) {
@@ -38,8 +37,7 @@ export function InputMultipleImages({
           console.log(`[InputMultipleImages] DataURL length:`, dataUrl.length);
           const resizedImage = await resizeImage(
             dataUrl,
-            resultWidth,
-            resultWidth / aspectRatio
+            resultWidth
           );
           console.log(`[InputMultipleImages] Resized image length:`, resizedImage.length);
           processedImages.push(resizedImage);
@@ -55,7 +53,7 @@ export function InputMultipleImages({
         onImagesAdded(processedImages);
       }
     },
-    [aspectRatio, resultWidth, onImagesAdded]
+    [resultWidth, onImagesAdded]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -122,8 +120,7 @@ function readFileAsDataUrl(file: File): Promise<string> {
 
 async function resizeImage(
   imageSrc: string,
-  maxWidth: number,
-  _maxHeight: number
+  maxWidth: number
 ): Promise<string> {
   const image = await createImage(imageSrc);
   const canvas = document.createElement("canvas");
