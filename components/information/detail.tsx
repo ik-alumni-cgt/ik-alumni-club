@@ -1,6 +1,5 @@
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
-import Link from "next/link";
 import { DetailTitle } from "@/components/information/detail-title";
 
 type Information = {
@@ -22,6 +21,18 @@ export function InformationDetail({ item }: { item: Information }) {
         <div className="text-[13px] text-gray-600">{formatDate(item.date)}</div>
       </div>
 
+      {/* 画像 */}
+      {item.imageUrl && (
+        <div className="relative w-full aspect-video rounded-lg overflow-hidden">
+          <Image
+            src={item.imageUrl}
+            alt={item.title}
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
+
       {/* コンテンツ */}
       <div className="prose prose-lg max-w-none whitespace-pre-wrap">
         {item.content}
@@ -41,27 +52,6 @@ export function InformationDetail({ item }: { item: Information }) {
         </div>
       )}
 
-      {/* 画像 */}
-      {item.imageUrl && (
-        <div className="relative w-full aspect-video rounded-lg overflow-hidden">
-          <Image
-            src={item.imageUrl}
-            alt={item.title}
-            fill
-            className="object-cover"
-          />
-        </div>
-      )}
-
-      {/* 戻るボタン */}
-      <div className="mt-8 text-center">
-        <Link
-          href="/information"
-          className="inline-block px-8 py-3 border-2 border-black text-black font-bold hover:bg-black hover:text-white transition-colors"
-        >
-          LIST
-        </Link>
-      </div>
     </div>
   );
 }

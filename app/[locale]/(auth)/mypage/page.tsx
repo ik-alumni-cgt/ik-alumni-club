@@ -1,5 +1,6 @@
 import { MypageCard } from "@/components/mypage/mypage-card";
 import { MembershipCardImage } from "@/components/mypage/membership-card-image";
+import { SupportersClubMenu } from "@/components/mypage/supporters-club-menu";
 import { ProfileCompletionBanner } from "@/components/profile-completion-banner";
 import { PaymentRegistrationBanner } from "@/components/payment-registration-banner";
 import { verifySession } from "@/lib/session";
@@ -43,6 +44,8 @@ export default async function MypagePage({
           planCode={(member!.plan as MemberPlan).planCode as PlanCode}
         />
       )}
+
+      <SupportersClubMenu />
 
       <MypageCard user={session.user} member={member} />
     </div>

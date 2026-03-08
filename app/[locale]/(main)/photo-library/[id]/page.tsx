@@ -1,7 +1,11 @@
 import { setLocale } from "@/app/web/i18n/set-locale";
 import { PhotoLibraryDetail } from "@/components/photo-library/detail";
+import { LikeButton } from "@/components/like-button";
 import { getPhoto } from "@/data/photo-library";
+import { getReactionCounts } from "@/data/like";
 import { canAccessMemberContent } from "@/lib/session";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { MemberOnlyContent } from "@/components/member-only-content";
 
@@ -28,10 +32,16 @@ export default async function PhotoLibraryDetailPage({
     }
   }
 
+  const reactionCounts = await getReactionCounts("photo_library", id);
+  const session = await auth.api.getSession({ headers: await headers() });
+
   return (
     <div className="bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 min-h-screen -mt-[140px] pt-[140px] text-white">
       <div className="container max-w-full items-center justify-between pt-10 pb-32">
         <PhotoLibraryDetail item={item} />
+        <div className="flex justify-center mt-8">
+          <LikeButton contentType="photo_library" contentId={id} initialReactionCounts={reactionCounts} userId={session?.user?.id} />
+        </div>
       </div>
     </div>
   );

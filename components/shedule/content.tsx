@@ -1,6 +1,7 @@
 import { getSchedules } from "@/data/schedule";
 import { ContentsHeader } from "../contents/contents-header";
 import { ScheduleContentsCard } from "./card";
+import { ScrollStagger } from "@/components/scroll-animation/scroll-stagger";
 import Link from "next/link";
 
 export async function ScheduleContents() {
@@ -12,11 +13,14 @@ export async function ScheduleContents() {
       <div className="text-white">
         <ContentsHeader title="SCHEDULE" viewAllHref="/schedule" />
       </div>
-      <div className="flex flex-col gap-[30px] mt-[60px]">
-        {items.length === 0 ? (
-          <p className="text-white">配信までしばらくお待ちください</p>
-        ) : (
-          items.map((schedule) => {
+      {items.length === 0 ? (
+        <p className="text-white mt-[60px]">配信までしばらくお待ちください</p>
+      ) : (
+        <ScrollStagger
+          className="flex flex-col gap-[30px] mt-[60px]"
+          staggerDelay={100}
+        >
+          {items.map((schedule) => {
             const dateObj = new Date(schedule.eventDate);
             const year = String(dateObj.getFullYear());
             const month = String(dateObj.getMonth() + 1).padStart(2, "0");
@@ -35,9 +39,9 @@ export async function ScheduleContents() {
                 />
               </Link>
             );
-          })
-        )}
-      </div>
+          })}
+        </ScrollStagger>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Lock } from "lucide-react";
+import { ScrollStagger } from "@/components/scroll-animation/scroll-stagger";
 
 type Video = {
   id: string;
@@ -16,13 +17,14 @@ type Video = {
 
 export function VideoList({ items }: { items: Video[] }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <>
       {items.length === 0 ? (
-        <p className="col-span-full text-center text-white/70">
+        <p className="text-center text-white/70">
           配信までしばらくお待ちください
         </p>
       ) : (
-        items.map((item) => (
+        <ScrollStagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={100}>
+        {items.map((item) => (
           <Link
             key={item.id}
             href={`/video/${item.id}`}
@@ -63,8 +65,9 @@ export function VideoList({ items }: { items: Video[] }) {
               </div>
             </div>
           </Link>
-        ))
+        ))}
+        </ScrollStagger>
       )}
-    </div>
+    </>
   );
 }

@@ -7,6 +7,7 @@ import { VideoContents } from "@/components/video/content";
 import { HeroCarousel } from "@/components/hero/hero-carousel";
 import { SupportersContents } from "@/components/supporters/content";
 import { MaintenancePage } from "@/components/maintenance/maintenance-page";
+import { ScrollFadeIn } from "@/components/scroll-animation/scroll-fade-in";
 
 export const dynamic = 'force-dynamic';
 
@@ -34,24 +35,26 @@ export default async function Home({
         <HeroCarousel />
       </div>
       {/* <AboutSection /> */}
-      <div className="mb-16 md:mb-32">
+      <ScrollFadeIn className="mb-16 md:mb-32">
         <div className="container mx-auto">
           <InformationContents />
         </div>
-      </div>
-      <div className="mb-16 md:mb-32 bg-gradient-red py-8 md:py-16">
+      </ScrollFadeIn>
+      <ScrollFadeIn className="mb-16 md:mb-32 bg-gradient-red py-8 md:py-16">
         <main className="container mx-auto">
         <div className="mb-16 md:mb-32">
           <ScheduleContents />
         </div>
       </main>
-      </div>
-      <div className="mb-16 md:mb-32">
+      </ScrollFadeIn>
+      <ScrollFadeIn className="mb-16 md:mb-32">
         <div className="container mx-auto">
           <VideoContents />
         </div>
-        </div>
-      <SupportersContents />
+      </ScrollFadeIn>
+      <ScrollFadeIn>
+        <SupportersContents />
+      </ScrollFadeIn>
     </div>
   );
 }

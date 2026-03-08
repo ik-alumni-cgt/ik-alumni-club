@@ -1,5 +1,6 @@
 import { ContentsHeader } from "@/components/contents/contents-header";
 import { ContentsCard } from "@/components/contents/contents-card";
+import { ScrollStagger } from "@/components/scroll-animation/scroll-stagger";
 import Link from "next/link";
 import Image from "next/image";
 import { getLatestNewsletters } from "@/data/newsletter";
@@ -49,11 +50,14 @@ export async function NewContents() {
   return (
     <div className="flex flex-col text-white">
       <ContentsHeader title="New Content" />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-[60px]">
-        {newItems.length === 0 ? (
-          <p>配信までしばらくお待ちください</p>
-        ) : (
-          newItems.map((item) => (
+      {newItems.length === 0 ? (
+        <p className="mt-[60px]">配信までしばらくお待ちください</p>
+      ) : (
+        <ScrollStagger
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-[60px]"
+          staggerDelay={150}
+        >
+          {newItems.map((item) => (
             <Link key={item.id} href={item.href}>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
@@ -78,9 +82,9 @@ export async function NewContents() {
                 <ContentsCard title={item.title} date={item.date} />
               </div>
             </Link>
-          ))
-        )}
-      </div>
+          ))}
+        </ScrollStagger>
+      )}
     </div>
   );
 }

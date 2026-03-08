@@ -4,6 +4,7 @@ import supportersImage from "./top_supporter's.jpg";
 import samuneImage from "./samune.jpg";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { ScrollFadeIn } from "@/components/scroll-animation/scroll-fade-in";
 import { NewContents } from "../new-contents/content";
 
 export function SupportersContents() {
@@ -35,7 +36,7 @@ export function SupportersContents() {
 
           <Separator className="mb-16 md:mb-32" />
 
-          <div className="mb-16 md:mb-32 flex justify-center">
+          <ScrollFadeIn className="mb-16 md:mb-32 flex justify-center">
             <Image
               src={samuneImage}
               alt="Samune"
@@ -43,7 +44,7 @@ export function SupportersContents() {
               height={450}
               className="rounded-lg"
             />
-          </div>
+          </ScrollFadeIn>
         </div>
       </div>
 
@@ -61,11 +62,11 @@ export function SupportersContents() {
         </div>
       </div> */}
 
-      <div className="mb-16 md:mb-32">
+      <ScrollFadeIn className="mb-16 md:mb-32">
         <div className="container mx-auto">
           <NewContents />
         </div>
-      </div>
+      </ScrollFadeIn>
     </section>
   );
 }

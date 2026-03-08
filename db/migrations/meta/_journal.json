@@ -155,6 +155,20 @@
       "when": 1772955210543,
       "tag": "0021_magical_glorian",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1772961787995,
+      "tag": "0022_new_ghost_rider",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1772962543544,
+      "tag": "0023_smiling_pyro",
+      "breakpoints": true
     }
   ]
 }

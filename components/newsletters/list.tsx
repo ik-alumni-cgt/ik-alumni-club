@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Lock } from "lucide-react";
+import { ScrollStagger } from "@/components/scroll-animation/scroll-stagger";
 
 type Newsletter = {
   id: string;
@@ -21,13 +22,14 @@ type Newsletter = {
 
 export function NewsletterList({ items }: { items: Newsletter[] }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <>
       {items.length === 0 ? (
-        <p className="col-span-full text-center text-white/70">
+        <p className="text-center text-white/70">
           配信までしばらくお待ちください
         </p>
       ) : (
-        items.map((item) => (
+        <ScrollStagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={100}>
+        {items.map((item) => (
           <Link
             key={item.id}
             href={`/newsletter/${item.id}`}
@@ -77,8 +79,9 @@ export function NewsletterList({ items }: { items: Newsletter[] }) {
               </div>
             </div>
           </Link>
-        ))
+        ))}
+        </ScrollStagger>
       )}
-    </div>
+    </>
   );
 }
