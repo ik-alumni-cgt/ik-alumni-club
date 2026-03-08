@@ -7,7 +7,7 @@ export function PhotoLibraryList({ items }: { items: PhotoLibraryWithImages[] })
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.length === 0 ? (
-        <p className="col-span-full text-center text-gray-500">
+        <p className="col-span-full text-center text-white/70">
           配信までしばらくお待ちください
         </p>
       ) : (
@@ -29,7 +29,7 @@ export function PhotoLibraryList({ items }: { items: PhotoLibraryWithImages[] })
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <ImageIcon className="h-16 w-16 text-gray-400" />
+                    <ImageIcon className="h-16 w-16 text-white/50" />
                   </div>
                 )}
                 {item.isMemberOnly && (
@@ -48,7 +48,7 @@ export function PhotoLibraryList({ items }: { items: PhotoLibraryWithImages[] })
                 <h3 className="font-semibold text-lg line-clamp-2">
                   {item.title}
                 </h3>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-white/60">
                   {new Date(item.createdAt).toLocaleDateString("ja-JP")}
                 </span>
               </div>

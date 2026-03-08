@@ -3,6 +3,7 @@ import { BlogCard } from "@/components/blog-card";
 import { DeleteBlogButton } from "@/components/delete-blog-button";
 import { Button } from "@/components/ui/button";
 import { getBlog } from "@/data/blog";
+import { getCategoriesTree, getBlogCategoryIds } from "@/data/category";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,7 +14,11 @@ export default async function EditBlogPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const blog = await getBlog(id);
+  const [blog, categoriesTree, initialCategoryIds] = await Promise.all([
+    getBlog(id),
+    getCategoriesTree(),
+    getBlogCategoryIds(id),
+  ]);
 
   if (!blog) {
     notFound();
@@ -50,6 +55,8 @@ export default async function EditBlogPage({
             published: blog.published,
             isMemberOnly: blog.isMemberOnly,
           }}
+          categoriesTree={categoriesTree}
+          initialCategoryIds={initialCategoryIds}
         />
       </div>
 

@@ -2,6 +2,7 @@ import { pgTable, text, timestamp, boolean, integer } from "drizzle-orm/pg-core"
 import { users } from "./auth";
 import { nanoid } from "nanoid";
 import { relations } from "drizzle-orm";
+import { scheduleCategories } from "./categories";
 
 export const schedules = pgTable("schedules", {
   id: text("id").primaryKey().$defaultFn(() => nanoid()),
@@ -23,9 +24,10 @@ export const schedules = pgTable("schedules", {
     .notNull(),
 });
 
-export const scheduleRelations = relations(schedules, ({ one }) => ({
+export const scheduleRelations = relations(schedules, ({ one, many }) => ({
   author: one(users, {
     fields: [schedules.authorId],
     references: [users.id],
   }),
+  scheduleCategories: many(scheduleCategories),
 }));

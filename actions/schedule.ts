@@ -24,14 +24,16 @@ export async function createSchedule(formData: ScheduleFormData) {
     ? await resolveImageUpload(`schedules/${nanoid()}`, data.imageUrl)
     : null;
 
-  await db.insert(schedules).values({
+  const [newSchedule] = await db.insert(schedules).values({
     ...data,
     imageUrl,
     eventDate: new Date(data.eventDate),
     authorId: userId,
     authorName: user?.name || "",
     authorEmail: user?.email || "",
-  });
+  }).returning();
+
+  return newSchedule;
 }
 
 // スケジュール更新

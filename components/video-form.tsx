@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { videoFormSchema, VideoFormData } from "@/zod/video";
@@ -17,15 +18,23 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
 import { createVideo, updateVideo } from "@/actions/video";
+import { updateVideoCategories } from "@/actions/category";
 import { toast } from "sonner";
 import { Video } from "@/types/video";
+import { CategorySelect } from "@/components/admin/category-select";
+import type { CategoryWithChildren } from "@/types/category";
 
 export function VideoForm({
   defaultValues,
+  categoriesTree = [],
+  initialCategoryIds = [],
 }: {
   defaultValues?: Video;
+  categoriesTree?: CategoryWithChildren[];
+  initialCategoryIds?: string[];
 }) {
   const router = useRouter();
+  const [categoryIds, setCategoryIds] = useState<string[]>(initialCategoryIds);
   const form = useForm<VideoFormData>({
     resolver: zodResolver(videoFormSchema),
     defaultValues: defaultValues
@@ -53,11 +62,15 @@ export function VideoForm({
     try {
       if (defaultValues) {
         await updateVideo(defaultValues.id, data);
+        await updateVideoCategories(defaultValues.id, categoryIds);
         toast.success("動画を更新しました", {
           description: `${data.title}を更新しました`,
         });
       } else {
-        await createVideo(data);
+        const created = await createVideo(data);
+        if (created) {
+          await updateVideoCategories(created.id, categoryIds);
+        }
         toast.success("動画を作成しました", {
           description: `${data.title}を作成しました`,
         });
@@ -164,6 +177,21 @@ export function VideoForm({
             </FormItem>
           )}
         />
+
+        {/* カテゴリー */}
+        <FormItem>
+          <FormLabel>カテゴリー</FormLabel>
+          <FormControl>
+            <CategorySelect
+              categoriesTree={categoriesTree}
+              selectedIds={categoryIds}
+              onChange={setCategoryIds}
+            />
+          </FormControl>
+          <FormDescription>
+            コンテンツに関連するカテゴリーを選択してください
+          </FormDescription>
+        </FormItem>
 
         <FormField
           control={form.control}

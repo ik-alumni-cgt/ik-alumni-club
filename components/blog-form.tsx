@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { blogFormSchema, type BlogFormData } from "@/zod/blog";
 import { createBlog, updateBlog } from "@/actions/blog";
+import { updateBlogCategories } from "@/actions/category";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { InputImage } from "@/components/input-image";
+import { CategorySelect } from "@/components/admin/category-select";
+import type { CategoryWithChildren } from "@/types/category";
 
 const TiptapEditor = dynamic(
   () => import("@/components/editor/tiptap-editor").then((m) => m.TiptapEditor),
@@ -35,10 +39,13 @@ const TiptapEditor = dynamic(
 interface BlogFormProps {
   defaultValues?: BlogFormData & { id?: string };
   mode: "create" | "edit";
+  categoriesTree?: CategoryWithChildren[];
+  initialCategoryIds?: string[];
 }
 
-export function BlogForm({ defaultValues, mode }: BlogFormProps) {
+export function BlogForm({ defaultValues, mode, categoriesTree = [], initialCategoryIds = [] }: BlogFormProps) {
   const router = useRouter();
+  const [categoryIds, setCategoryIds] = useState<string[]>(initialCategoryIds);
   const form = useForm<BlogFormData>({
     resolver: zodResolver(blogFormSchema),
     defaultValues: defaultValues || {
@@ -54,12 +61,14 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
   const onSubmit = async (data: BlogFormData) => {
     try {
       if (mode === "create") {
-        await createBlog(data);
+        const newBlog = await createBlog(data);
+        await updateBlogCategories(newBlog.id, categoryIds);
         toast.success("ブログを作成しました", {
           description: `${data.title}を作成しました`,
         });
       } else if (defaultValues?.id) {
         await updateBlog(defaultValues.id, data);
+        await updateBlogCategories(defaultValues.id, categoryIds);
         toast.success("ブログを更新しました", {
           description: `${data.title}を更新しました`,
         });
@@ -157,6 +166,21 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
             </FormItem>
           )}
         />
+
+        {/* カテゴリー */}
+        <FormItem>
+          <FormLabel>カテゴリー</FormLabel>
+          <FormControl>
+            <CategorySelect
+              categoriesTree={categoriesTree}
+              selectedIds={categoryIds}
+              onChange={setCategoryIds}
+            />
+          </FormControl>
+          <FormDescription>
+            コンテンツに関連するカテゴリーを選択してください
+          </FormDescription>
+        </FormItem>
 
         {/* 公開フラグ */}
         <FormField

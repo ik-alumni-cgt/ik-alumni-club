@@ -1,9 +1,12 @@
 import { BlogForm } from "@/components/blog-form";
 import { Button } from "@/components/ui/button";
+import { getCategoriesTree } from "@/data/category";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function NewBlogPage() {
+export default async function NewBlogPage() {
+  const categoriesTree = await getCategoriesTree();
+
   return (
     <div className="container max-w-3xl py-10">
       <div className="mb-6">
@@ -17,7 +20,7 @@ export default function NewBlogPage() {
         <p className="text-muted-foreground">新しいブログ記事を作成します</p>
       </div>
 
-      <BlogForm mode="create" />
+      <BlogForm mode="create" categoriesTree={categoriesTree} />
     </div>
   );
 }

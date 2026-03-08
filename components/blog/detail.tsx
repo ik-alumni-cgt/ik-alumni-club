@@ -18,11 +18,10 @@ export function BlogDetail({ item }: { item: Blog }) {
   return (
     <article className="flex flex-col gap-8 max-w-4xl mx-auto">
       <header>
-        <h1 className="main-text mb-4">{item.title}</h1>
+        <h1 className="text-2xl md:text-3xl lg:text-4xl mb-4">{item.title}</h1>
         <div className="flex items-center gap-4 text-sm text-gray-600">
           {item.authorName && <span>著者: {item.authorName}</span>}
           <span>{new Date(item.createdAt).toLocaleDateString("ja-JP")}</span>
-          <span>閲覧数: {item.viewCount}</span>
         </div>
       </header>
 

@@ -1,9 +1,12 @@
 import { InformationForm } from "@/components/information-form";
 import { Button } from "@/components/ui/button";
+import { getCategoriesTree } from "@/data/category";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function NewInformationPage() {
+export default async function NewInformationPage() {
+  const categoriesTree = await getCategoriesTree();
+
   return (
     <div className="container max-w-3xl py-10">
       <div className="mb-6">
@@ -17,7 +20,7 @@ export default function NewInformationPage() {
         <p className="text-muted-foreground">新しいお知らせを作成します</p>
       </div>
 
-      <InformationForm />
+      <InformationForm categoriesTree={categoriesTree} />
     </div>
   );
 }

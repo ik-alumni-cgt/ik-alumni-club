@@ -23,7 +23,7 @@ export function NewsletterList({ items }: { items: Newsletter[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.length === 0 ? (
-        <p className="col-span-full text-center text-gray-500">
+        <p className="col-span-full text-center text-white/70">
           配信までしばらくお待ちください
         </p>
       ) : (
@@ -58,16 +58,16 @@ export function NewsletterList({ items }: { items: Newsletter[] }) {
                   </span>
                 </div>
               )}
-              <div className="text-sm font-medium text-blue-600">
+              <div className="text-sm font-medium text-white/80">
                 第{item.issueNumber}号
               </div>
               <h3 className="font-semibold text-lg line-clamp-2">
                 {item.title}
               </h3>
-              <p className="text-sm text-gray-600 line-clamp-3">
+              <p className="text-sm text-white/70 line-clamp-3">
                 {item.excerpt}
               </p>
-              <div className="mt-auto pt-4 flex items-center justify-between text-xs text-gray-500">
+              <div className="mt-auto pt-4 flex items-center justify-between text-xs text-white/60">
                 {item.authorName && <span>by {item.authorName}</span>}
                 {item.publishedAt && (
                   <span>

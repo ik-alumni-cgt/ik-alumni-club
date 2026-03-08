@@ -3,6 +3,7 @@ import { InformationCard } from "@/components/information-card";
 import { DeleteInformationButton } from "@/components/delete-information-button";
 import { Button } from "@/components/ui/button";
 import { getInformation } from "@/data/information";
+import { getCategoriesTree, getInformationCategoryIds } from "@/data/category";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,7 +14,11 @@ export default async function EditInformationPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const information = await getInformation(id);
+  const [information, categoriesTree, initialCategoryIds] = await Promise.all([
+    getInformation(id),
+    getCategoriesTree(),
+    getInformationCategoryIds(id),
+  ]);
 
   if (!information) {
     notFound();
@@ -39,7 +44,11 @@ export default async function EditInformationPage({
 
       <div className="mb-6">
         <h2 className="mb-3 text-lg font-semibold">編集</h2>
-        <InformationForm defaultValues={information} />
+        <InformationForm
+          defaultValues={information}
+          categoriesTree={categoriesTree}
+          initialCategoryIds={initialCategoryIds}
+        />
       </div>
 
       <div className="border-t pt-6">

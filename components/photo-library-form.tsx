@@ -21,8 +21,11 @@ import {
 } from "@/components/ui/form";
 import { InputImage } from "@/components/input-image";
 import { InputMultipleImages } from "@/components/input-multiple-images";
+import { CategorySelect } from "@/components/admin/category-select";
+import type { CategoryWithChildren } from "@/types/category";
+import { updatePhotoLibraryCategories } from "@/actions/category";
 import { Plus, Trash2, GripVertical } from "lucide-react";
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 
 function dataUrlToBlob(dataUrl: string): Blob {
   const [header, base64] = dataUrl.split(",");
@@ -38,10 +41,18 @@ function dataUrlToBlob(dataUrl: string): Blob {
 interface PhotoLibraryFormProps {
   defaultValues?: PhotoLibraryFormData & { id?: string };
   mode: "create" | "edit";
+  categoriesTree?: CategoryWithChildren[];
+  initialCategoryIds?: string[];
 }
 
-export function PhotoLibraryForm({ defaultValues, mode }: PhotoLibraryFormProps) {
+export function PhotoLibraryForm({
+  defaultValues,
+  mode,
+  categoriesTree = [],
+  initialCategoryIds = [],
+}: PhotoLibraryFormProps) {
   const router = useRouter();
+  const [categoryIds, setCategoryIds] = useState<string[]>(initialCategoryIds);
   const form = useForm<PhotoLibraryFormData>({
     resolver: zodResolver(photoLibraryFormSchema),
     defaultValues: defaultValues || {
@@ -148,12 +159,16 @@ export function PhotoLibraryForm({ defaultValues, mode }: PhotoLibraryFormProps)
 
       // Step 5: DB 保存（URL文字列のみ送信）
       if (mode === "create") {
-        await createPhoto(resolvedData);
+        const created = await createPhoto(resolvedData);
+        if (created) {
+          await updatePhotoLibraryCategories(created.id, categoryIds);
+        }
         toast.success("フォトを作成しました", {
           description: `${data.title}を作成しました`,
         });
       } else if (defaultValues?.id) {
         await updatePhoto(defaultValues.id, resolvedData);
+        await updatePhotoLibraryCategories(defaultValues.id, categoryIds);
         toast.success("フォトを更新しました", {
           description: `${data.title}を更新しました`,
         });
@@ -298,6 +313,21 @@ export function PhotoLibraryForm({ defaultValues, mode }: PhotoLibraryFormProps)
             </p>
           )}
         </div>
+
+        {/* カテゴリー */}
+        <FormItem>
+          <FormLabel>カテゴリー</FormLabel>
+          <FormControl>
+            <CategorySelect
+              categoriesTree={categoriesTree}
+              selectedIds={categoryIds}
+              onChange={setCategoryIds}
+            />
+          </FormControl>
+          <FormDescription>
+            コンテンツに関連するカテゴリーを選択してください
+          </FormDescription>
+        </FormItem>
 
         {/* 公開フラグ */}
         <FormField

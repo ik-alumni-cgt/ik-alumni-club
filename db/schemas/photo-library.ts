@@ -2,6 +2,7 @@ import { pgTable, text, boolean, integer, timestamp } from "drizzle-orm/pg-core"
 import { users } from "./auth";
 import { nanoid } from "nanoid";
 import { relations } from "drizzle-orm";
+import { photoLibraryCategories } from "./categories";
 
 // フォトライブラリ（アルバム）テーブル
 export const photoLibrary = pgTable("photo_library", {
@@ -36,6 +37,7 @@ export const photoLibraryRelations = relations(photoLibrary, ({ one, many }) => 
     references: [users.id],
   }),
   images: many(photoLibraryImages),
+  photoLibraryCategories: many(photoLibraryCategories),
 }));
 
 export const photoLibraryImagesRelations = relations(photoLibraryImages, ({ one }) => ({

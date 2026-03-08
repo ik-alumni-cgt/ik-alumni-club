@@ -19,11 +19,13 @@ export async function createInformation(formData: InformationFormData) {
     ? await resolveImageUpload(`informations/${nanoid()}`, data.imageUrl)
     : null;
 
-  await db.insert(informations).values({
+  const [newInformation] = await db.insert(informations).values({
     ...data,
     imageUrl,
     createdBy: userId,
-  });
+  }).returning();
+
+  return newInformation;
 }
 
 // お知らせ更新

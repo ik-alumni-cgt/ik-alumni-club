@@ -27,16 +27,15 @@ export function PhotoLibraryDetail({ item }: { item: PhotoLibraryWithImages }) {
   return (
     <article className="flex flex-col gap-8 max-w-4xl mx-auto">
       <header>
-        <h1 className="main-text mb-4">{item.title}</h1>
-        <div className="flex items-center gap-4 text-sm text-gray-600">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl mb-4">{item.title}</h1>
+        <div className="flex items-center gap-4 text-sm text-white/70">
           <span>{new Date(item.createdAt).toLocaleDateString("ja-JP")}</span>
-          <span>閲覧数: {item.viewCount}</span>
           <span>{item.images.length}枚の写真</span>
         </div>
       </header>
 
       {item.description && (
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg prose-invert max-w-none">
           <p className="whitespace-pre-wrap">{item.description}</p>
         </div>
       )}
@@ -65,8 +64,8 @@ export function PhotoLibraryDetail({ item }: { item: PhotoLibraryWithImages }) {
       </div>
 
       {item.images.length === 0 && (
-        <div className="flex items-center justify-center h-48 bg-gray-100 rounded-lg">
-          <div className="text-center text-gray-500">
+        <div className="flex items-center justify-center h-48 bg-white/10 rounded-lg">
+          <div className="text-center text-white/70">
             <ImageIcon className="h-12 w-12 mx-auto mb-2" />
             <p>画像がありません</p>
           </div>
