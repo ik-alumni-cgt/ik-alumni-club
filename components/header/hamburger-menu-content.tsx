@@ -3,10 +3,19 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { SNS_LINKS } from "../sns-icon/sns-links";
 import xBlack from "../sns-icon/x-black.png";
 import instagramBlack from "../sns-icon/instagram-black.png";
 import youtubeBlack from "../sns-icon/youtube-black.png";
 import tiktokBlack from "../sns-icon/tiktok-black.png";
+import { StaticImageData } from "next/image";
+
+const snsIcons: Record<string, StaticImageData> = {
+  x: xBlack,
+  instagram: instagramBlack,
+  youtube: youtubeBlack,
+  tiktok: tiktokBlack,
+};
 import logo from "./logo_main.png";
 import supportersLogo from "@/app/[locale]/(main)/supporters/top_supporter's.jpg";
 import supportersSamune from "@/components/supporters/samune.jpg";
@@ -68,18 +77,21 @@ export function HamburgerMenuContent({ onClose }: HamburgerMenuContentProps) {
 
         {/* SNSアイコン */}
         <div className="flex gap-4 mt-4 justify-center">
-          <a href="https://x.com/ik_alumni_2022" target="_blank" rel="noopener noreferrer">
-            <Image src={xBlack} alt="X (Twitter)" height={24} width={24} />
-          </a>
-          <a href="https://www.instagram.com/p/DGdTDvBPPuI/" target="_blank" rel="noopener noreferrer">
-            <Image src={instagramBlack} alt="Instagram" height={24} width={24} />
-          </a>
-          <a href="https://www.youtube.com/@ichikashialumnicgt2562" target="_blank" rel="noopener noreferrer">
-            <Image src={youtubeBlack} alt="YouTube" height={24} width={24} />
-          </a>
-          <a href="https://www.tiktok.com/@ik_alumni_2022" target="_blank" rel="noopener noreferrer">
-            <Image src={tiktokBlack} alt="TikTok" height={24} width={24} />
-          </a>
+          {SNS_LINKS.map((sns) => (
+            <a
+              key={sns.key}
+              href={sns.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src={snsIcons[sns.key]}
+                alt={sns.alt}
+                height={24}
+                width={24}
+              />
+            </a>
+          ))}
         </div>
       </div>
 

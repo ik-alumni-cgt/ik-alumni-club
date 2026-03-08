@@ -1,9 +1,11 @@
 import { MypageCard } from "@/components/mypage/mypage-card";
+import { MembershipCardImage } from "@/components/mypage/membership-card-image";
 import { ProfileCompletionBanner } from "@/components/profile-completion-banner";
 import { PaymentRegistrationBanner } from "@/components/payment-registration-banner";
 import { verifySession } from "@/lib/session";
 import { getCurrentMember } from "@/actions/members/get-member";
 import { setLocale } from "@/app/web/i18n/set-locale";
+import { MemberPlan, PlanCode } from "@/types/member-plan";
 
 export default async function MypagePage({
   params,
@@ -34,6 +36,13 @@ export default async function MypagePage({
 
       {/* プロフィール未完成の場合は促進バナーを表示（決済バナーと排他） */}
       {showProfileBanner && <ProfileCompletionBanner className="mb-6" />}
+
+      {/* プラン設定済みの場合は会員カード画像を表示 */}
+      {(member?.plan as MemberPlan | null)?.planCode && (
+        <MembershipCardImage
+          planCode={(member!.plan as MemberPlan).planCode as PlanCode}
+        />
+      )}
 
       <MypageCard user={session.user} member={member} />
     </div>

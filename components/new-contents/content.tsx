@@ -28,7 +28,7 @@ export async function NewContents() {
       title: newsletters[0].title,
       date: formatDate(newsletters[0].publishedAt ?? newsletters[0].createdAt),
       imageUrl: newsletters[0].thumbnailUrl,
-      category: "News Letter",
+      category: "Digital Magazine",
       href: `/newsletter/${newsletters[0].id}`,
     },
     videos[0] && {

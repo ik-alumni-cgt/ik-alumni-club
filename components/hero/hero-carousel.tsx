@@ -10,7 +10,7 @@ import hero2 from "./hero2.jpg";
 import hero4 from "./hero4.jpg";
 
 const images = [
-  { src: hero1, alt: "Hero 1", href: "https://www.ik-alumni-cgt.com/information/Il0DGd6QZGhxKkKZNh9qy" },
+  { src: hero1, alt: "Hero 1", href: "https://www.ik-alumni-cgt.com/information/St337J1TNm73cYbjGT_1b" },
   { src: hero2, alt: "Hero 2", href: "https://www.ik-alumni-cgt.com/supporters" },
   { src: hero4, alt: "Hero 4", href: "https://linktr.ee/ik_alumni_2022" },
 ];
@@ -159,7 +159,7 @@ export function HeroCarousel() {
   const actualIndex = currentIndex % images.length;
 
   return (
-    <div className="w-full mb-8 md:mb-12 lg:mb-16 -mt-24 md:-mt-20 lg:-mt-24 overflow-x-clip">
+    <div className="w-full mt-8 md:mt-12 overflow-x-clip">
       {/* SP: 全幅、PC: container */}
       <div className="md:container md:mx-auto md:px-4">
         {/* 画像カルーセル */}
