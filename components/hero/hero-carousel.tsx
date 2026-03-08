@@ -10,7 +10,7 @@ import hero2 from "./hero2.jpg";
 import hero4 from "./hero4.jpg";
 
 const images = [
-  { src: hero1, alt: "Hero 1", href: "https://www.ik-alumni-cgt.com/information/Il0DGd6QZGhxKkKZNh9qy" },
+  { src: hero1, alt: "Hero 1", href: "https://www.ik-alumni-cgt.com/information/St337J1TNm73cYbjGT_1b" },
   { src: hero2, alt: "Hero 2", href: "https://www.ik-alumni-cgt.com/supporters" },
   { src: hero4, alt: "Hero 4", href: "https://linktr.ee/ik_alumni_2022" },
 ];
