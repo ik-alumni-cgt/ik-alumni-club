@@ -169,6 +169,13 @@
       "when": 1772962543544,
       "tag": "0023_smiling_pyro",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1772973174326,
+      "tag": "0024_brief_whirlwind",
+      "breakpoints": true
     }
   ]
 }

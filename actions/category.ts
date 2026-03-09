@@ -9,6 +9,7 @@ import {
   videoCategories,
   newsletterCategories,
   photoLibraryCategories,
+  pastEventCategories,
 } from "@/db/schemas/categories";
 import { categoryFormSchema, type CategoryFormData } from "@/zod/category";
 import { verifyAdmin } from "@/lib/session";
@@ -155,4 +156,19 @@ export async function updatePhotoLibraryCategories(photoLibraryId: string, categ
 
   revalidatePath("/admin/photo-library");
   revalidatePath("/photo-library");
+}
+
+export async function updatePastEventCategories(pastEventId: string, categoryIds: string[]) {
+  await verifyAdmin();
+
+  await db.delete(pastEventCategories).where(eq(pastEventCategories.pastEventId, pastEventId));
+
+  if (categoryIds.length > 0) {
+    await db.insert(pastEventCategories).values(
+      categoryIds.map((categoryId) => ({ pastEventId, categoryId })),
+    );
+  }
+
+  revalidatePath("/admin/past-events");
+  revalidatePath("/past-events");
 }

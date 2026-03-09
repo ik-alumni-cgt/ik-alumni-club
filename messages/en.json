@@ -12,6 +12,7 @@
     "video": "VIDEO",
     "blog": "BLOG",
     "profiles": "PROFILES",
+    "event": "EVENT",
     "contact": "CONTACT",
     "joinUs": "Join Us",
     "login": "Login",
@@ -28,7 +29,8 @@
     "photoLibrary": "PHOTO LIBRARY",
     "click_here_for_details" : "Click here for details",
     "publicContent": "Public",
-    "memberOnlyContent": "Members Only"
+    "memberOnlyContent": "Members Only",
+    "pastEvents": "PAST EVENTS"
   },
   "Footer": {
     "about": "About",

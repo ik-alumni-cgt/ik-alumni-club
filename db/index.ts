@@ -15,6 +15,8 @@ import * as sponsorSchema from './schemas/sponsors';
 import * as emailSendSchema from './schemas/email-sends';
 import * as categorySchema from './schemas/categories';
 import * as likeSchema from './schemas/likes';
+import * as contactSchema from './schemas/contacts';
+import * as pastEventSchema from './schemas/past-events';
 
 config({ path: '.env' });
 
@@ -36,5 +38,7 @@ export const db = drizzle({
         ...emailSendSchema,
         ...categorySchema,
         ...likeSchema,
+        ...contactSchema,
+        ...pastEventSchema,
     },
 });

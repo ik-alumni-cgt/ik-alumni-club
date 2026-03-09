@@ -12,6 +12,7 @@
     "video": "VIDEO",
     "blog": "BLOG",
     "profiles": "PROFILES",
+    "event": "EVENT",
     "contact": "CONTACT",
     "joinUs": "入会はこちら",
     "login": "ログイン",
@@ -28,7 +29,8 @@
     "photoLibrary": "PHOTO LIBRARY",
     "click_here_for_details" : "詳細はこちら",
     "publicContent": "一般公開",
-    "memberOnlyContent": "会員限定"
+    "memberOnlyContent": "会員限定",
+    "pastEvents": "PAST EVENTS"
   },
   "Footer": {
     "about": "アバウト",

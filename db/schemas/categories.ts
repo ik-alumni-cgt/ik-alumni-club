@@ -7,6 +7,7 @@ import { schedules } from "./schedules";
 import { videos } from "./videos";
 import { newsletters } from "./newsletters";
 import { photoLibrary } from "./photo-library";
+import { pastEvents } from "./past-events";
 
 // カテゴリーマスタ
 export const categories = pgTable("categories", {
@@ -38,6 +39,7 @@ export const categoryRelations = relations(categories, ({ one, many }) => ({
   videoCategories: many(videoCategories),
   newsletterCategories: many(newsletterCategories),
   photoLibraryCategories: many(photoLibraryCategories),
+  pastEventCategories: many(pastEventCategories),
 }));
 
 // ブログ中間テーブル
@@ -186,6 +188,31 @@ export const photoLibraryCategoryRelations = relations(photoLibraryCategories, (
   }),
   category: one(categories, {
     fields: [photoLibraryCategories.categoryId],
+    references: [categories.id],
+  }),
+}));
+
+// 過去イベント中間テーブル
+export const pastEventCategories = pgTable(
+  "past_event_categories",
+  {
+    pastEventId: text("past_event_id")
+      .notNull()
+      .references(() => pastEvents.id, { onDelete: "cascade" }),
+    categoryId: text("category_id")
+      .notNull()
+      .references(() => categories.id, { onDelete: "cascade" }),
+  },
+  (t) => [primaryKey({ columns: [t.pastEventId, t.categoryId] })],
+);
+
+export const pastEventCategoryRelations = relations(pastEventCategories, ({ one }) => ({
+  pastEvent: one(pastEvents, {
+    fields: [pastEventCategories.pastEventId],
+    references: [pastEvents.id],
+  }),
+  category: one(categories, {
+    fields: [pastEventCategories.categoryId],
     references: [categories.id],
   }),
 }));
