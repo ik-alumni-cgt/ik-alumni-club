@@ -5,6 +5,7 @@ import {
   Users,
   Bell,
   Calendar,
+  CalendarDays,
   Video,
   FileText,
   Newspaper,
@@ -13,6 +14,7 @@ import {
   Building2,
   ClipboardList,
   Tags,
+  MessageSquare,
 } from "lucide-react";
 import {
   Sidebar,
@@ -70,6 +72,11 @@ const menuItems = [
     url: "/admin/categories",
   },
   {
+    title: "過去のイベント管理",
+    icon: CalendarDays,
+    url: "/admin/past-events",
+  },
+  {
     title: "フォトライブラリ管理",
     icon: Image,
     url: "/admin/photo-library",
@@ -78,6 +85,11 @@ const menuItems = [
     title: "スポンサー回答管理",
     icon: Building2,
     url: "/admin/sponsors",
+  },
+  {
+    title: "お問い合わせ管理",
+    icon: MessageSquare,
+    url: "/admin/contacts",
   },
   {
     title: "役員ビュー",

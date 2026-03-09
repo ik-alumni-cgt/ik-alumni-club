@@ -68,6 +68,9 @@ export function HamburgerMenuContent({ onClose }: HamburgerMenuContentProps) {
         <Link href="/blog" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
           {t("blog")}
         </Link>
+        <Link href="/past-events" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
+          {t("event")}
+        </Link>
         <Link href="/profiles" onClick={handleLinkClick} className="text-base font-medium text-red-500 hover:text-red-300 transition-colors pb-4 border-b border-red-500">
           {t("profiles")}
         </Link>

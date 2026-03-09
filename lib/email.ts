@@ -99,6 +99,195 @@ export async function sendPasswordResetEmail({
   return data;
 }
 
+const ADMIN_EMAIL =
+  process.env.ADMIN_EMAIL || "cgt.ik.est2022@gmail.com";
+
+/**
+ * 問い合わせ通知メールを管理者に送信
+ */
+export async function sendContactNotificationEmail({
+  name,
+  email,
+  category,
+  subject,
+  body,
+}: {
+  name: string;
+  email: string;
+  category: string;
+  subject: string;
+  body: string;
+}) {
+  const resend = getResendClient();
+
+  if (!resend) {
+    console.log("=".repeat(50));
+    console.log("Contact Notification Email (Development Mode)");
+    console.log("=".repeat(50));
+    console.log(`To: ${ADMIN_EMAIL}`);
+    console.log(`From: ${name} <${email}>`);
+    console.log(`Category: ${category}`);
+    console.log(`Subject: ${subject}`);
+    console.log(`Body: ${body}`);
+    console.log("=".repeat(50));
+    return { id: "dev-mode" };
+  }
+
+  const { data, error } = await resend.emails.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: ADMIN_EMAIL,
+    subject: `【お問い合わせ】${subject}`,
+    html: `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px;">
+    <h1 style="color: #1a1a1a; font-size: 24px; margin-bottom: 20px; text-align: center;">
+      お問い合わせを受け付けました
+    </h1>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0; width: 120px;">名前</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${name}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">メール</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${email}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">カテゴリ</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${category}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">件名</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${subject}</td>
+      </tr>
+    </table>
+
+    <div style="background-color: #fff; padding: 16px; border-radius: 4px; border: 1px solid #e0e0e0;">
+      <p style="font-weight: bold; margin-bottom: 8px;">お問い合わせ内容:</p>
+      <p style="white-space: pre-wrap; margin: 0;">${body}</p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+
+    <p style="font-size: 12px; color: #999; text-align: center;">
+      このメールはIK ALUMNI CLUBのお問い合わせフォームから自動送信されています。
+    </p>
+  </div>
+</body>
+</html>
+    `,
+  });
+
+  if (error) {
+    console.error("Failed to send contact notification email:", error);
+    throw new Error("管理者への通知メールの送信に失敗しました");
+  }
+
+  return data;
+}
+
+/**
+ * 問い合わせ受付確認メールを送信者に送信
+ */
+export async function sendContactConfirmationEmail({
+  name,
+  email,
+  category,
+  subject,
+  body,
+}: {
+  name: string;
+  email: string;
+  category: string;
+  subject: string;
+  body: string;
+}) {
+  const resend = getResendClient();
+
+  if (!resend) {
+    console.log("=".repeat(50));
+    console.log("Contact Confirmation Email (Development Mode)");
+    console.log("=".repeat(50));
+    console.log(`To: ${email}`);
+    console.log(`Subject: ${subject}`);
+    console.log("=".repeat(50));
+    return { id: "dev-mode" };
+  }
+
+  const { data, error } = await resend.emails.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: email,
+    subject: "【IK ALUMNI CLUB】お問い合わせを受け付けました",
+    html: `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px;">
+    <h1 style="color: #1a1a1a; font-size: 24px; margin-bottom: 20px; text-align: center;">
+      お問い合わせを受け付けました
+    </h1>
+
+    <p style="margin-bottom: 20px;">
+      ${name} 様
+    </p>
+
+    <p style="margin-bottom: 20px;">
+      この度はお問い合わせいただきありがとうございます。<br>
+      以下の内容でお問い合わせを受け付けました。<br>
+      内容を確認の上、担当者よりご連絡いたします。
+    </p>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0; width: 120px;">カテゴリ</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${category}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">件名</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${subject}</td>
+      </tr>
+    </table>
+
+    <div style="background-color: #fff; padding: 16px; border-radius: 4px; border: 1px solid #e0e0e0;">
+      <p style="font-weight: bold; margin-bottom: 8px;">お問い合わせ内容:</p>
+      <p style="white-space: pre-wrap; margin: 0;">${body}</p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+
+    <p style="font-size: 12px; color: #999; text-align: center;">
+      このメールは自動送信されています。<br>
+      このメールに返信いただいてもお答えできませんのでご了承ください。
+    </p>
+
+    <p style="font-size: 12px; color: #999; text-align: center; margin-top: 20px;">
+      IK ALUMNI CLUB
+    </p>
+  </div>
+</body>
+</html>
+    `,
+  });
+
+  if (error) {
+    console.error("Failed to send contact confirmation email:", error);
+    throw new Error("確認メールの送信に失敗しました");
+  }
+
+  return data;
+}
+
 const TEST_EMAIL_TO = "cgt.ik.est2022@gmail.com";
 
 /**

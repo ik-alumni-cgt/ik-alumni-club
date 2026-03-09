@@ -77,6 +77,7 @@ const WHITE_BACKGROUND_PATHS = [
   "/photo-library",
   "/information",
   "/schedule",
+  "/past-events",
 ];
 
 export function Header() {
