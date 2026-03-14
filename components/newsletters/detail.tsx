@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
+import { useState } from "react";
+import { PdfViewer } from "./pdf-viewer";
 
 type Newsletter = {
   id: string;
@@ -19,6 +22,8 @@ type Newsletter = {
 };
 
 export function NewsletterDetail({ item }: { item: Newsletter }) {
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+
   return (
     <article className="flex flex-col gap-8 max-w-4xl mx-auto">
       <header>
@@ -55,12 +60,12 @@ export function NewsletterDetail({ item }: { item: Newsletter }) {
 
       {item.pdfUrl && (
         <div className="mt-6 p-4 bg-white/10 rounded-lg flex items-center gap-4">
-          <Link
-            href={`/newsletter/${item.id}/viewer`}
+          <button
+            onClick={() => setIsViewerOpen(true)}
             className="text-white hover:text-white/80 underline font-medium"
           >
             PDFを閲覧する
-          </Link>
+          </button>
           <a
             href={item.pdfUrl}
             target="_blank"
@@ -70,6 +75,15 @@ export function NewsletterDetail({ item }: { item: Newsletter }) {
             ダウンロード
           </a>
         </div>
+      )}
+
+      {isViewerOpen && item.pdfUrl && (
+        <PdfViewer
+          pdfUrl={item.pdfUrl}
+          title={item.title}
+          issueNumber={item.issueNumber}
+          onClose={() => setIsViewerOpen(false)}
+        />
       )}
     </article>
   );
