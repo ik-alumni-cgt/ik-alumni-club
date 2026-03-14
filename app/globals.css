@@ -71,14 +71,14 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.345 0 0);
+  --sidebar-primary: oklch(0.24 0.11 275);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.955 0.015 275);
+  --sidebar-accent-foreground: oklch(0.24 0.11 275);
+  --sidebar-border: oklch(0.90 0 0);
+  --sidebar-ring: oklch(0.24 0.11 275);
 }
 
 .dark {
@@ -232,4 +232,79 @@
     transform: none;
     transition: none;
   }
+}
+
+/* スクロールバー非表示 */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* モバイルPDFビューアのフリップアニメーション */
+@keyframes flip-out-forward {
+  from {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+
+  to {
+    transform: rotateY(-90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes flip-in-forward {
+  from {
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes flip-out-backward {
+  from {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+
+  to {
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes flip-in-backward {
+  from {
+    transform: rotateY(-90deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-flip-out-forward {
+  animation: flip-out-forward 0.3s ease-in forwards;
+}
+
+.animate-flip-in-forward {
+  animation: flip-in-forward 0.3s ease-out forwards;
+}
+
+.animate-flip-out-backward {
+  animation: flip-out-backward 0.3s ease-in forwards;
+}
+
+.animate-flip-in-backward {
+  animation: flip-in-backward 0.3s ease-out forwards;
 }

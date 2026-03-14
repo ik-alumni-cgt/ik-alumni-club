@@ -3,6 +3,7 @@ import { setLocale } from "@/app/web/i18n/set-locale";
 import { redirect } from "next/navigation";
 import { AdminDashboard } from "@/components/admin-dashboard/admin-dashboard";
 import { isAdmin } from "@/data/member";
+import { getDashboardStats } from "@/data/dashboard";
 
 export default async function AdminDashboardPage({
   params,
@@ -12,12 +13,13 @@ export default async function AdminDashboardPage({
   await setLocale(params);
   const session = await verifySession();
 
-  // 管理者権限チェック
   const adminCheck = await isAdmin();
 
   if (!adminCheck) {
     redirect("/");
   }
 
-  return <AdminDashboard user={session.user} />;
+  const stats = await getDashboardStats();
+
+  return <AdminDashboard stats={stats} userName={session.user.name} />;
 }
