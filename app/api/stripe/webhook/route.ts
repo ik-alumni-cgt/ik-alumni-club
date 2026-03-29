@@ -93,10 +93,13 @@ async function handleCheckoutSessionCompleted(
       const subscriptionId = session.subscription as string;
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
-      const subscriptionData = subscription as unknown as Stripe.Subscription & {
-        current_period_start: number;
-        current_period_end: number;
-      };
+      const periodStart = subscription.items?.data?.[0]?.current_period_start
+        ?? (subscription as unknown as { current_period_start?: number }).current_period_start;
+      const periodEnd = subscription.items?.data?.[0]?.current_period_end
+        ?? (subscription as unknown as { current_period_end?: number }).current_period_end;
+
+      const startDate = periodStart ? new Date(periodStart * 1000) : new Date();
+      const endDate = periodEnd ? new Date(periodEnd * 1000) : (() => { const d = new Date(); d.setFullYear(d.getFullYear() + 1); return d; })();
 
       if (existingMember.length === 0) {
         console.log(`Creating new member record for user: ${userId}`);
@@ -110,8 +113,8 @@ async function handleCheckoutSessionCompleted(
           isActive: true,
           paymentStatus: "completed",
           stripeSubscriptionId: subscriptionId,
-          subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
-          subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
+          subscriptionStartDate: startDate,
+          subscriptionEndDate: endDate,
         });
       } else {
         await db
@@ -119,8 +122,8 @@ async function handleCheckoutSessionCompleted(
           .set({
             paymentStatus: "completed",
             stripeSubscriptionId: subscriptionId,
-            subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
-            subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
+            subscriptionStartDate: startDate,
+            subscriptionEndDate: endDate,
           })
           .where(eq(members.userId, userId));
       }
