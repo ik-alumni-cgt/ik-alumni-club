@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Suspense } from "react";
-import type { MemberStatus } from "@/types/member";
 
 type PaymentStatus = "pending" | "completed" | "failed" | "canceled";
 
@@ -31,6 +30,17 @@ const VALID_PAYMENT_STATUSES: PaymentStatus[] = [
   "failed",
   "canceled",
 ];
+
+function ProfileStatusBadge({ status }: { status: string | null }) {
+  if (status === "pending_profile") {
+    return (
+      <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
+        プロフィール未登録
+      </Badge>
+    );
+  }
+  return null;
+}
 
 function MembershipTypeBadge({ isMigrated }: { isMigrated: boolean }) {
   if (isMigrated) {
@@ -138,6 +148,7 @@ function MemberCardList({ accounts }: { accounts: Account[] }) {
               <div className="flex shrink-0 flex-wrap gap-1">
                 <MembershipTypeBadge isMigrated={account.isMigrated} />
                 <PaymentStatusBadge status={account.paymentStatus} />
+                <ProfileStatusBadge status={account.status} />
               </div>
             </div>
 
@@ -197,6 +208,7 @@ function MemberTableDesktop({ accounts }: { accounts: Account[] }) {
             <TableHead>会員種別</TableHead>
             <TableHead>継続/新規</TableHead>
             <TableHead>入金状況</TableHead>
+            <TableHead>ステータス</TableHead>
             <TableHead className="text-center">初回特典郵送済</TableHead>
           </TableRow>
         </TableHeader>
@@ -228,6 +240,9 @@ function MemberTableDesktop({ accounts }: { accounts: Account[] }) {
                 <TableCell>
                   <PaymentStatusBadge status={account.paymentStatus} />
                 </TableCell>
+                <TableCell>
+                  <ProfileStatusBadge status={account.status} />
+                </TableCell>
                 <TableCell className="text-center">
                   <WelcomeGiftCheckbox
                     memberId={account.id}
@@ -249,7 +264,6 @@ async function MembersContent({
   paymentStatus: PaymentStatus | undefined;
 }) {
   const accounts = await getAllAccounts({
-    status: "active" as MemberStatus,
     paymentStatus,
   });
 
