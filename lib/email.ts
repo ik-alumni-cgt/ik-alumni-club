@@ -102,6 +102,12 @@ export async function sendPasswordResetEmail({
 const ADMIN_EMAIL =
   process.env.ADMIN_EMAIL || "cgt.ik.est2022@gmail.com";
 
+const NOTIFICATION_EMAILS = [
+  ADMIN_EMAIL,
+  "k.1hsnm@softbank.ne.jp",
+  "c5.-_-.328@softbank.ne.jp",
+];
+
 /**
  * 問い合わせ通知メールを管理者に送信
  */
@@ -283,6 +289,184 @@ export async function sendContactConfirmationEmail({
   if (error) {
     console.error("Failed to send contact confirmation email:", error);
     throw new Error("確認メールの送信に失敗しました");
+  }
+
+  return data;
+}
+
+/**
+ * 新規サインアップ通知メールを管理者に送信
+ */
+export async function sendSignupNotificationEmail({
+  name,
+  email,
+}: {
+  name: string;
+  email: string;
+}) {
+  const resend = getResendClient();
+
+  const signupDate = new Date().toLocaleString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+  });
+
+  if (!resend) {
+    console.log("=".repeat(50));
+    console.log("Signup Notification Email (Development Mode)");
+    console.log("=".repeat(50));
+    console.log(`To: ${NOTIFICATION_EMAILS.join(", ")}`);
+    console.log(`Name: ${name}`);
+    console.log(`Email: ${email}`);
+    console.log(`Date: ${signupDate}`);
+    console.log("=".repeat(50));
+    return { id: "dev-mode" };
+  }
+
+  const { data, error } = await resend.emails.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: NOTIFICATION_EMAILS,
+    subject: "【IK ALUMNI CLUB】新規ユーザー登録がありました",
+    html: `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px;">
+    <h1 style="color: #1a1a1a; font-size: 24px; margin-bottom: 20px; text-align: center;">
+      新規ユーザー登録通知
+    </h1>
+
+    <p style="margin-bottom: 20px;">
+      新しいユーザーがアカウントを作成しました。
+    </p>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0; width: 120px;">名前</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${name}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">メール</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${email}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">登録日時</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${signupDate}</td>
+      </tr>
+    </table>
+
+    <p style="margin-bottom: 10px; font-size: 14px; color: #666;">
+      このユーザーはまだ決済を完了していません。
+    </p>
+
+    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+
+    <p style="font-size: 12px; color: #999; text-align: center;">
+      このメールはIK ALUMNI CLUBから自動送信されています。
+    </p>
+  </div>
+</body>
+</html>
+    `,
+  });
+
+  if (error) {
+    console.error("Failed to send signup notification email:", error);
+    throw new Error("サインアップ通知メールの送信に失敗しました");
+  }
+
+  return data;
+}
+
+/**
+ * 決済完了通知メールを管理者に送信
+ */
+export async function sendPaymentCompletedNotificationEmail({
+  name,
+  email,
+  paymentMode,
+}: {
+  name: string;
+  email: string;
+  paymentMode: string;
+}) {
+  const resend = getResendClient();
+
+  const completedDate = new Date().toLocaleString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+  });
+  const paymentModeLabel = paymentMode === "subscription" ? "サブスクリプション" : "一括払い";
+
+  if (!resend) {
+    console.log("=".repeat(50));
+    console.log("Payment Completed Notification Email (Development Mode)");
+    console.log("=".repeat(50));
+    console.log(`To: ${NOTIFICATION_EMAILS.join(", ")}`);
+    console.log(`Name: ${name}`);
+    console.log(`Email: ${email}`);
+    console.log(`Payment Mode: ${paymentModeLabel}`);
+    console.log(`Date: ${completedDate}`);
+    console.log("=".repeat(50));
+    return { id: "dev-mode" };
+  }
+
+  const { data, error } = await resend.emails.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: NOTIFICATION_EMAILS,
+    subject: "【IK ALUMNI CLUB】新規会員の決済が完了しました",
+    html: `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background-color: #f8f9fa; padding: 30px; border-radius: 8px;">
+    <h1 style="color: #1a1a1a; font-size: 24px; margin-bottom: 20px; text-align: center;">
+      決済完了通知
+    </h1>
+
+    <p style="margin-bottom: 20px;">
+      新規会員の決済が完了しました。
+    </p>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0; width: 120px;">名前</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${name}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">メール</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${email}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">決済方法</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${paymentModeLabel}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: bold; border-bottom: 1px solid #e0e0e0;">完了日時</td>
+        <td style="padding: 8px 12px; border-bottom: 1px solid #e0e0e0;">${completedDate}</td>
+      </tr>
+    </table>
+
+    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+
+    <p style="font-size: 12px; color: #999; text-align: center;">
+      このメールはIK ALUMNI CLUBから自動送信されています。
+    </p>
+  </div>
+</body>
+</html>
+    `,
+  });
+
+  if (error) {
+    console.error("Failed to send payment completed notification email:", error);
+    throw new Error("決済完了通知メールの送信に失敗しました");
   }
 
   return data;

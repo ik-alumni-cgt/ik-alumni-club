@@ -9,7 +9,7 @@ import { anonymous, genericOAuth } from "better-auth/plugins";
 import { stripe as stripePlugin } from "@better-auth/stripe";
 import Stripe from "stripe";
 import { eq } from "drizzle-orm";
-import { sendPasswordResetEmail } from "@/lib/email";
+import { sendPasswordResetEmail, sendPaymentCompletedNotificationEmail } from "@/lib/email";
 import { members } from "@/db/schemas/member";
 
 // Stripe クライアントを初期化
@@ -179,6 +179,22 @@ export const auth = betterAuth({
             }
             console.log(`Subscription payment completed for user: ${userId}`);
 
+            // 決済完了通知メールを管理者に送信
+            try {
+              const userRecord = await db
+                .select({ name: schema.users.name })
+                .from(schema.users)
+                .where(eq(schema.users.id, userId))
+                .limit(1);
+              await sendPaymentCompletedNotificationEmail({
+                name: userRecord[0]?.name || "不明",
+                email: email || "不明",
+                paymentMode: "subscription",
+              });
+            } catch (emailError) {
+              console.error("Failed to send payment notification email:", emailError);
+            }
+
           } else if (mode === 'payment') {
             const oneYearLater = new Date();
             oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
@@ -209,6 +225,22 @@ export const auth = betterAuth({
                 .where(eq(members.userId, userId));
             }
             console.log(`One-time payment completed for user: ${userId}`);
+
+            // 決済完了通知メールを管理者に送信
+            try {
+              const userRecord = await db
+                .select({ name: schema.users.name })
+                .from(schema.users)
+                .where(eq(schema.users.id, userId))
+                .limit(1);
+              await sendPaymentCompletedNotificationEmail({
+                name: userRecord[0]?.name || "不明",
+                email: email || "不明",
+                paymentMode: "payment",
+              });
+            } catch (emailError) {
+              console.error("Failed to send payment notification email:", emailError);
+            }
           }
 
         } else if (event.type === 'customer.subscription.deleted') {
