@@ -115,159 +115,183 @@ export const auth = betterAuth({
         ]
       },
       onEvent: async (event) => {
-        console.log('Stripe Event:', event.type);
+        console.log('[Webhook] Stripe Event:', event.type);
 
-        if (event.type === 'checkout.session.completed') {
-          const session = event.data.object as Stripe.Checkout.Session;
-          const userId = session.client_reference_id || session.metadata?.userId;
-          const customerId = session.customer;
-          const planId = session.metadata?.planId;
-          const email = session.customer_email;
-          const mode = session.mode;
+        try {
+          if (event.type === 'checkout.session.completed') {
+            const session = event.data.object as Stripe.Checkout.Session;
+            const userId = session.client_reference_id || session.metadata?.userId;
+            const customerId = session.customer;
+            const planId = session.metadata?.planId;
+            const email = session.customer_email;
+            const mode = session.mode;
 
-          // stripeCustomerId を users テーブルに保存
-          if (userId && customerId) {
-            await db
-              .update(schema.users)
-              .set({ stripeCustomerId: customerId as string })
-              .where(eq(schema.users.id, userId));
-          }
+            console.log('[Webhook] Session data:', JSON.stringify({ userId, customerId, planId, email, mode, subscription: session.subscription }));
 
-          if (!userId) {
-            console.error('No user ID found in checkout session');
-            return;
-          }
-
-          const existingMember = await db
-            .select()
-            .from(members)
-            .where(eq(members.userId, userId))
-            .limit(1);
-
-          if (mode === 'subscription') {
-            const subscriptionId = session.subscription as string;
-            const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
-            const subscriptionData = subscription as unknown as Stripe.Subscription & {
-              current_period_start: number;
-              current_period_end: number;
-            };
-
-            if (existingMember.length === 0) {
-              await db.insert(members).values({
-                userId,
-                email: email || '',
-                planId: planId ? parseInt(planId) : null,
-                role: 'member',
-                status: 'pending_profile',
-                profileCompleted: false,
-                isActive: true,
-                paymentStatus: 'completed',
-                stripeSubscriptionId: subscriptionId,
-                subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
-                subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
-              });
-            } else {
+            // stripeCustomerId を users テーブルに保存
+            if (userId && customerId) {
+              console.log('[Webhook] Updating stripeCustomerId for user:', userId);
               await db
-                .update(members)
-                .set({
+                .update(schema.users)
+                .set({ stripeCustomerId: customerId as string })
+                .where(eq(schema.users.id, userId));
+              console.log('[Webhook] stripeCustomerId updated successfully');
+            }
+
+            if (!userId) {
+              console.error('[Webhook] No user ID found in checkout session');
+              return;
+            }
+
+            console.log('[Webhook] Querying existing member for userId:', userId);
+            const existingMember = await db
+              .select()
+              .from(members)
+              .where(eq(members.userId, userId))
+              .limit(1);
+            console.log('[Webhook] Existing member found:', existingMember.length > 0);
+
+            if (mode === 'subscription') {
+              const subscriptionId = session.subscription as string;
+              console.log('[Webhook] Retrieving subscription:', subscriptionId);
+              const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+              const subscriptionData = subscription as unknown as Stripe.Subscription & {
+                current_period_start: number;
+                current_period_end: number;
+              };
+              console.log('[Webhook] Subscription period:', JSON.stringify({
+                current_period_start: subscriptionData.current_period_start,
+                current_period_end: subscriptionData.current_period_end,
+                items_period_start: subscription.items?.data?.[0]?.current_period_start,
+                items_period_end: subscription.items?.data?.[0]?.current_period_end,
+              }));
+
+              if (existingMember.length === 0) {
+                console.log('[Webhook] Creating new member record');
+                await db.insert(members).values({
+                  userId,
+                  email: email || '',
+                  planId: planId ? parseInt(planId) : null,
+                  role: 'member',
+                  status: 'pending_profile',
+                  profileCompleted: false,
+                  isActive: true,
                   paymentStatus: 'completed',
                   stripeSubscriptionId: subscriptionId,
                   subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
                   subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
-                })
-                .where(eq(members.userId, userId));
-            }
-            console.log(`Subscription payment completed for user: ${userId}`);
+                });
+              } else {
+                console.log('[Webhook] Updating existing member record');
+                await db
+                  .update(members)
+                  .set({
+                    paymentStatus: 'completed',
+                    stripeSubscriptionId: subscriptionId,
+                    subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
+                    subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
+                  })
+                  .where(eq(members.userId, userId));
+              }
+              console.log(`[Webhook] Subscription payment completed for user: ${userId}`);
 
-            // 決済完了通知メールを管理者に送信
-            try {
-              const userRecord = await db
-                .select({ name: schema.users.name })
-                .from(schema.users)
-                .where(eq(schema.users.id, userId))
-                .limit(1);
-              await sendPaymentCompletedNotificationEmail({
-                name: userRecord[0]?.name || "不明",
-                email: email || "不明",
-                paymentMode: "subscription",
-              });
-            } catch (emailError) {
-              console.error("Failed to send payment notification email:", emailError);
-            }
+              // 決済完了通知メールを管理者に送信
+              try {
+                const userRecord = await db
+                  .select({ name: schema.users.name })
+                  .from(schema.users)
+                  .where(eq(schema.users.id, userId))
+                  .limit(1);
+                await sendPaymentCompletedNotificationEmail({
+                  name: userRecord[0]?.name || "不明",
+                  email: email || "不明",
+                  paymentMode: "subscription",
+                });
+              } catch (emailError) {
+                console.error("[Webhook] Failed to send payment notification email:", emailError);
+              }
 
-          } else if (mode === 'payment') {
-            const oneYearLater = new Date();
-            oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+            } else if (mode === 'payment') {
+              const oneYearLater = new Date();
+              oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
 
-            if (existingMember.length === 0) {
-              await db.insert(members).values({
-                userId,
-                email: email || '',
-                planId: planId ? parseInt(planId) : null,
-                role: 'member',
-                status: 'pending_profile',
-                profileCompleted: false,
-                isActive: true,
-                paymentStatus: 'completed',
-                stripeSubscriptionId: null,
-                subscriptionStartDate: new Date(),
-                subscriptionEndDate: oneYearLater,
-              });
-            } else {
-              await db
-                .update(members)
-                .set({
+              if (existingMember.length === 0) {
+                console.log('[Webhook] Creating new member record (one-time)');
+                await db.insert(members).values({
+                  userId,
+                  email: email || '',
+                  planId: planId ? parseInt(planId) : null,
+                  role: 'member',
+                  status: 'pending_profile',
+                  profileCompleted: false,
+                  isActive: true,
                   paymentStatus: 'completed',
                   stripeSubscriptionId: null,
                   subscriptionStartDate: new Date(),
                   subscriptionEndDate: oneYearLater,
-                })
-                .where(eq(members.userId, userId));
+                });
+              } else {
+                console.log('[Webhook] Updating existing member record (one-time)');
+                await db
+                  .update(members)
+                  .set({
+                    paymentStatus: 'completed',
+                    stripeSubscriptionId: null,
+                    subscriptionStartDate: new Date(),
+                    subscriptionEndDate: oneYearLater,
+                  })
+                  .where(eq(members.userId, userId));
+              }
+              console.log(`[Webhook] One-time payment completed for user: ${userId}`);
+
+              // 決済完了通知メールを管理者に送信
+              try {
+                const userRecord = await db
+                  .select({ name: schema.users.name })
+                  .from(schema.users)
+                  .where(eq(schema.users.id, userId))
+                  .limit(1);
+                await sendPaymentCompletedNotificationEmail({
+                  name: userRecord[0]?.name || "不明",
+                  email: email || "不明",
+                  paymentMode: "payment",
+                });
+              } catch (emailError) {
+                console.error("[Webhook] Failed to send payment notification email:", emailError);
+              }
             }
-            console.log(`One-time payment completed for user: ${userId}`);
 
-            // 決済完了通知メールを管理者に送信
-            try {
-              const userRecord = await db
-                .select({ name: schema.users.name })
-                .from(schema.users)
-                .where(eq(schema.users.id, userId))
-                .limit(1);
-              await sendPaymentCompletedNotificationEmail({
-                name: userRecord[0]?.name || "不明",
-                email: email || "不明",
-                paymentMode: "payment",
-              });
-            } catch (emailError) {
-              console.error("Failed to send payment notification email:", emailError);
-            }
-          }
-
-        } else if (event.type === 'customer.subscription.deleted') {
-          const subscription = event.data.object as Stripe.Subscription;
-          await db
-            .update(members)
-            .set({
-              paymentStatus: 'canceled',
-              subscriptionEndDate: new Date(),
-            })
-            .where(eq(members.stripeSubscriptionId, subscription.id));
-          console.log(`Subscription canceled: ${subscription.id}`);
-
-        } else if (event.type === 'invoice.payment_failed') {
-          const invoice = event.data.object as unknown as { subscription?: string | Stripe.Subscription };
-          const subscriptionValue = invoice.subscription;
-          const subscriptionId = typeof subscriptionValue === 'string'
-            ? subscriptionValue
-            : subscriptionValue?.id;
-
-          if (subscriptionId) {
+          } else if (event.type === 'customer.subscription.deleted') {
+            const subscription = event.data.object as Stripe.Subscription;
             await db
               .update(members)
-              .set({ paymentStatus: 'failed' })
-              .where(eq(members.stripeSubscriptionId, subscriptionId));
-            console.log(`Payment failed for subscription: ${subscriptionId}`);
+              .set({
+                paymentStatus: 'canceled',
+                subscriptionEndDate: new Date(),
+              })
+              .where(eq(members.stripeSubscriptionId, subscription.id));
+            console.log(`[Webhook] Subscription canceled: ${subscription.id}`);
+
+          } else if (event.type === 'invoice.payment_failed') {
+            const invoice = event.data.object as unknown as { subscription?: string | Stripe.Subscription };
+            const subscriptionValue = invoice.subscription;
+            const subscriptionId = typeof subscriptionValue === 'string'
+              ? subscriptionValue
+              : subscriptionValue?.id;
+
+            if (subscriptionId) {
+              await db
+                .update(members)
+                .set({ paymentStatus: 'failed' })
+                .where(eq(members.stripeSubscriptionId, subscriptionId));
+              console.log(`[Webhook] Payment failed for subscription: ${subscriptionId}`);
+            }
           }
+        } catch (error) {
+          console.error('[Webhook] onEvent error:', error);
+          console.error('[Webhook] onEvent error message:', error instanceof Error ? error.message : String(error));
+          console.error('[Webhook] onEvent error stack:', error instanceof Error ? error.stack : 'no stack');
+          throw error;
         }
       },
     }),
