@@ -26,10 +26,18 @@ export function PdfViewer({ pdfUrl, title, issueNumber, onClose }: Props) {
   const { pages, isLoading, error, progress } = usePdfDocument(pdfUrl);
   const [isPortrait, setIsPortrait] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [windowHeight, setWindowHeight] = useState(600);
 
   useEffect(() => {
     setIsLayoutReady(true);
     setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
+    setWindowHeight(window.innerHeight);
+
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // モバイル縦向き検知
@@ -106,7 +114,7 @@ export function PdfViewer({ pdfUrl, title, issueNumber, onClose }: Props) {
 
   // ===== flipbook表示（PC・スマホ共通） =====
   // py-12 = 48px * 2 = 96px分の余白を引いた利用可能高さから算出
-  const availableHeight = typeof window !== "undefined" ? window.innerHeight - 96 : 600;
+  const availableHeight = windowHeight - 96;
   const pageHeight = Math.min(availableHeight, 849);
   const pageWidth = Math.round(pageHeight / 1.414);
 
@@ -160,6 +168,7 @@ export function PdfViewer({ pdfUrl, title, issueNumber, onClose }: Props) {
 
       {pages.length > 0 && (
         <HTMLFlipBook
+          key={windowHeight}
           ref={flipBookRef}
           width={pageWidth}
           height={pageHeight}
