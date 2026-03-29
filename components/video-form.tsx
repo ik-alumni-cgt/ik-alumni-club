@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { InputImage } from "@/components/input-image";
 import { useRouter } from "next/navigation";
 import { createVideo, updateVideo } from "@/actions/video";
 import { updateVideoCategories } from "@/actions/category";
@@ -144,14 +145,19 @@ export function VideoForm({
           name="thumbnailUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>サムネイルURL（任意）</FormLabel>
+              <FormLabel>サムネイル画像（任意）</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="https://example.com/thumbnail.jpg"
-                  {...field}
+                <InputImage
+                  width={400}
+                  aspectRatio={16 / 9}
+                  resultWidth={800}
+                  value={field.value || ""}
+                  onChange={field.onChange}
                 />
               </FormControl>
-              <FormDescription>サムネイル画像のURLを入力してください</FormDescription>
+              <FormDescription>
+                画像をドラッグ&ドロップまたはクリックして選択してください
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

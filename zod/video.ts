@@ -26,21 +26,7 @@ export const videoFormSchema = createInsertSchema(videos, {
       },
       { message: "有効なYouTube URLを入力してください" }
     ),
-  thumbnailUrl: z
-    .string()
-    .optional()
-    .refine(
-      (val) => {
-        if (!val || val === "") return true;
-        try {
-          new URL(val);
-          return true;
-        } catch {
-          return false;
-        }
-      },
-      { message: "有効なURLを入力してください" }
-    ),
+  thumbnailUrl: z.string().optional(),
   published: z.boolean(),
   viewCount: z.number().int().min(0),
 }).omit({
