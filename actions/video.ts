@@ -6,6 +6,8 @@ import { verifyAdmin } from "@/lib/session";
 import { VideoFormData } from "@/types/video";
 import { videoFormSchema } from "@/zod/video";
 import { eq } from "drizzle-orm";
+import { resolveImageUpload } from "@/lib/storage";
+import { nanoid } from "nanoid";
 
 // 動画作成
 export async function createVideo(formData: VideoFormData) {
@@ -17,8 +19,13 @@ export async function createVideo(formData: VideoFormData) {
     where: (users, { eq }) => eq(users.id, userId),
   });
 
+  const thumbnailUrl = data.thumbnailUrl
+    ? await resolveImageUpload(`videos/${nanoid()}`, data.thumbnailUrl)
+    : null;
+
   const [newVideo] = await db.insert(videos).values({
     ...data,
+    thumbnailUrl,
     authorId: userId,
     authorName: user?.name || "",
   }).returning();
@@ -31,9 +38,16 @@ export async function updateVideo(id: string, formData: VideoFormData) {
   await verifyAdmin();
   const data = videoFormSchema.parse(formData);
 
+  const thumbnailUrl = data.thumbnailUrl
+    ? await resolveImageUpload(`videos/${id}`, data.thumbnailUrl)
+    : null;
+
   await db
     .update(videos)
-    .set(data)
+    .set({
+      ...data,
+      thumbnailUrl,
+    })
     .where(eq(videos.id, id));
 }
 
