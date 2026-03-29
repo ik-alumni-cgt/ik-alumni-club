@@ -9,7 +9,7 @@ export function ScheduleSection() {
           className="text-2xl md:text-3xl font-bold tracking-widest text-white"
           style={{ fontFamily: "var(--font-academy)" }}
         >
-          2027.2.3<span className="text-base md:text-lg ml-1">Wed</span>
+          2027.2.7<span className="text-base md:text-lg ml-1">Fri</span>
         </p>
 
         {/* 会場 */}
