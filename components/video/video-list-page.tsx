@@ -13,7 +13,6 @@ type Video = {
   published: boolean;
   isMemberOnly: boolean;
   authorName: string | null;
-  viewCount: number;
 };
 
 interface ShortsItem {

@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { photoLibrary, photoLibraryImages } from "@/db/schemas/photo-library";
 import { photoLibraryFormSchema, type PhotoLibraryFormData } from "@/zod/photo-library";
 import { verifyAdmin } from "@/lib/session";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { generatePresignedPutUrl, type PresignedPutUrlResult } from "@/lib/storage";
 import { nanoid } from "nanoid";
@@ -139,21 +139,6 @@ export async function deletePhoto(id: string) {
   // 3. キャッシュ再検証
   revalidatePath("/admin/photo-library");
   revalidatePath("/photo-library");
-}
-
-/**
- * 閲覧数をインクリメント
- */
-export async function incrementPhotoViewCount(id: string) {
-  // 権限チェック不要（一般ユーザーも実行可能）
-  await db
-    .update(photoLibrary)
-    .set({
-      viewCount: sql`${photoLibrary.viewCount} + 1`,
-    })
-    .where(eq(photoLibrary.id, id));
-
-  revalidatePath(`/photo-library/${id}`);
 }
 
 /**

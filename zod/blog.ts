@@ -42,7 +42,6 @@ export const blogFormSchema = createInsertSchema(blogs, {
   id: true,
   authorId: true,
   authorName: true,
-  viewCount: true,
   createdAt: true,
   updatedAt: true,
 });

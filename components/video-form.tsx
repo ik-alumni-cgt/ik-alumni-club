@@ -47,7 +47,6 @@ export function VideoForm({
           published: defaultValues.published,
           isMemberOnly: defaultValues.isMemberOnly,
           isShorts: defaultValues.isShorts,
-          viewCount: defaultValues.viewCount,
         }
       : {
           title: "",
@@ -57,7 +56,6 @@ export function VideoForm({
           published: false,
           isMemberOnly: false,
           isShorts: false,
-          viewCount: 0,
         },
   });
 
@@ -159,27 +157,6 @@ export function VideoForm({
               </FormControl>
               <FormDescription>
                 画像をドラッグ&ドロップまたはクリックして選択してください
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="viewCount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>閲覧数</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                />
-              </FormControl>
-              <FormDescription>
-                閲覧数を入力してください（将来的な拡張用）
               </FormDescription>
               <FormMessage />
             </FormItem>

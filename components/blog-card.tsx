@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, Eye, Lock } from "lucide-react";
+import { Calendar, Lock } from "lucide-react";
 
 export function BlogCard({
   blog,
@@ -35,15 +35,9 @@ export function BlogCard({
               </Badge>
             )}
           </div>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <div className="flex items-center">
-              <Eye className="mr-1 h-4 w-4" />
-              {blog.viewCount}
-            </div>
-            <div className="flex items-center">
-              <Calendar className="mr-1 h-4 w-4" />
-              {new Date(blog.createdAt).toLocaleDateString("ja-JP")}
-            </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <Calendar className="mr-1 h-4 w-4" />
+            {new Date(blog.createdAt).toLocaleDateString("ja-JP")}
           </div>
         </div>
         <CardTitle className="line-clamp-2">{blog.title}</CardTitle>

@@ -62,7 +62,6 @@ export const newsletterFormSchema = createInsertSchema(newsletters, {
   id: true,
   authorId: true,
   authorName: true,
-  viewCount: true,
   createdAt: true,
   updatedAt: true,
 });

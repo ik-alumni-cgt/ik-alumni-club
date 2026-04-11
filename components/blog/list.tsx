@@ -12,7 +12,6 @@ type Blog = {
   published: boolean;
   isMemberOnly: boolean;
   authorName: string | null;
-  viewCount: number;
   publishedAt: Date | null;
   createdAt: Date;
 };

@@ -204,6 +204,13 @@
       "when": 1775901975588,
       "tag": "0028_confused_red_shift",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1775903800124,
+      "tag": "0029_fair_inertia",
+      "breakpoints": true
     }
   ]
 }

@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { photoLibrary } from "@/db/schemas/photo-library";
 import { and, desc, eq, sql } from "drizzle-orm";
 
+
 /**
  * 公開されているフォトライブラリ一覧を取得（一般ユーザー向け）
  * 会員限定コンテンツも一覧には表示（詳細ページでアクセス制御）
@@ -83,23 +84,6 @@ export const getPhoto = async (id: string) => {
       creator: true,
       images: {
         orderBy: (images, { asc }) => [asc(images.sortOrder)],
-      },
-    },
-  });
-};
-
-/**
- * 人気のフォトを取得
- */
-export const getPopularPhotos = async (limit: number = 5) => {
-  return db.query.photoLibrary.findMany({
-    where: eq(photoLibrary.published, true),
-    orderBy: [desc(photoLibrary.viewCount)],
-    limit,
-    with: {
-      images: {
-        orderBy: (images, { asc }) => [asc(images.sortOrder)],
-        limit: 1,
       },
     },
   });

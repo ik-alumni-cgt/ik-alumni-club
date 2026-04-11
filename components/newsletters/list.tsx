@@ -13,7 +13,6 @@ type Newsletter = {
   pdfUrl: string | null;
   authorName: string | null;
   category: string | null;
-  viewCount: number;
   published: boolean;
   isMemberOnly: boolean;
   publishedAt: Date | null;

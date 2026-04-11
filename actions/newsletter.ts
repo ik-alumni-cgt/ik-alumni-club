@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { newsletters } from "@/db/schemas/newsletters";
 import { newsletterFormSchema, type NewsletterFormData } from "@/zod/newsletter";
 import { verifyAdmin } from "@/lib/session";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { resolveImageUpload } from "@/lib/storage";
 import { nanoid } from "nanoid";
@@ -114,21 +114,6 @@ export async function deleteNewsletter(id: string) {
   // 3. キャッシュ再検証
   revalidatePath("/admin/newsletters");
   revalidatePath("/newsletters");
-}
-
-/**
- * 閲覧数をインクリメント
- */
-export async function incrementNewsletterViewCount(id: string) {
-  // 権限チェック不要（会員ユーザーも実行可能）
-  await db
-    .update(newsletters)
-    .set({
-      viewCount: sql`${newsletters.viewCount} + 1`,
-    })
-    .where(eq(newsletters.id, id));
-
-  revalidatePath(`/newsletters/${id}`);
 }
 
 /**

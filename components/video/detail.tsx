@@ -9,7 +9,6 @@ type Video = {
   published: boolean;
   isMemberOnly: boolean;
   authorName: string | null;
-  viewCount: number;
 };
 
 function getYouTubeEmbedUrl(url: string): string | null {

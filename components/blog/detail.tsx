@@ -9,7 +9,6 @@ type Blog = {
   thumbnailUrl: string | null;
   published: boolean;
   authorName: string | null;
-  viewCount: number;
   publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;

@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, ExternalLink, Eye, Lock } from "lucide-react";
+import { Calendar, ExternalLink, Lock } from "lucide-react";
 import { DeleteVideoButton } from "./delete-video-button";
 import { TogglePublishVideoButton } from "./toggle-publish-video-button";
 
@@ -34,12 +34,6 @@ export function VideoCard({
               <Badge variant="outline" className="flex items-center gap-1 border-amber-500 text-amber-700">
                 <Lock className="h-3 w-3" />
                 会員限定
-              </Badge>
-            )}
-            {video.viewCount > 0 && (
-              <Badge variant="outline" className="flex items-center gap-1">
-                <Eye className="h-3 w-3" />
-                {video.viewCount}
               </Badge>
             )}
           </div>

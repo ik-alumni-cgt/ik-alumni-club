@@ -12,7 +12,6 @@ type Video = {
   published: boolean;
   isMemberOnly: boolean;
   authorName: string | null;
-  viewCount: number;
 };
 
 export function VideoList({ items }: { items: Video[] }) {

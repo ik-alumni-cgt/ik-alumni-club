@@ -32,7 +32,6 @@ export const photoLibraryFormSchema = createInsertSchema(photoLibrary, {
 }).omit({
   id: true,
   createdBy: true,
-  viewCount: true,
   createdAt: true,
   updatedAt: true,
 }).extend({

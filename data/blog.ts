@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { blogs } from "@/db/schemas/blogs";
 import { and, desc, eq, sql } from "drizzle-orm";
 
+
 /**
  * 公開されているブログ一覧を取得（一般ユーザー向け）
  * 会員限定コンテンツも一覧には表示（詳細ページでアクセス制御）
@@ -64,18 +65,6 @@ export const getBlog = async (id: string) => {
     with: {
       author: true,
     },
-  });
-};
-
-/**
- * 人気記事トップ5を取得
- * 会員限定コンテンツも一覧には表示（詳細ページでアクセス制御）
- */
-export const getPopularBlogs = async (limit: number = 5) => {
-  return db.query.blogs.findMany({
-    where: eq(blogs.published, true),
-    orderBy: [desc(blogs.viewCount)],
-    limit,
   });
 };
 
