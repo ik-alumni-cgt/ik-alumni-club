@@ -61,7 +61,7 @@ export function PhotoLibraryCard({
         )}
       </CardHeader>
       <CardContent>
-        <div className="relative h-48 w-full">
+        <div className="relative aspect-[4/3] w-full">
           {thumbnailUrl ? (
             <Image
               src={thumbnailUrl}

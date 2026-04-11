@@ -49,7 +49,7 @@ export function PastEventCard({
       </CardHeader>
       {pastEvent.imageUrl && (
         <CardContent>
-          <div className="relative h-48 w-full">
+          <div className="relative aspect-video w-full">
             <Image
               src={pastEvent.imageUrl}
               alt={pastEvent.title}

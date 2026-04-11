@@ -55,7 +55,7 @@ export function VideoCard({
       </CardHeader>
       {video.thumbnailUrl && (
         <CardContent>
-          <div className="relative h-48 w-full">
+          <div className="relative aspect-video w-full">
             <Image
               src={video.thumbnailUrl}
               alt={video.title}
