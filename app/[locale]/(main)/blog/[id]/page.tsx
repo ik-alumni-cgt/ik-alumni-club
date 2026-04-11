@@ -36,10 +36,23 @@ export default async function BlogDetailPage({
   const session = await auth.api.getSession({ headers: await headers() });
 
   return (
-    <div className="container max-w-full items-center justify-between pt-10 pb-32">
-      <BlogDetail item={item} />
-      <div className="flex justify-center mt-8">
-        <LikeButton contentType="blog" contentId={id} initialReactionCounts={reactionCounts} userId={session?.user?.id} />
+    <div className={`min-h-screen -mt-[140px] pt-[140px] ${item.isMemberOnly ? "bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 text-white" : ""}`}>
+      <div className="container max-w-full items-center justify-between pt-10 pb-32">
+        {item.isMemberOnly ? (
+          <div className="bg-white text-gray-900 rounded-lg p-6 md:p-10 max-w-4xl mx-auto">
+            <BlogDetail item={item} />
+            <div className="flex justify-center mt-8">
+              <LikeButton contentType="blog" contentId={id} initialReactionCounts={reactionCounts} userId={session?.user?.id} />
+            </div>
+          </div>
+        ) : (
+          <>
+            <BlogDetail item={item} />
+            <div className="flex justify-center mt-8">
+              <LikeButton contentType="blog" contentId={id} initialReactionCounts={reactionCounts} userId={session?.user?.id} />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

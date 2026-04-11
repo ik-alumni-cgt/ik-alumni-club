@@ -16,11 +16,19 @@ type Blog = {
   createdAt: Date;
 };
 
-export function BlogList({ items }: { items: Blog[] }) {
+export function BlogList({
+  items,
+  variant = "default",
+}: {
+  items: Blog[];
+  variant?: "default" | "member";
+}) {
+  const isMember = variant === "member";
+
   return (
     <>
       {items.length === 0 ? (
-        <p className="text-center text-gray-500">
+        <p className={`text-center ${isMember ? "text-white/70" : "text-gray-500"}`}>
           配信までしばらくお待ちください
         </p>
       ) : (
@@ -56,13 +64,13 @@ export function BlogList({ items }: { items: Blog[] }) {
                   </span>
                 </div>
               )}
-              <h3 className="font-semibold text-lg line-clamp-2">
+              <h3 className={`font-semibold text-lg line-clamp-2 ${isMember ? "text-white" : ""}`}>
                 {item.title}
               </h3>
-              <p className="text-sm text-gray-600 line-clamp-3">
+              <p className={`text-sm line-clamp-3 ${isMember ? "text-white/70" : "text-gray-600"}`}>
                 {item.excerpt}
               </p>
-              <div className="mt-auto pt-4 flex items-center justify-between text-xs text-gray-500">
+              <div className={`mt-auto pt-4 flex items-center justify-between text-xs ${isMember ? "text-white/60" : "text-gray-500"}`}>
                 {item.authorName && <span>by {item.authorName}</span>}
                 <span>
                   {new Date(item.publishedAt ?? item.createdAt).toLocaleDateString("ja-JP")}
