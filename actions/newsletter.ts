@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { newsletters } from "@/db/schemas/newsletters";
 import { newsletterFormSchema, type NewsletterFormData } from "@/zod/newsletter";
 import { verifyAdmin } from "@/lib/session";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { resolveImageUpload } from "@/lib/storage";
 import { nanoid } from "nanoid";
@@ -49,7 +49,7 @@ export async function createNewsletter(formData: NewsletterFormData) {
       thumbnailUrl,
       pdfUrl,
       category: data.category || null,
-      publishedAt: data.published ? new Date() : null,
+      publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
     })
     .returning();
 
@@ -70,37 +70,17 @@ export async function updateNewsletter(id: string, formData: NewsletterFormData)
   // 2. バリデーション
   const data = newsletterFormSchema.parse(formData);
 
-  // 3. 現在のニュースレター情報を取得
-  const currentNewsletter = await db.query.newsletters.findFirst({
-    where: eq(newsletters.id, id),
-    columns: {
-      published: true,
-      publishedAt: true,
-    },
-  });
-
-  if (!currentNewsletter) {
-    throw new Error("ニュースレターが見つかりません");
-  }
-
-  // 4. publishedAtの処理
-  let publishedAt = currentNewsletter.publishedAt;
-  if (!currentNewsletter.published && data.published) {
-    // 公開状態が false → true に変更された場合
-    publishedAt = new Date();
-  }
-
-  // 5. 画像URLの処理（dataURLの場合はアップロード）
+  // 3. 画像URLの処理（dataURLの場合はアップロード）
   const thumbnailUrl = data.thumbnailUrl
     ? await resolveImageUpload(`newsletters/${id}`, data.thumbnailUrl)
     : null;
 
-  // 6. PDF URLの処理（dataURLの場合はアップロード）
+  // 4. PDF URLの処理（dataURLの場合はアップロード）
   const pdfUrl = data.pdfUrl
     ? await resolveImageUpload(`newsletters/${id}`, data.pdfUrl)
     : null;
 
-  // 7. データベース更新
+  // 5. データベース更新
   const [updatedNewsletter] = await db
     .update(newsletters)
     .set({
@@ -108,7 +88,7 @@ export async function updateNewsletter(id: string, formData: NewsletterFormData)
       thumbnailUrl,
       pdfUrl,
       category: data.category || null,
-      publishedAt,
+      publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
     })
     .where(eq(newsletters.id, id))
     .returning();
@@ -137,43 +117,14 @@ export async function deleteNewsletter(id: string) {
 }
 
 /**
- * 閲覧数をインクリメント
- */
-export async function incrementNewsletterViewCount(id: string) {
-  // 権限チェック不要（会員ユーザーも実行可能）
-  await db
-    .update(newsletters)
-    .set({
-      viewCount: sql`${newsletters.viewCount} + 1`,
-    })
-    .where(eq(newsletters.id, id));
-
-  revalidatePath(`/newsletters/${id}`);
-}
-
-/**
  * ニュースレターの公開状態を切り替え
  */
 export async function toggleNewsletterPublish(id: string, published: boolean) {
   await verifyAdmin();
 
-  const updateData: any = { published };
-
-  // 公開する場合、publishedAtを設定
-  if (published) {
-    const currentNewsletter = await db.query.newsletters.findFirst({
-      where: eq(newsletters.id, id),
-      columns: { publishedAt: true },
-    });
-
-    if (!currentNewsletter?.publishedAt) {
-      updateData.publishedAt = new Date();
-    }
-  }
-
   await db
     .update(newsletters)
-    .set(updateData)
+    .set({ published })
     .where(eq(newsletters.id, id));
 
   revalidatePath("/admin/newsletters");

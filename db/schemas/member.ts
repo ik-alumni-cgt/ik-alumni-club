@@ -59,6 +59,9 @@ export const members = pgTable("members", {
   // 初回特典
   welcomeGiftSent: boolean("welcome_gift_sent").default(false).notNull(),
 
+  // 法人情報（スポンサーフォーム回答済み）
+  sponsorFormCompleted: boolean("sponsor_form_completed").default(false).notNull(),
+
   // メタデータ
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")

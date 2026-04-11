@@ -1,7 +1,8 @@
 import "server-only";
 import { db } from "@/db";
 import { photoLibrary } from "@/db/schemas/photo-library";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
+
 
 /**
  * 公開されているフォトライブラリ一覧を取得（一般ユーザー向け）
@@ -10,7 +11,7 @@ import { and, desc, eq } from "drizzle-orm";
 export const getPublishedPhotos = async () => {
   return db.query.photoLibrary.findMany({
     where: eq(photoLibrary.published, true),
-    orderBy: [desc(photoLibrary.createdAt)],
+    orderBy: [desc(sql`COALESCE(${photoLibrary.publishedAt}, ${photoLibrary.createdAt})`)],
     with: {
       creator: true,
       images: {
@@ -29,7 +30,7 @@ export const getPublicPhotos = async () => {
       eq(photoLibrary.published, true),
       eq(photoLibrary.isMemberOnly, false)
     ),
-    orderBy: [desc(photoLibrary.createdAt)],
+    orderBy: [desc(sql`COALESCE(${photoLibrary.publishedAt}, ${photoLibrary.createdAt})`)],
     with: {
       creator: true,
       images: {
@@ -48,7 +49,7 @@ export const getMemberOnlyPhotos = async () => {
       eq(photoLibrary.published, true),
       eq(photoLibrary.isMemberOnly, true)
     ),
-    orderBy: [desc(photoLibrary.createdAt)],
+    orderBy: [desc(sql`COALESCE(${photoLibrary.publishedAt}, ${photoLibrary.createdAt})`)],
     with: {
       creator: true,
       images: {
@@ -63,7 +64,7 @@ export const getMemberOnlyPhotos = async () => {
  */
 export const getAllPhotos = async () => {
   return db.query.photoLibrary.findMany({
-    orderBy: [desc(photoLibrary.createdAt)],
+    orderBy: [desc(sql`COALESCE(${photoLibrary.publishedAt}, ${photoLibrary.createdAt})`)],
     with: {
       creator: true,
       images: {
@@ -89,29 +90,12 @@ export const getPhoto = async (id: string) => {
 };
 
 /**
- * 人気のフォトを取得
- */
-export const getPopularPhotos = async (limit: number = 5) => {
-  return db.query.photoLibrary.findMany({
-    where: eq(photoLibrary.published, true),
-    orderBy: [desc(photoLibrary.viewCount)],
-    limit,
-    with: {
-      images: {
-        orderBy: (images, { asc }) => [asc(images.sortOrder)],
-        limit: 1,
-      },
-    },
-  });
-};
-
-/**
  * 最新のフォトを取得（ホーム画面用）
  */
 export const getRecentPhotos = async (limit: number = 6) => {
   return db.query.photoLibrary.findMany({
     where: eq(photoLibrary.published, true),
-    orderBy: [desc(photoLibrary.createdAt)],
+    orderBy: [desc(sql`COALESCE(${photoLibrary.publishedAt}, ${photoLibrary.createdAt})`)],
     limit,
     with: {
       images: {

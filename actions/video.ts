@@ -75,18 +75,3 @@ export async function togglePublishVideo(id: string) {
     .where(eq(videos.id, id));
 }
 
-// 閲覧数の更新（将来的な拡張用）
-export async function incrementViewCount(id: string) {
-  const video = await db.query.videos.findFirst({
-    where: eq(videos.id, id),
-  });
-
-  if (!video) {
-    throw new Error("動画が見つかりません");
-  }
-
-  await db
-    .update(videos)
-    .set({ viewCount: video.viewCount + 1 })
-    .where(eq(videos.id, id));
-}

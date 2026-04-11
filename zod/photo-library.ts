@@ -22,12 +22,16 @@ export const photoLibraryFormSchema = createInsertSchema(photoLibrary, {
   coverImageUrl: z
     .string()
     .optional(),
+  publishedAt: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD形式で入力してください")
+    .optional()
+    .or(z.literal("")),
   published: z.boolean(),
   isMemberOnly: z.boolean(),
 }).omit({
   id: true,
   createdBy: true,
-  viewCount: true,
   createdAt: true,
   updatedAt: true,
 }).extend({

@@ -32,12 +32,16 @@ export const blogFormSchema = createInsertSchema(blogs, {
       },
       { message: "有効なURLを入力してください" }
     ),
+  publishedAt: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD形式で入力してください")
+    .optional()
+    .or(z.literal("")),
   published: z.boolean(),
 }).omit({
   id: true,
   authorId: true,
   authorName: true,
-  viewCount: true,
   createdAt: true,
   updatedAt: true,
 });

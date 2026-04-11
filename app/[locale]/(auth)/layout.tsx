@@ -1,6 +1,7 @@
 import { RegistrationProvider } from "@/contexts/RegistrationContext";
 import { AuthHeader } from "@/components/auth/auth-header";
 import { AuthFooter } from "@/components/auth/auth-footer";
+import { InAppBrowserDialog } from "@/components/in-app-browser-dialog";
 
 export default function AuthLayout({
   children,
@@ -16,6 +17,7 @@ export default function AuthLayout({
         </main>
         <AuthFooter />
       </div>
+      <InAppBrowserDialog />
     </RegistrationProvider>
   );
 }

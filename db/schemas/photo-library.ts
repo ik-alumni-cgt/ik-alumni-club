@@ -1,4 +1,4 @@
-import { pgTable, text, boolean, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, boolean, timestamp, integer } from "drizzle-orm/pg-core";
 import { users } from "./auth";
 import { nanoid } from "nanoid";
 import { relations } from "drizzle-orm";
@@ -13,7 +13,7 @@ export const photoLibrary = pgTable("photo_library", {
   published: boolean("published").notNull().default(false),
   isMemberOnly: boolean("is_member_only").notNull().default(true),
   createdBy: text("created_by").references(() => users.id, { onDelete: "set null" }),
-  viewCount: integer("view_count").notNull().default(0),
+  publishedAt: timestamp("published_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

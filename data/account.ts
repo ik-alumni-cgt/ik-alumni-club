@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { members } from "@/db/schemas/member";
 import { accounts } from "@/db/schemas/auth";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, ne, desc, and } from "drizzle-orm";
 import type { MemberStatus } from "@/types/member";
 import "server-only";
 
@@ -13,9 +13,12 @@ type AccountFilters = {
   isMigrated?: boolean;
 };
 
-// 全会員一覧を取得（管理者用）
+// 全会員一覧を取得（管理者用、adminロールを除外）
 export const getAllAccounts = async (filters?: AccountFilters) => {
   const conditions = [];
+
+  // adminロールは会員管理の対象外（システムアカウント管理で扱う）
+  conditions.push(ne(members.role, "admin"));
 
   if (filters?.status) {
     conditions.push(eq(members.status, filters.status));
@@ -107,4 +110,42 @@ export const getAccountById = async (id: string) => {
     hasLoginSetup,
     linkedProviders,
   };
+};
+
+// システムアカウント（adminロール）一覧を取得
+export const getSystemAccounts = async () => {
+  const memberList = await db.query.members.findMany({
+    with: {
+      user: true,
+    },
+    where: eq(members.role, "admin"),
+    orderBy: [desc(members.createdAt)],
+  });
+
+  const membersWithAuthInfo = await Promise.all(
+    memberList.map(async (member) => {
+      const userAccounts = await db.query.accounts.findMany({
+        where: eq(accounts.userId, member.userId),
+      });
+
+      const hasPassword = userAccounts.some(
+        (acc) => acc.providerId === "credential" && acc.password
+      );
+
+      const hasSocialLogin = userAccounts.some(
+        (acc) => acc.providerId === "google" || acc.providerId === "line"
+      );
+
+      const hasLoginSetup = hasPassword || hasSocialLogin;
+
+      return {
+        ...member,
+        hasPassword,
+        hasSocialLogin,
+        hasLoginSetup,
+      };
+    })
+  );
+
+  return membersWithAuthInfo;
 };

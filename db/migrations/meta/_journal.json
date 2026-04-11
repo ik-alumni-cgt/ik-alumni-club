@@ -176,6 +176,41 @@
       "when": 1772973174326,
       "tag": "0024_brief_whirlwind",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1775897115770,
+      "tag": "0025_quick_gorgon",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1775898087701,
+      "tag": "0026_useful_blue_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1775898576529,
+      "tag": "0027_demonic_stick",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1775901975588,
+      "tag": "0028_confused_red_shift",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1775903800124,
+      "tag": "0029_fair_inertia",
+      "breakpoints": true
     }
   ]
 }

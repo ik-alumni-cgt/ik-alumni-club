@@ -1,4 +1,4 @@
-import { pgTable, text, date, boolean, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, date, boolean, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./auth";
 import { nanoid } from "nanoid";
 import { relations } from "drizzle-orm";
@@ -12,9 +12,9 @@ export const videos = pgTable("videos", {
   thumbnailUrl: text("thumbnail_url"),
   published: boolean("published").notNull().default(false),
   isMemberOnly: boolean("is_member_only").notNull().default(false),
+  isShorts: boolean("is_shorts").notNull().default(false),
   authorId: text("author_id").references(() => users.id, { onDelete: "set null" }),
   authorName: text("author_name"),
-  viewCount: integer("view_count").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

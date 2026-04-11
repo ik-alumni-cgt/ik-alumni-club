@@ -53,7 +53,7 @@ export function ScheduleCard({
       </CardHeader>
       {schedule.imageUrl && (
         <CardContent>
-          <div className="relative h-48 w-full">
+          <div className="relative aspect-video w-full">
             <Image
               src={schedule.imageUrl}
               alt={schedule.title}

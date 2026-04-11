@@ -18,6 +18,9 @@ export async function updateAccount(accountId: string, formData: AdminAccountFor
   const data = adminAccountFormSchema.parse(formData);
 
   // 3. データベース更新
+  // adminロールの場合はプラン・支払い関連フィールドをクリア
+  const isAdmin = data.role === "admin";
+
   const [updatedMember] = await db
     .update(members)
     .set({
@@ -31,11 +34,17 @@ export async function updateAccount(accountId: string, formData: AdminAccountFor
       address: data.address,
       building: data.building || null,
       phoneNumber: data.phoneNumber,
-      planId: data.planId,
+      planId: isAdmin ? null : data.planId,
       role: data.role,
       status: data.status,
       isActive: data.isActive,
       profileCompleted: data.status === "active" ? true : false,
+      ...(isAdmin && {
+        paymentStatus: null,
+        stripeSubscriptionId: null,
+        subscriptionStartDate: null,
+        subscriptionEndDate: null,
+      }),
     })
     .where(eq(members.id, accountId))
     .returning();
@@ -47,6 +56,8 @@ export async function updateAccount(accountId: string, formData: AdminAccountFor
   // 4. キャッシュ再検証
   revalidatePath("/admin/accounts");
   revalidatePath(`/admin/accounts/${accountId}`);
+  revalidatePath("/admin/system-accounts");
+  revalidatePath(`/admin/system-accounts/${accountId}`);
 
   return updatedMember;
 }

@@ -26,7 +26,7 @@ const publicRoutes = [
   "/register/email",
   "/feature/5th-anniversary",
 ];
-const adminRoutes = ["/admin/login"]; // 管理者ログインページは認証不要
+const adminRoutes = ["/admin-login"]; // 管理者ログインページは認証不要
 
 const intlMiddleware = createIntlMiddleware(routing);
 
@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
 
 	// 管理者エリア(ログインページ以外)にアクセスした場合、未ログインなら管理者ログインページへ
 	if (isAdminRoute && !isAdminLoginRoute && !sessionCookie) {
-		return NextResponse.redirect(new URL("/admin/login", request.url));
+		return NextResponse.redirect(new URL("/admin-login", request.url));
 	}
 
 	// 一般の非公開ルートチェック（前方一致で判定）

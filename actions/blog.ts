@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { blogs } from "@/db/schemas/blogs";
 import { blogFormSchema, type BlogFormData } from "@/zod/blog";
 import { verifyAdmin } from "@/lib/session";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { resolveImageUpload } from "@/lib/storage";
 import { nanoid } from "nanoid";
@@ -39,6 +39,7 @@ export async function createBlog(formData: BlogFormData) {
     .values({
       ...data,
       thumbnailUrl,
+      publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
       authorId: userId,
       authorName: user.name,
     })
@@ -72,6 +73,7 @@ export async function updateBlog(id: string, formData: BlogFormData) {
     .set({
       ...data,
       thumbnailUrl,
+      publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
     })
     .where(eq(blogs.id, id))
     .returning();
@@ -101,21 +103,6 @@ export async function deleteBlog(id: string) {
   // 3. キャッシュ再検証
   revalidatePath("/admin/blogs");
   revalidatePath("/blogs");
-}
-
-/**
- * 閲覧数をインクリメント
- */
-export async function incrementViewCount(id: string) {
-  // 権限チェック不要（一般ユーザーも実行可能）
-  await db
-    .update(blogs)
-    .set({
-      viewCount: sql`${blogs.viewCount} + 1`,
-    })
-    .where(eq(blogs.id, id));
-
-  revalidatePath(`/blogs/${id}`);
 }
 
 /**

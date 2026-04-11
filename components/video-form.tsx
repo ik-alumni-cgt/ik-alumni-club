@@ -46,7 +46,7 @@ export function VideoForm({
           thumbnailUrl: defaultValues.thumbnailUrl ?? "",
           published: defaultValues.published,
           isMemberOnly: defaultValues.isMemberOnly,
-          viewCount: defaultValues.viewCount,
+          isShorts: defaultValues.isShorts,
         }
       : {
           title: "",
@@ -55,7 +55,7 @@ export function VideoForm({
           thumbnailUrl: "",
           published: false,
           isMemberOnly: false,
-          viewCount: 0,
+          isShorts: false,
         },
   });
 
@@ -163,27 +163,6 @@ export function VideoForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="viewCount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>閲覧数</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                />
-              </FormControl>
-              <FormDescription>
-                閲覧数を入力してください（将来的な拡張用）
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         {/* カテゴリー */}
         <FormItem>
           <FormLabel>カテゴリー</FormLabel>
@@ -229,6 +208,27 @@ export function VideoForm({
                 <FormLabel className="text-base">会員限定</FormLabel>
                 <FormDescription>
                   ONにすると会員のみ閲覧可能になります
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="isShorts"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">ショート動画</FormLabel>
+                <FormDescription>
+                  ONにするとショート動画として表示されます
                 </FormDescription>
               </div>
               <FormControl>

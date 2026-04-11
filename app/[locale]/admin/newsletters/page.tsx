@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Calendar, Lock } from "lucide-react";
+import { Calendar, Lock } from "lucide-react";
 
 export default async function AdminNewslettersPage() {
   const newsletters = await getAllNewsletters();
@@ -84,10 +84,6 @@ export default async function AdminNewslettersPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Eye className="h-4 w-4" />
-                    {newsletter.viewCount} 回閲覧
-                  </div>
                   {newsletter.publishedAt && (
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4" />

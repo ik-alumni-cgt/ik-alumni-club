@@ -28,7 +28,8 @@ export const videoFormSchema = createInsertSchema(videos, {
     ),
   thumbnailUrl: z.string().optional(),
   published: z.boolean(),
-  viewCount: z.number().int().min(0),
+  isMemberOnly: z.boolean(),
+  isShorts: z.boolean(),
 }).omit({
   id: true,
   authorId: true,

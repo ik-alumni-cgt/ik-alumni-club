@@ -47,7 +47,7 @@ export function InformationCard({
       </CardHeader>
       {information.imageUrl && (
         <CardContent>
-          <div className="relative h-48 w-full">
+          <div className="relative aspect-video w-full">
             <Image
               src={information.imageUrl}
               alt={information.title}

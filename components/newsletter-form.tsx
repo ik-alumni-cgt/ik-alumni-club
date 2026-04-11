@@ -61,6 +61,11 @@ export function NewsletterForm({
           thumbnailUrl: defaultValues.thumbnailUrl ?? "",
           pdfUrl: defaultValues.pdfUrl ?? "",
           category: defaultValues.category,
+          publishedAt: defaultValues.publishedAt
+            ? typeof defaultValues.publishedAt === "string"
+              ? defaultValues.publishedAt
+              : new Date(defaultValues.publishedAt as unknown as string).toISOString().split("T")[0]
+            : "",
           published: defaultValues.published,
           isMemberOnly: defaultValues.isMemberOnly ?? true,
         }
@@ -72,6 +77,7 @@ export function NewsletterForm({
           thumbnailUrl: "",
           pdfUrl: "",
           category: "regular",
+          publishedAt: "",
           published: false,
           isMemberOnly: true,
         },
@@ -259,6 +265,24 @@ export function NewsletterForm({
                   <SelectItem value="extra">号外</SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* 公開日 */}
+        <FormField
+          control={form.control}
+          name="publishedAt"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>公開日</FormLabel>
+              <FormControl>
+                <Input type="date" {...field} value={field.value || ""} />
+              </FormControl>
+              <FormDescription>
+                コンテンツの公開日を設定してください
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

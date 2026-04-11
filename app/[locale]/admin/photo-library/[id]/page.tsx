@@ -51,6 +51,9 @@ export default async function EditPhotoLibraryPage({
             title: photo.title,
             description: photo.description || "",
             coverImageUrl: photo.coverImageUrl || "",
+            publishedAt: photo.publishedAt
+              ? photo.publishedAt.toISOString().split("T")[0]
+              : "",
             published: photo.published,
             isMemberOnly: photo.isMemberOnly,
             images: photo.images.map((img) => ({

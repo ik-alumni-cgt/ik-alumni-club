@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "@/db";
 import { newsletters } from "@/db/schemas/newsletters";
-import { and, eq, desc } from "drizzle-orm";
+import { and, eq, desc, sql } from "drizzle-orm";
 
 /**
  * 公開済みニュースレター一覧を取得
@@ -10,7 +10,7 @@ import { and, eq, desc } from "drizzle-orm";
 export const getPublishedNewsletters = async () => {
   return db.query.newsletters.findMany({
     where: eq(newsletters.published, true),
-    orderBy: [desc(newsletters.issueNumber)],
+    orderBy: [desc(sql`COALESCE(${newsletters.publishedAt}, ${newsletters.createdAt})`)],
     with: {
       author: true,
     },
@@ -26,7 +26,7 @@ export const getPublicNewsletters = async () => {
       eq(newsletters.published, true),
       eq(newsletters.isMemberOnly, false)
     ),
-    orderBy: [desc(newsletters.issueNumber)],
+    orderBy: [desc(sql`COALESCE(${newsletters.publishedAt}, ${newsletters.createdAt})`)],
     with: {
       author: true,
     },
@@ -42,7 +42,7 @@ export const getMemberOnlyNewsletters = async () => {
       eq(newsletters.published, true),
       eq(newsletters.isMemberOnly, true)
     ),
-    orderBy: [desc(newsletters.issueNumber)],
+    orderBy: [desc(sql`COALESCE(${newsletters.publishedAt}, ${newsletters.createdAt})`)],
     with: {
       author: true,
     },
@@ -54,7 +54,7 @@ export const getMemberOnlyNewsletters = async () => {
  */
 export const getAllNewsletters = async () => {
   return db.query.newsletters.findMany({
-    orderBy: [desc(newsletters.issueNumber)],
+    orderBy: [desc(sql`COALESCE(${newsletters.publishedAt}, ${newsletters.createdAt})`)],
     with: {
       author: true,
     },
@@ -92,7 +92,7 @@ export const getNewsletterByIssueNumber = async (issueNumber: number) => {
 export const getLatestNewsletters = async (limit: number = 3) => {
   return db.query.newsletters.findMany({
     where: eq(newsletters.published, true),
-    orderBy: [desc(newsletters.issueNumber)],
+    orderBy: [desc(sql`COALESCE(${newsletters.publishedAt}, ${newsletters.createdAt})`)],
     limit,
   });
 };
@@ -102,7 +102,7 @@ export const getLatestNewsletters = async (limit: number = 3) => {
  */
 export const getNextIssueNumber = async (): Promise<number> => {
   const latestNewsletter = await db.query.newsletters.findFirst({
-    orderBy: [desc(newsletters.issueNumber)],
+    orderBy: [desc(sql`COALESCE(${newsletters.publishedAt}, ${newsletters.createdAt})`)],
     columns: {
       issueNumber: true,
     },

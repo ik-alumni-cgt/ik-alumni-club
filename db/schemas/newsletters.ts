@@ -1,4 +1,4 @@
-import { pgTable, text, boolean, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, boolean, timestamp, integer } from "drizzle-orm/pg-core";
 import { users } from "./auth";
 import { nanoid } from "nanoid";
 import { relations } from "drizzle-orm";
@@ -22,8 +22,6 @@ export const newsletters = pgTable("newsletters", {
 
   // メタ情報
   category: text("category"), // 'regular', 'special', 'extra'
-  viewCount: integer("view_count").notNull().default(0),
-
   // 公開管理
   published: boolean("published").notNull().default(false),
   isMemberOnly: boolean("is_member_only").notNull().default(true), // ニュースレターはデフォルトで会員限定

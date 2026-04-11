@@ -51,7 +51,7 @@ export function PhotoLibraryList({ items }: { items: PhotoLibraryWithImages[] })
                   {item.title}
                 </h3>
                 <span className="text-xs text-white/60">
-                  {new Date(item.createdAt).toLocaleDateString("ja-JP")}
+                  {new Date(item.publishedAt ?? item.createdAt).toLocaleDateString("ja-JP")}
                 </span>
               </div>
             </Link>
