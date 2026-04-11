@@ -3,6 +3,7 @@ import { MembershipCardImage } from "@/components/mypage/membership-card-image";
 import { SupportersClubMenu } from "@/components/mypage/supporters-club-menu";
 import { ProfileCompletionBanner } from "@/components/profile-completion-banner";
 import { PaymentRegistrationBanner } from "@/components/payment-registration-banner";
+import { SponsorFormBanner } from "@/components/sponsor-form-banner";
 import { verifySession } from "@/lib/session";
 import { getCurrentMember } from "@/actions/members/get-member";
 import { setLocale } from "@/app/web/i18n/set-locale";
@@ -28,6 +29,14 @@ export default async function MypagePage({
   const showProfileBanner =
     !showPaymentBanner && member?.status === "pending_profile";
 
+  // 法人会員でスポンサーフォーム未回答の場合にバナー表示
+  const plan = member?.plan as MemberPlan | null;
+  const showSponsorFormBanner =
+    !showPaymentBanner &&
+    !showProfileBanner &&
+    plan?.isBusinessPlan === true &&
+    member?.sponsorFormCompleted === false;
+
   return (
     <div className="w-full max-w-4xl">
       {/* 移行ユーザーで決済未完了の場合は決済登録促進バナーを表示 */}
@@ -37,6 +46,9 @@ export default async function MypagePage({
 
       {/* プロフィール未完成の場合は促進バナーを表示（決済バナーと排他） */}
       {showProfileBanner && <ProfileCompletionBanner className="mb-6" />}
+
+      {/* 法人会員でスポンサーフォーム未回答の場合 */}
+      {showSponsorFormBanner && <SponsorFormBanner className="mb-6" />}
 
       {/* プラン設定済みの場合は会員カード画像を表示 */}
       {(member?.plan as MemberPlan | null)?.planCode && (
