@@ -3,6 +3,7 @@
 import {
   LayoutDashboard,
   Users,
+  UserCircle,
   Bell,
   Calendar,
   CalendarDays,
@@ -93,6 +94,11 @@ const menuGroups: MenuGroup[] = [
         title: "フォトライブラリ",
         icon: Image,
         url: "/admin/photo-library",
+      },
+      {
+        title: "プロフィールメンバー",
+        icon: UserCircle,
+        url: "/admin/profile-members",
       },
     ],
   },
