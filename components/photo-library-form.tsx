@@ -55,14 +55,24 @@ export function PhotoLibraryForm({
   const [categoryIds, setCategoryIds] = useState<string[]>(initialCategoryIds);
   const form = useForm<PhotoLibraryFormData>({
     resolver: zodResolver(photoLibraryFormSchema),
-    defaultValues: defaultValues || {
-      title: "",
-      description: "",
-      coverImageUrl: "",
-      published: false,
-      isMemberOnly: true,
-      images: [{ imageUrl: "", caption: "" }],
-    },
+    defaultValues: defaultValues
+      ? {
+          ...defaultValues,
+          publishedAt: defaultValues.publishedAt
+            ? typeof defaultValues.publishedAt === "string"
+              ? defaultValues.publishedAt
+              : new Date(defaultValues.publishedAt as unknown as string).toISOString().split("T")[0]
+            : "",
+        }
+      : {
+          title: "",
+          description: "",
+          coverImageUrl: "",
+          publishedAt: "",
+          published: false,
+          isMemberOnly: true,
+          images: [{ imageUrl: "", caption: "" }],
+        },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -313,6 +323,24 @@ export function PhotoLibraryForm({
             </p>
           )}
         </div>
+
+        {/* 公開日 */}
+        <FormField
+          control={form.control}
+          name="publishedAt"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>公開日</FormLabel>
+              <FormControl>
+                <Input type="date" {...field} value={field.value || ""} />
+              </FormControl>
+              <FormDescription>
+                コンテンツの公開日を設定してください
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* カテゴリー */}
         <FormItem>

@@ -51,6 +51,7 @@ export async function createPhoto(formData: PhotoLibraryFormData) {
       coverImageUrl: data.coverImageUrl || null,
       published: data.published,
       isMemberOnly: data.isMemberOnly,
+      publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
       createdBy: userId,
     })
     .returning();
@@ -93,6 +94,7 @@ export async function updatePhoto(id: string, formData: PhotoLibraryFormData) {
       coverImageUrl: data.coverImageUrl || null,
       published: data.published,
       isMemberOnly: data.isMemberOnly,
+      publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
     })
     .where(eq(photoLibrary.id, id))
     .returning();

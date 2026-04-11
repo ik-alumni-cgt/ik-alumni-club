@@ -110,6 +110,9 @@ export default async function EditNewsletterPage({
             thumbnailUrl: newsletter.thumbnailUrl || "",
             pdfUrl: newsletter.pdfUrl || "",
             category: newsletter.category as "regular" | "special" | "extra" | undefined,
+            publishedAt: newsletter.publishedAt
+              ? newsletter.publishedAt.toISOString().split("T")[0]
+              : "",
             published: newsletter.published,
             isMemberOnly: newsletter.isMemberOnly,
           }}

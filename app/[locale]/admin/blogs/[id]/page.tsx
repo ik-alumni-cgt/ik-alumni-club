@@ -52,6 +52,9 @@ export default async function EditBlogPage({
             excerpt: blog.excerpt,
             content: blog.content,
             thumbnailUrl: blog.thumbnailUrl || "",
+            publishedAt: blog.publishedAt
+              ? blog.publishedAt.toISOString().split("T")[0]
+              : "",
             published: blog.published,
             isMemberOnly: blog.isMemberOnly,
           }}

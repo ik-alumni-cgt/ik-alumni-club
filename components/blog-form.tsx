@@ -48,14 +48,24 @@ export function BlogForm({ defaultValues, mode, categoriesTree = [], initialCate
   const [categoryIds, setCategoryIds] = useState<string[]>(initialCategoryIds);
   const form = useForm<BlogFormData>({
     resolver: zodResolver(blogFormSchema),
-    defaultValues: defaultValues || {
-      title: "",
-      excerpt: "",
-      content: "",
-      thumbnailUrl: "",
-      published: false,
-      isMemberOnly: false,
-    },
+    defaultValues: defaultValues
+      ? {
+          ...defaultValues,
+          publishedAt: defaultValues.publishedAt
+            ? typeof defaultValues.publishedAt === "string"
+              ? defaultValues.publishedAt
+              : new Date(defaultValues.publishedAt as unknown as string).toISOString().split("T")[0]
+            : "",
+        }
+      : {
+          title: "",
+          excerpt: "",
+          content: "",
+          thumbnailUrl: "",
+          publishedAt: "",
+          published: false,
+          isMemberOnly: false,
+        },
   });
 
   const onSubmit = async (data: BlogFormData) => {
@@ -161,6 +171,24 @@ export function BlogForm({ defaultValues, mode, categoriesTree = [], initialCate
               </FormControl>
               <FormDescription>
                 画像をドラッグ&ドロップまたはクリックして選択してください
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* 公開日 */}
+        <FormField
+          control={form.control}
+          name="publishedAt"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>公開日</FormLabel>
+              <FormControl>
+                <Input type="date" {...field} value={field.value || ""} />
+              </FormControl>
+              <FormDescription>
+                コンテンツの公開日を設定してください
               </FormDescription>
               <FormMessage />
             </FormItem>

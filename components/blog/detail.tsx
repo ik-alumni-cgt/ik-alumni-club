@@ -10,6 +10,7 @@ type Blog = {
   published: boolean;
   authorName: string | null;
   viewCount: number;
+  publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -21,7 +22,7 @@ export function BlogDetail({ item }: { item: Blog }) {
         <h1 className="text-2xl md:text-3xl lg:text-4xl mb-4">{item.title}</h1>
         <div className="flex items-center gap-4 text-sm text-gray-600">
           {item.authorName && <span>著者: {item.authorName}</span>}
-          <span>{new Date(item.createdAt).toLocaleDateString("ja-JP")}</span>
+          <span>{new Date(item.publishedAt ?? item.createdAt).toLocaleDateString("ja-JP")}</span>
         </div>
       </header>
 

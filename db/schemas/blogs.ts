@@ -15,6 +15,7 @@ export const blogs = pgTable("blogs", {
   authorId: text("author_id").references(() => users.id, { onDelete: "set null" }),
   authorName: text("author_name"),
   viewCount: integer("view_count").notNull().default(0),
+  publishedAt: timestamp("published_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

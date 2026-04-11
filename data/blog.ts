@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "@/db";
 import { blogs } from "@/db/schemas/blogs";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 
 /**
  * 公開されているブログ一覧を取得（一般ユーザー向け）
@@ -10,7 +10,7 @@ import { and, desc, eq } from "drizzle-orm";
 export const getPublishedBlogs = async () => {
   return db.query.blogs.findMany({
     where: eq(blogs.published, true),
-    orderBy: [desc(blogs.createdAt)],
+    orderBy: [desc(sql`COALESCE(${blogs.publishedAt}, ${blogs.createdAt})`)],
     with: {
       author: true,
     },
@@ -23,7 +23,7 @@ export const getPublishedBlogs = async () => {
 export const getPublicBlogs = async () => {
   return db.query.blogs.findMany({
     where: and(eq(blogs.published, true), eq(blogs.isMemberOnly, false)),
-    orderBy: [desc(blogs.createdAt)],
+    orderBy: [desc(sql`COALESCE(${blogs.publishedAt}, ${blogs.createdAt})`)],
     with: {
       author: true,
     },
@@ -36,7 +36,7 @@ export const getPublicBlogs = async () => {
 export const getMemberOnlyBlogs = async () => {
   return db.query.blogs.findMany({
     where: and(eq(blogs.published, true), eq(blogs.isMemberOnly, true)),
-    orderBy: [desc(blogs.createdAt)],
+    orderBy: [desc(sql`COALESCE(${blogs.publishedAt}, ${blogs.createdAt})`)],
     with: {
       author: true,
     },
@@ -48,7 +48,7 @@ export const getMemberOnlyBlogs = async () => {
  */
 export const getAllBlogs = async () => {
   return db.query.blogs.findMany({
-    orderBy: [desc(blogs.createdAt)],
+    orderBy: [desc(sql`COALESCE(${blogs.publishedAt}, ${blogs.createdAt})`)],
     with: {
       author: true,
     },
@@ -86,7 +86,7 @@ export const getPopularBlogs = async (limit: number = 5) => {
 export const getRecentBlogs = async (limit: number = 3) => {
   return db.query.blogs.findMany({
     where: eq(blogs.published, true),
-    orderBy: [desc(blogs.createdAt)],
+    orderBy: [desc(sql`COALESCE(${blogs.publishedAt}, ${blogs.createdAt})`)],
     limit,
   });
 };

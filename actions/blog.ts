@@ -39,6 +39,7 @@ export async function createBlog(formData: BlogFormData) {
     .values({
       ...data,
       thumbnailUrl,
+      publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
       authorId: userId,
       authorName: user.name,
     })
@@ -72,6 +73,7 @@ export async function updateBlog(id: string, formData: BlogFormData) {
     .set({
       ...data,
       thumbnailUrl,
+      publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
     })
     .where(eq(blogs.id, id))
     .returning();

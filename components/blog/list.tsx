@@ -13,6 +13,7 @@ type Blog = {
   isMemberOnly: boolean;
   authorName: string | null;
   viewCount: number;
+  publishedAt: Date | null;
   createdAt: Date;
 };
 
@@ -65,7 +66,7 @@ export function BlogList({ items }: { items: Blog[] }) {
               <div className="mt-auto pt-4 flex items-center justify-between text-xs text-gray-500">
                 {item.authorName && <span>by {item.authorName}</span>}
                 <span>
-                  {new Date(item.createdAt).toLocaleDateString("ja-JP")}
+                  {new Date(item.publishedAt ?? item.createdAt).toLocaleDateString("ja-JP")}
                 </span>
               </div>
             </div>

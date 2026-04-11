@@ -71,11 +71,9 @@ export function NewsletterList({ items }: { items: Newsletter[] }) {
               </p>
               <div className="mt-auto pt-4 flex items-center justify-between text-xs text-white/60">
                 {item.authorName && <span>by {item.authorName}</span>}
-                {item.publishedAt && (
-                  <span>
-                    {new Date(item.publishedAt).toLocaleDateString("ja-JP")}
-                  </span>
-                )}
+                <span>
+                  {new Date(item.publishedAt ?? item.createdAt).toLocaleDateString("ja-JP")}
+                </span>
               </div>
             </div>
           </Link>

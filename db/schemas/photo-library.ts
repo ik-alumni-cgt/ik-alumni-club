@@ -14,6 +14,7 @@ export const photoLibrary = pgTable("photo_library", {
   isMemberOnly: boolean("is_member_only").notNull().default(true),
   createdBy: text("created_by").references(() => users.id, { onDelete: "set null" }),
   viewCount: integer("view_count").notNull().default(0),
+  publishedAt: timestamp("published_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
