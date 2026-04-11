@@ -1,16 +1,30 @@
-import { getRecentVideos } from "@/data/video";
+import { getRecentVideos, getRecentShorts } from "@/data/video";
 import { getTranslations } from "next-intl/server";
-import { VideoContentsWrapper } from "./video-contents-wrapper";
+import { VideoSection } from "./video-section";
 
 export async function VideoContents() {
   const t = await getTranslations("Contents");
 
-  // データベースから動画を取得（静的データの代わり）
-  const videos = await getRecentVideos(5);
-  const items = videos.map((video) => ({
+  const [videos, shorts] = await Promise.all([
+    getRecentVideos(5),
+    getRecentShorts(5),
+  ]);
+
+  const videoItems = videos.map((video) => ({
     videoUrl: video.videoUrl,
     title: video.title,
   }));
 
-  return <VideoContentsWrapper title={t("video")} items={items} />;
+  const shortsItems = shorts.map((short) => ({
+    videoUrl: short.videoUrl,
+    title: short.title,
+  }));
+
+  return (
+    <VideoSection
+      title={t("video")}
+      videoItems={videoItems}
+      shortsItems={shortsItems}
+    />
+  );
 }

@@ -12,10 +12,10 @@ export const getVideos = async () => {
   });
 };
 
-// 一般公開動画一覧を取得（isMemberOnly = false のみ）
+// 一般公開の通常動画一覧を取得（isMemberOnly = false, isShorts = false のみ）
 export const getPublicVideos = async () => {
   return db.query.videos.findMany({
-    where: and(eq(videos.published, true), eq(videos.isMemberOnly, false)),
+    where: and(eq(videos.published, true), eq(videos.isMemberOnly, false), eq(videos.isShorts, false)),
     orderBy: [desc(videos.videoDate)],
   });
 };
@@ -42,12 +42,29 @@ export const getVideo = async (id: string) => {
   });
 };
 
-// 最新の動画を取得（Home画面表示用）
+// 最新の通常動画を取得（Home画面表示用）
 // 会員限定コンテンツは除外（isMemberOnly = false のみ）
 export const getRecentVideos = async (limit: number = 3) => {
   return db.query.videos.findMany({
-    where: and(eq(videos.published, true), eq(videos.isMemberOnly, false)),
+    where: and(eq(videos.published, true), eq(videos.isMemberOnly, false), eq(videos.isShorts, false)),
     orderBy: [desc(videos.videoDate)],
     limit,
+  });
+};
+
+// 最新のショート動画を取得（Home画面表示用）
+export const getRecentShorts = async (limit: number = 5) => {
+  return db.query.videos.findMany({
+    where: and(eq(videos.published, true), eq(videos.isMemberOnly, false), eq(videos.isShorts, true)),
+    orderBy: [desc(videos.videoDate)],
+    limit,
+  });
+};
+
+// 公開済みショート動画一覧を取得
+export const getPublicShorts = async () => {
+  return db.query.videos.findMany({
+    where: and(eq(videos.published, true), eq(videos.isMemberOnly, false), eq(videos.isShorts, true)),
+    orderBy: [desc(videos.videoDate)],
   });
 };
