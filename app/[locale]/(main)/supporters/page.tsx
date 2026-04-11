@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PhotoCarousel } from "@/components/supporters/photo-carousel";
 import { SupportersContent } from "@/components/supporters/supporters-content";
-import { InAppBrowserNotice } from "@/components/supporters/in-app-browser-notice";
 
 // 特典画像のインポート
 import tokuten_IMG_3582 from "./tokuten/IMG_3582-scaled.jpg";
@@ -115,7 +114,6 @@ export default function SupportersPage() {
               </Button>
             </Link>
           </div>
-          <InAppBrowserNotice />
       </div>
 
       {/* フォトカルーセル - containerの外に配置 */}

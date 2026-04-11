@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { Header } from "@/components/header/header";
 import { Footer } from "@/components/footer/footer";
+import { InAppBrowserDialog } from "@/components/in-app-browser-dialog";
 
 export default async function MainLayout({
   children,
@@ -22,6 +23,7 @@ export default async function MainLayout({
       <Header />
       {children}
       <Footer />
+      <InAppBrowserDialog />
     </>
   );
 }
