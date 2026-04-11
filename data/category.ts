@@ -97,6 +97,18 @@ export const getPastEventCategoryIds = async (pastEventId: string) => {
   return rows.map((r) => r.categoryId);
 };
 
+/**
+ * カテゴリーIDのリストから子カテゴリー（parentIdがnullでないもの）のみを返す
+ */
+async function filterToChildCategories(categoryIds: string[]): Promise<string[]> {
+  const categoryRows = await db.query.categories.findMany({
+    where: inArray(categories.id, categoryIds),
+  });
+  return categoryRows
+    .filter((c) => c.parentId !== null)
+    .map((c) => c.id);
+}
+
 export type RelatedContentItem = {
   id: string;
   title: string;
@@ -108,25 +120,30 @@ export type RelatedContentItem = {
 
 /**
  * カテゴリーIDに紐づく関連コンテンツ（Blog, Video, Information, Schedule）を取得
+ * 子カテゴリーのみでフィルタリングし、親カテゴリーは除外する
  */
 export const getRelatedContentByCategoryIds = async (
   categoryIds: string[],
 ): Promise<RelatedContentItem[]> => {
   if (categoryIds.length === 0) return [];
 
+  // 子カテゴリー（parentIdがnullでないもの）のみに絞り込む
+  const childCategoryIds = await filterToChildCategories(categoryIds);
+  if (childCategoryIds.length === 0) return [];
+
   // 各コンテンツタイプのIDをカテゴリーから取得
   const [blogRows, videoRows, infoRows, scheduleRows] = await Promise.all([
     db.query.blogCategories.findMany({
-      where: inArray(blogCategories.categoryId, categoryIds),
+      where: inArray(blogCategories.categoryId, childCategoryIds),
     }),
     db.query.videoCategories.findMany({
-      where: inArray(videoCategories.categoryId, categoryIds),
+      where: inArray(videoCategories.categoryId, childCategoryIds),
     }),
     db.query.informationCategories.findMany({
-      where: inArray(informationCategories.categoryId, categoryIds),
+      where: inArray(informationCategories.categoryId, childCategoryIds),
     }),
     db.query.scheduleCategories.findMany({
-      where: inArray(scheduleCategories.categoryId, categoryIds),
+      where: inArray(scheduleCategories.categoryId, childCategoryIds),
     }),
   ]);
 
