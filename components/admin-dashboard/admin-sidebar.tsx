@@ -105,6 +105,11 @@ const menuGroups: MenuGroup[] = [
         url: "/admin/accounts",
       },
       {
+        title: "システムアカウント",
+        icon: ShieldCheck,
+        url: "/admin/system-accounts",
+      },
+      {
         title: "役員ビュー",
         icon: ClipboardList,
         url: "/officer/members",
