@@ -6,6 +6,7 @@ import { HeroBgSlideshow } from "@/components/hero/hero-bg-slideshow";
 import { VideoContents } from "@/components/video/content";
 import { HeroCarousel } from "@/components/hero/hero-carousel";
 import { SupportersContents } from "@/components/supporters/content";
+import { SponsorLogosSection } from "@/components/sponsors/sponsor-logos-section";
 import { MaintenancePage } from "@/components/maintenance/maintenance-page";
 import { ScrollFadeIn } from "@/components/scroll-animation/scroll-fade-in";
 
@@ -55,6 +56,7 @@ export default async function Home({
       <ScrollFadeIn>
         <SupportersContents />
       </ScrollFadeIn>
+      <SponsorLogosSection />
     </div>
   );
 }

@@ -142,7 +142,7 @@ export function HamburgerMenuContent({ onClose }: HamburgerMenuContentProps) {
         {/* コンテンツリンク（会員限定） */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-full bg-blue-500 rounded-lg p-4">
           <Link href="/member/video" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
-            VIDEO
+            MEMBERS VIDEO
           </Link>
           <Link href="/member/newsletter" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
             DIGITAL MAGAZINE
@@ -151,7 +151,7 @@ export function HamburgerMenuContent({ onClose }: HamburgerMenuContentProps) {
             PHOTO LIBRARY
           </Link>
           <Link href="/member/blog" onClick={handleLinkClick} className="text-base font-medium text-white hover:text-white/70 transition-colors text-center py-2">
-            EXCLUSIVE BLOG
+            MEMBERS BLOG
           </Link>
         </div>
       </div>

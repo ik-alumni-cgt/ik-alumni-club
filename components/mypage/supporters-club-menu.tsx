@@ -7,10 +7,10 @@ import {
 } from "@/components/ui/card";
 
 const MENU_ITEMS = [
-  { label: "VIDEO", href: "/member/video" },
+  { label: "MEMBERS VIDEO", href: "/member/video" },
   { label: "DIGITAL MAGAZINE", href: "/member/newsletter" },
   { label: "PHOTO LIBRARY", href: "/member/photo-library" },
-  { label: "EXCLUSIVE BLOG", href: "/member/blog" },
+  { label: "MEMBERS BLOG", href: "/member/blog" },
 ] as const;
 
 export function SupportersClubMenu() {

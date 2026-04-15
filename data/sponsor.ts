@@ -10,6 +10,14 @@ export const getAllSponsors = async () => {
   })
 }
 
+// ホームページ掲載同意済みスポンサーを取得
+export const getWebsiteConsentedSponsors = async () => {
+  return db.query.sponsors.findMany({
+    where: eq(sponsors.websiteConsent, true),
+    orderBy: [desc(sponsors.createdAt)],
+  })
+}
+
 // 個別スポンサー回答を取得
 export const getSponsor = async (id: string) => {
   return db.query.sponsors.findFirst({

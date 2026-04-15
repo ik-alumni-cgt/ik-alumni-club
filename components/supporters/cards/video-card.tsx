@@ -23,7 +23,7 @@ export function VideoCard({ videoImages }: VideoCardProps) {
     <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-8 overflow-visible group hover:bg-white/15 transition-all duration-300">
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
       <div className="relative z-10">
-        <h3 className="text-2xl font-bold text-white mb-3">VIDEO</h3>
+        <h3 className="text-2xl font-bold text-white mb-3">MEMBERS VIDEO</h3>
         <p className="text-white/90 mb-6 leading-relaxed">
           過去のイベントや<br />
           発表会の動画などを配信！
