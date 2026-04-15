@@ -19,7 +19,7 @@ export default async function MemberVideoPage({
   return (
     <div className="bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 min-h-screen -mt-[140px] pt-[140px] text-white">
       <div className="container mx-auto px-4 pt-10 pb-32">
-        <h1 className="main-text mb-10 text-white">{t("video")}</h1>
+        <h1 className="main-text mb-10 text-white">{t("memberVideo")}</h1>
         <VideoList items={items} />
       </div>
     </div>
