@@ -16,6 +16,7 @@ import {
   ClipboardList,
   Tags,
   MessageSquare,
+  ShieldCheck,
 } from "lucide-react";
 import {
   Sidebar,
