@@ -27,7 +27,7 @@ type MetricCardProps = {
 function MetricCard({ title, value, icon, href, description }: MetricCardProps) {
   const content = (
     <CardContent className="flex items-center gap-4 p-5">
-      <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand">
+      <div className="flex size-12 shrink-0 items-center justify-center rounded-md bg-brand/10 text-brand">
         {icon}
       </div>
       <div>

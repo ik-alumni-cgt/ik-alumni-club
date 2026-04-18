@@ -1,159 +1,62 @@
 "use client";
 
 import {
-  LayoutDashboard,
-  Users,
-  UserCircle,
-  Bell,
-  Calendar,
-  CalendarDays,
-  Video,
-  FileText,
-  Newspaper,
-  Image,
-  Settings,
-  Building2,
-  ClipboardList,
-  Tags,
-  MessageSquare,
-  ShieldCheck,
-} from "lucide-react";
-import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-  SidebarFooter,
   SidebarRail,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import NextImage from "next/image";
 import { usePathname } from "next/navigation";
-import type { LucideIcon } from "lucide-react";
-
-type MenuItem = {
-  title: string;
-  icon: LucideIcon;
-  url: string;
-};
-
-type MenuGroup = {
-  label: string;
-  items: MenuItem[];
-};
-
-const menuGroups: MenuGroup[] = [
-  {
-    label: "メイン",
-    items: [
-      {
-        title: "ダッシュボード",
-        icon: LayoutDashboard,
-        url: "/admin/dashboard",
-      },
-    ],
-  },
-  {
-    label: "コンテンツ管理",
-    items: [
-      {
-        title: "お知らせ管理",
-        icon: Bell,
-        url: "/admin/informations",
-      },
-      {
-        title: "Digital Magazine",
-        icon: Newspaper,
-        url: "/admin/newsletters",
-      },
-      {
-        title: "ブログ管理",
-        icon: FileText,
-        url: "/admin/blogs",
-      },
-      {
-        title: "動画管理",
-        icon: Video,
-        url: "/admin/videos",
-      },
-      {
-        title: "スケジュール管理",
-        icon: Calendar,
-        url: "/admin/schedules",
-      },
-      {
-        title: "過去のイベント",
-        icon: CalendarDays,
-        url: "/admin/past-events",
-      },
-      {
-        title: "フォトライブラリ",
-        icon: Image,
-        url: "/admin/photo-library",
-      },
-      {
-        title: "プロフィールメンバー",
-        icon: UserCircle,
-        url: "/admin/profile-members",
-      },
-    ],
-  },
-  {
-    label: "会員管理",
-    items: [
-      {
-        title: "会員管理",
-        icon: Users,
-        url: "/admin/accounts",
-      },
-      {
-        title: "システムアカウント",
-        icon: ShieldCheck,
-        url: "/admin/system-accounts",
-      },
-      {
-        title: "役員ビュー",
-        icon: ClipboardList,
-        url: "/officer/members",
-      },
-    ],
-  },
-  {
-    label: "その他",
-    items: [
-      {
-        title: "カテゴリー管理",
-        icon: Tags,
-        url: "/admin/categories",
-      },
-      {
-        title: "スポンサー管理",
-        icon: Building2,
-        url: "/admin/sponsors",
-      },
-      {
-        title: "お問い合わせ",
-        icon: MessageSquare,
-        url: "/admin/contacts",
-      },
-      {
-        title: "設定",
-        icon: Settings,
-        url: "#",
-      },
-    ],
-  },
-];
+import logoMain from "@/components/header/logo_main.png";
+import {
+  mainItems,
+  contentItems,
+  memberItems,
+  otherItems,
+} from "./admin-menu-items";
+import type { MenuItem } from "./admin-menu-items";
 
 function isActiveUrl(pathname: string, url: string): boolean {
   if (url === "#") return false;
-  // ロケールプレフィックスを除去して比較
   const normalizedPathname = pathname.replace(/^\/[a-z]{2}(?=\/)/, "");
   return normalizedPathname.startsWith(url);
+}
+
+function MenuSection({ items, pathname }: { items: MenuItem[]; pathname: string }) {
+  return (
+    <SidebarGroup className="p-0">
+      <SidebarGroupContent>
+        <SidebarMenu className="gap-px px-2">
+          {items.map((item) => {
+            const active = isActiveUrl(pathname, item.url);
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
+                  isActive={active}
+                  className="h-9 rounded-md font-medium text-black hover:bg-sidebar-accent hover:text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground"
+                >
+                  <Link href={item.url}>
+                    <item.icon className="!size-4" />
+                    <span className="text-[13px]">{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
 }
 
 export function AdminSidebar() {
@@ -161,58 +64,34 @@ export function AdminSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <div className="flex items-center gap-3 px-3 py-4">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand text-white">
-            <ShieldCheck className="size-5" />
+      <SidebarHeader className="px-2 pt-2 pb-0">
+        <Link
+          href="/admin/dashboard"
+          className="flex h-10 items-center gap-2.5 rounded-md px-2.5 hover:bg-sidebar-accent group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+        >
+          <div className="flex size-5 shrink-0 items-center justify-center">
+            <NextImage
+              src={logoMain}
+              alt="IK ALUMNI CGT"
+              width={20}
+              height={20}
+              className="object-contain"
+            />
           </div>
-          <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="truncate text-sm font-semibold">管理者パネル</span>
-            <span className="truncate text-xs text-sidebar-foreground/60">
-              Alumni Club
-            </span>
-          </div>
-        </div>
+          <span className="truncate text-[13px] font-semibold group-data-[collapsible=icon]:hidden">
+            IK ALUMNI CGT
+          </span>
+        </Link>
       </SidebarHeader>
-      <SidebarContent>
-        {menuGroups.map((group, groupIndex) => (
-          <SidebarGroup key={group.label}>
-            <SidebarGroupLabel>
-              {group.label}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {group.items.map((item) => {
-                  const active = isActiveUrl(pathname, item.url);
-                  return (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        tooltip={item.title}
-                        isActive={active}
-                        className="rounded-lg"
-                      >
-                        <Link href={item.url}>
-                          <item.icon className="size-5" />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+      <SidebarContent className="pt-2">
+        <MenuSection items={mainItems} pathname={pathname} />
+        <MenuSection items={contentItems} pathname={pathname} />
+        <SidebarSeparator className="mx-2 bg-gray-100" />
+        <MenuSection items={memberItems} pathname={pathname} />
+        <SidebarSeparator className="mx-2 bg-gray-100" />
+        <MenuSection items={otherItems} pathname={pathname} />
       </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border">
-        <div className="px-3 py-3 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
-          <p className="text-xs text-sidebar-foreground/50 group-data-[collapsible=icon]:hidden">
-            IK Alumni Club Admin
-          </p>
-        </div>
-      </SidebarFooter>
-      <SidebarRail />
+      <SidebarRail className="after:bg-gray-100 after:w-px" />
     </Sidebar>
   );
 }

@@ -20,7 +20,7 @@ export default async function EditSchedulePage({
   }
 
   return (
-    <div className="p-6">
+    <div>
       <h1 className="text-2xl font-bold mb-6">スケジュール編集</h1>
       <ScheduleForm
         defaultValues={schedule}

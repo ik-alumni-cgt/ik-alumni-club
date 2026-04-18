@@ -33,7 +33,7 @@ export default async function AdminContactDetailPage({
     contact.category;
 
   return (
-    <div className="container py-10">
+    <div>
       <div className="mb-6">
         <Button variant="ghost" asChild>
           <Link href="/admin/contacts">

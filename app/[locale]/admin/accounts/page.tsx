@@ -1,8 +1,8 @@
 import { getAllAccounts } from "@/data/account";
-import { SendTestEmailButton } from "@/components/admin/send-test-email-button";
 import { AccountFilters } from "@/components/admin/account-filters";
-import { AccountsTable } from "@/components/admin/accounts-table";
+import { AccountsDataTable } from "@/components/admin/tables/accounts-data-table";
 import type { MemberStatus } from "@/types/member";
+import type { AccountForTable } from "@/components/admin/tables/columns/accounts-columns";
 import { Suspense } from "react";
 
 type PaymentStatus = "pending" | "completed" | "failed" | "canceled";
@@ -13,8 +13,17 @@ type SearchParams = {
   isMigrated?: string;
 };
 
-const VALID_STATUSES: MemberStatus[] = ["pending_profile", "active", "inactive"];
-const VALID_PAYMENT_STATUSES: PaymentStatus[] = ["pending", "completed", "failed", "canceled"];
+const VALID_STATUSES: MemberStatus[] = [
+  "pending_profile",
+  "active",
+  "inactive",
+];
+const VALID_PAYMENT_STATUSES: PaymentStatus[] = [
+  "pending",
+  "completed",
+  "failed",
+  "canceled",
+];
 
 export default async function AdminAccountsPage({
   searchParams,
@@ -27,7 +36,9 @@ export default async function AdminAccountsPage({
     ? (params.status as MemberStatus)
     : undefined;
 
-  const paymentStatus = VALID_PAYMENT_STATUSES.includes(params.paymentStatus as PaymentStatus)
+  const paymentStatus = VALID_PAYMENT_STATUSES.includes(
+    params.paymentStatus as PaymentStatus
+  )
     ? (params.paymentStatus as PaymentStatus)
     : undefined;
 
@@ -40,8 +51,7 @@ export default async function AdminAccountsPage({
 
   const accounts = await getAllAccounts({ status, paymentStatus, isMigrated });
 
-  // Server -> Client のシリアライズ（Date -> string）
-  const serializedAccounts = accounts.map((account) => ({
+  const data: AccountForTable[] = accounts.map((account) => ({
     id: account.id,
     lastName: account.lastName,
     firstName: account.firstName,
@@ -58,35 +68,14 @@ export default async function AdminAccountsPage({
   }));
 
   return (
-    <div className="container py-10">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">会員管理</h1>
-          <p className="text-muted-foreground">
-            会員の一覧・詳細・編集・削除ができます
-          </p>
-        </div>
-        <SendTestEmailButton />
-      </div>
-
+    <div>
       <div className="mb-4">
         <Suspense>
           <AccountFilters />
         </Suspense>
       </div>
 
-      {accounts.length === 0 ? (
-        <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold">該当する会員がいません</h3>
-            <p className="text-sm text-muted-foreground">
-              フィルター条件に合う会員が見つかりませんでした
-            </p>
-          </div>
-        </div>
-      ) : (
-        <AccountsTable accounts={serializedAccounts} />
-      )}
+      <AccountsDataTable accounts={data} />
     </div>
   );
 }
