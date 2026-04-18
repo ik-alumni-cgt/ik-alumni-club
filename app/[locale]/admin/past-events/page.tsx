@@ -20,7 +20,7 @@ export default async function AdminPastEventsPage() {
   }));
 
   return (
-    <div className="container">
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">過去のイベント管理</h1>

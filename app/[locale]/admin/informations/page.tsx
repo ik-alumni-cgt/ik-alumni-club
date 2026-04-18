@@ -21,7 +21,7 @@ export default async function AdminInformationsPage() {
   }));
 
   return (
-    <div className="container">
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">お知らせ管理</h1>

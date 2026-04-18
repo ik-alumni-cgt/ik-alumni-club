@@ -69,7 +69,7 @@ export default async function AdminAccountsPage({
   }));
 
   return (
-    <div className="container">
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">会員管理</h1>

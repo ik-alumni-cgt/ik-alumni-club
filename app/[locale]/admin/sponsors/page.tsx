@@ -20,7 +20,7 @@ export default async function AdminSponsorsPage() {
   }));
 
   return (
-    <div className="container">
+    <div>
       <div className="mb-6">
         <h1 className="text-3xl font-bold">スポンサー回答管理</h1>
         <p className="text-muted-foreground">

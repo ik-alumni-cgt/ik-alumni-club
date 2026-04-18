@@ -21,7 +21,7 @@ export default async function AdminVideosPage() {
   }));
 
   return (
-    <div className="container">
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">動画管理</h1>

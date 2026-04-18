@@ -16,7 +16,6 @@ import {
   ClipboardList,
   Tags,
   MessageSquare,
-  ShieldCheck,
 } from "lucide-react";
 import {
   Sidebar,
@@ -31,7 +30,9 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import NextImage from "next/image";
 import { usePathname } from "next/navigation";
+import logoMain from "@/components/header/logo_main.png";
 import type { LucideIcon } from "lucide-react";
 
 type MenuItem = {
@@ -177,11 +178,17 @@ export function AdminSidebar() {
           href="/admin/dashboard"
           className="flex h-10 items-center gap-2.5 rounded-md px-2.5 hover:bg-sidebar-accent group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
         >
-          <div className="flex size-5 shrink-0 items-center justify-center rounded bg-sidebar-foreground text-sidebar-background">
-            <ShieldCheck className="size-3.5" />
+          <div className="flex size-5 shrink-0 items-center justify-center">
+            <NextImage
+              src={logoMain}
+              alt="IK ALUMNI CGT"
+              width={20}
+              height={20}
+              className="object-contain"
+            />
           </div>
           <span className="truncate text-[13px] font-semibold group-data-[collapsible=icon]:hidden">
-            管理者パネル
+            IK ALUMNI CGT
           </span>
         </Link>
       </SidebarHeader>

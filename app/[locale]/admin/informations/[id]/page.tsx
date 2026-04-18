@@ -25,7 +25,7 @@ export default async function EditInformationPage({
   }
 
   return (
-    <div className="container max-w-3xl">
+    <div className="max-w-3xl">
       <div className="mb-6">
         <Button asChild variant="ghost" size="sm" className="mb-4">
           <Link href="/admin/informations">
