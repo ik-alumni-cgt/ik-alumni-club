@@ -4,8 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
-import { ImageCell } from "@/components/admin/tables/cells/image-cell";
 import { PublishedBadgeCell } from "@/components/admin/tables/cells/published-badge-cell";
 import { MemberOnlyBadgeCell } from "@/components/admin/tables/cells/member-only-badge-cell";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
@@ -21,19 +19,9 @@ export type PhotoLibraryForTable = {
 };
 
 export const photoLibraryColumns: ColumnDef<PhotoLibraryForTable>[] = [
-  {
-    accessorKey: "thumbnailUrl",
-    header: "",
-    cell: ({ row }) => (
-      <ImageCell src={row.original.thumbnailUrl} alt={row.original.title} />
-    ),
-    enableSorting: false,
-  },
-  {
+{
     accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="タイトル" />
-    ),
+    header: "タイトル",
     cell: ({ row }) => (
       <span className="font-medium line-clamp-2 max-w-[300px]">
         {row.getValue("title")}
@@ -42,9 +30,7 @@ export const photoLibraryColumns: ColumnDef<PhotoLibraryForTable>[] = [
   },
   {
     accessorKey: "imageCount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="画像数" />
-    ),
+    header: "画像数",
     cell: ({ row }) => (
       <Badge variant="outline" className="text-xs">
         {row.original.imageCount}枚
@@ -53,9 +39,7 @@ export const photoLibraryColumns: ColumnDef<PhotoLibraryForTable>[] = [
   },
   {
     accessorKey: "published",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="公開" />
-    ),
+    header: "公開",
     cell: ({ row }) => (
       <PublishedBadgeCell published={row.original.published} />
     ),
@@ -69,9 +53,7 @@ export const photoLibraryColumns: ColumnDef<PhotoLibraryForTable>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="作成日" />
-    ),
+    header: "作成日",
     cell: ({ row }) => <DateCell date={row.getValue("createdAt")} />,
   },
   {

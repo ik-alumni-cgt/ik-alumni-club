@@ -4,7 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
 
 export type SystemAccountForTable = {
@@ -42,9 +41,7 @@ function getStatusBadge(status: string) {
 export const systemAccountsColumns: ColumnDef<SystemAccountForTable>[] = [
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="氏名" />
-    ),
+    header: "氏名",
     accessorFn: (row) => getDisplayName(row),
     cell: ({ row }) => (
       <span className="font-medium">{getDisplayName(row.original)}</span>
@@ -52,17 +49,13 @@ export const systemAccountsColumns: ColumnDef<SystemAccountForTable>[] = [
   },
   {
     accessorKey: "email",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="メールアドレス" />
-    ),
+    header: "メールアドレス",
     accessorFn: (row) => row.email || row.userEmail,
     cell: ({ row }) => row.original.email || row.original.userEmail,
   },
   {
     accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ステータス" />
-    ),
+    header: "ステータス",
     cell: ({ row }) =>
       getStatusBadge(row.original.status ?? "pending_profile"),
   },
@@ -82,9 +75,7 @@ export const systemAccountsColumns: ColumnDef<SystemAccountForTable>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="登録日" />
-    ),
+    header: "登録日",
     cell: ({ row }) => <DateCell date={row.getValue("createdAt")} />,
   },
   {

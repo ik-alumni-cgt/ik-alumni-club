@@ -22,13 +22,6 @@ export default async function SystemAccountsPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">システムアカウント</h1>
-        <p className="text-muted-foreground">
-          管理者アカウントの一覧・詳細を確認できます
-        </p>
-      </div>
-
       <DataTable
         columns={systemAccountsColumns}
         data={data}

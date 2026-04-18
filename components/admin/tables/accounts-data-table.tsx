@@ -12,6 +12,7 @@ import {
 
 type Props = {
   accounts: AccountForTable[];
+  toolbar?: React.ReactNode;
 };
 
 function getDisplayName(account: AccountForTable) {
@@ -21,7 +22,7 @@ function getDisplayName(account: AccountForTable) {
   return account.userName;
 }
 
-export function AccountsDataTable({ accounts }: Props) {
+export function AccountsDataTable({ accounts, toolbar }: Props) {
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState<
     { id: string; email: string; name: string }[]
@@ -35,6 +36,7 @@ export function AccountsDataTable({ accounts }: Props) {
         enableRowSelection
         searchKey="name"
         searchPlaceholder="氏名で検索..."
+        toolbar={toolbar}
         emptyState={{
           title: "該当する会員がいません",
           description: "フィルター条件に合う会員が見つかりませんでした",

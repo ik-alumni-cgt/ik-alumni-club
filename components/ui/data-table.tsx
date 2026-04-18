@@ -92,10 +92,10 @@ export function DataTable<TData, TValue>({
               onChange={(event) =>
                 table.getColumn(searchKey)?.setFilterValue(event.target.value)
               }
-              className="max-w-sm"
+              className="max-w-sm bg-white"
             />
           )}
-          {toolbar}
+          {toolbar && <div className="ml-auto">{toolbar}</div>}
           {bulkActions && table.getFilteredSelectedRowModel().rows.length > 0 && (
             <div className="flex items-center gap-3 rounded-md border bg-muted/50 px-4 py-2">
               <span className="text-sm font-medium">
@@ -108,7 +108,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
 
-      <div className="rounded-md border">
+      <div className="rounded-md border bg-white">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

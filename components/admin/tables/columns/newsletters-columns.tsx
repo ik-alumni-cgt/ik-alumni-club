@@ -4,7 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { PublishedBadgeCell } from "@/components/admin/tables/cells/published-badge-cell";
 import { MemberOnlyBadgeCell } from "@/components/admin/tables/cells/member-only-badge-cell";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
@@ -37,18 +36,14 @@ function getCategoryLabel(category: string | null) {
 export const newslettersColumns: ColumnDef<NewsletterForTable>[] = [
   {
     accessorKey: "issueNumber",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="号数" />
-    ),
+    header: "号数",
     cell: ({ row }) => (
       <span className="font-medium">第{row.original.issueNumber}号</span>
     ),
   },
   {
     accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="タイトル" />
-    ),
+    header: "タイトル",
     cell: ({ row }) => (
       <span className="font-medium line-clamp-2 max-w-[300px]">
         {row.getValue("title")}
@@ -57,9 +52,7 @@ export const newslettersColumns: ColumnDef<NewsletterForTable>[] = [
   },
   {
     accessorKey: "published",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="公開" />
-    ),
+    header: "公開",
     cell: ({ row }) => (
       <PublishedBadgeCell published={row.original.published} />
     ),
@@ -73,9 +66,7 @@ export const newslettersColumns: ColumnDef<NewsletterForTable>[] = [
   },
   {
     accessorKey: "category",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="カテゴリ" />
-    ),
+    header: "カテゴリ",
     cell: ({ row }) => {
       const label = getCategoryLabel(row.original.category);
       return label ? (
@@ -87,9 +78,7 @@ export const newslettersColumns: ColumnDef<NewsletterForTable>[] = [
   },
   {
     accessorKey: "publishedAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="発行日" />
-    ),
+    header: "発行日",
     cell: ({ row }) => <DateCell date={row.original.publishedAt} />,
   },
   {

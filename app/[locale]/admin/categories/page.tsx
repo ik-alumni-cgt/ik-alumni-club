@@ -9,13 +9,7 @@ export default async function AdminCategoriesPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">カテゴリー管理</h1>
-          <p className="text-muted-foreground">
-            カテゴリーの追加・編集・削除ができます
-          </p>
-        </div>
+      <div className="mb-6 flex justify-end">
         <Button asChild>
           <Link href="/admin/categories/new">
             <Plus className="mr-2 h-4 w-4" />

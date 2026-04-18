@@ -2,7 +2,6 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
 import {
   CONTACT_CATEGORY_LABELS,
@@ -20,18 +19,14 @@ export type ContactForTable = {
 export const contactsColumns: ColumnDef<ContactForTable>[] = [
   {
     accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="受付日時" />
-    ),
+    header: "受付日時",
     cell: ({ row }) => (
       <DateCell date={row.getValue("createdAt")} showTime />
     ),
   },
   {
     accessorKey: "category",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="カテゴリ" />
-    ),
+    header: "カテゴリ",
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       return (
@@ -41,9 +36,7 @@ export const contactsColumns: ColumnDef<ContactForTable>[] = [
   },
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="名前" />
-    ),
+    header: "名前",
   },
   {
     accessorKey: "subject",

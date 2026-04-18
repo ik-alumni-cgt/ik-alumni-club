@@ -24,26 +24,19 @@ export default async function AdminProfileMembersPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">プロフィールメンバー管理</h1>
-          <p className="text-muted-foreground">
-            プロフィールページに表示するメンバーの管理ができます
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/admin/profile-members/new">
-            <Plus className="mr-2 h-4 w-4" />
-            新規追加
-          </Link>
-        </Button>
-      </div>
-
       <DataTable
         columns={profileMembersColumns}
         data={data}
         searchKey="name"
         searchPlaceholder="名前で検索..."
+        toolbar={
+          <Button asChild>
+            <Link href="/admin/profile-members/new">
+              <Plus className="mr-2 h-4 w-4" />
+              新規追加
+            </Link>
+          </Button>
+        }
         emptyState={{
           title: "メンバーがいません",
           description: "新しいメンバーを追加してください",

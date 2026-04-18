@@ -5,8 +5,6 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
-import { ImageCell } from "@/components/admin/tables/cells/image-cell";
 import { PublishedBadgeCell } from "@/components/admin/tables/cells/published-badge-cell";
 import { MemberOnlyBadgeCell } from "@/components/admin/tables/cells/member-only-badge-cell";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
@@ -23,19 +21,9 @@ export type ScheduleForTable = {
 };
 
 export const schedulesColumns: ColumnDef<ScheduleForTable>[] = [
-  {
-    accessorKey: "imageUrl",
-    header: "",
-    cell: ({ row }) => (
-      <ImageCell src={row.original.imageUrl} alt={row.original.title} />
-    ),
-    enableSorting: false,
-  },
-  {
+{
     accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="タイトル" />
-    ),
+    header: "タイトル",
     cell: ({ row }) => (
       <span className="font-medium line-clamp-2 max-w-[300px]">
         {row.getValue("title")}
@@ -44,18 +32,14 @@ export const schedulesColumns: ColumnDef<ScheduleForTable>[] = [
   },
   {
     accessorKey: "eventDate",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="イベント日時" />
-    ),
+    header: "イベント日時",
     cell: ({ row }) => (
       <DateCell date={row.getValue("eventDate")} showTime />
     ),
   },
   {
     accessorKey: "sortOrder",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="表示順" />
-    ),
+    header: "表示順",
     cell: ({ row }) => (
       <Badge variant="outline" className="text-xs">
         {row.getValue("sortOrder")}
@@ -64,9 +48,7 @@ export const schedulesColumns: ColumnDef<ScheduleForTable>[] = [
   },
   {
     accessorKey: "published",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="公開" />
-    ),
+    header: "公開",
     cell: ({ row }) => (
       <PublishedBadgeCell published={row.original.published} />
     ),

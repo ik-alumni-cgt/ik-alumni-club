@@ -1,24 +1,6 @@
 "use client";
 
 import {
-  LayoutDashboard,
-  Users,
-  UserCircle,
-  Bell,
-  Calendar,
-  CalendarDays,
-  Video,
-  FileText,
-  Newspaper,
-  Image,
-  Settings,
-  Building2,
-  ClipboardList,
-  Tags,
-  MessageSquare,
-  ShieldCheck,
-} from "lucide-react";
-import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -34,105 +16,13 @@ import Link from "next/link";
 import NextImage from "next/image";
 import { usePathname } from "next/navigation";
 import logoMain from "@/components/header/logo_main.png";
-import type { LucideIcon } from "lucide-react";
-
-type MenuItem = {
-  title: string;
-  icon: LucideIcon;
-  url: string;
-};
-
-const mainItems: MenuItem[] = [
-  {
-    title: "ダッシュボード",
-    icon: LayoutDashboard,
-    url: "/admin/dashboard",
-  },
-];
-
-const contentItems: MenuItem[] = [
-  {
-    title: "お知らせ管理",
-    icon: Bell,
-    url: "/admin/informations",
-  },
-  {
-    title: "Digital Magazine",
-    icon: Newspaper,
-    url: "/admin/newsletters",
-  },
-  {
-    title: "ブログ管理",
-    icon: FileText,
-    url: "/admin/blogs",
-  },
-  {
-    title: "動画管理",
-    icon: Video,
-    url: "/admin/videos",
-  },
-  {
-    title: "スケジュール管理",
-    icon: Calendar,
-    url: "/admin/schedules",
-  },
-  {
-    title: "過去のイベント",
-    icon: CalendarDays,
-    url: "/admin/past-events",
-  },
-  {
-    title: "フォトライブラリ",
-    icon: Image,
-    url: "/admin/photo-library",
-  },
-  {
-    title: "プロフィールメンバー",
-    icon: UserCircle,
-    url: "/admin/profile-members",
-  },
-];
-
-const memberItems: MenuItem[] = [
-  {
-    title: "会員管理",
-    icon: Users,
-    url: "/admin/accounts",
-  },
-  {
-    title: "システムアカウント",
-    icon: ShieldCheck,
-    url: "/admin/system-accounts",
-  },
-  {
-    title: "役員ビュー",
-    icon: ClipboardList,
-    url: "/officer/members",
-  },
-];
-
-const otherItems: MenuItem[] = [
-  {
-    title: "カテゴリー管理",
-    icon: Tags,
-    url: "/admin/categories",
-  },
-  {
-    title: "スポンサー管理",
-    icon: Building2,
-    url: "/admin/sponsors",
-  },
-  {
-    title: "お問い合わせ",
-    icon: MessageSquare,
-    url: "/admin/contacts",
-  },
-  {
-    title: "設定",
-    icon: Settings,
-    url: "#",
-  },
-];
+import {
+  mainItems,
+  contentItems,
+  memberItems,
+  otherItems,
+} from "./admin-menu-items";
+import type { MenuItem } from "./admin-menu-items";
 
 function isActiveUrl(pathname: string, url: string): boolean {
   if (url === "#") return false;
@@ -153,7 +43,7 @@ function MenuSection({ items, pathname }: { items: MenuItem[]; pathname: string 
                   asChild
                   tooltip={item.title}
                   isActive={active}
-                  className="h-9 rounded-md font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground"
+                  className="h-9 rounded-md font-medium text-black hover:bg-sidebar-accent hover:text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground"
                 >
                   <Link href={item.url}>
                     <item.icon className="!size-4" />
@@ -195,14 +85,13 @@ export function AdminSidebar() {
       </SidebarHeader>
       <SidebarContent className="pt-2">
         <MenuSection items={mainItems} pathname={pathname} />
-        <SidebarSeparator className="mx-2" />
         <MenuSection items={contentItems} pathname={pathname} />
-        <SidebarSeparator className="mx-2" />
+        <SidebarSeparator className="mx-2 bg-gray-100" />
         <MenuSection items={memberItems} pathname={pathname} />
-        <SidebarSeparator className="mx-2" />
+        <SidebarSeparator className="mx-2 bg-gray-100" />
         <MenuSection items={otherItems} pathname={pathname} />
       </SidebarContent>
-      <SidebarRail />
+      <SidebarRail className="after:bg-gray-100 after:w-px" />
     </Sidebar>
   );
 }

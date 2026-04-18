@@ -3,8 +3,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
-import { ImageCell } from "@/components/admin/tables/cells/image-cell";
 import { PublishedBadgeCell } from "@/components/admin/tables/cells/published-badge-cell";
 import { MemberOnlyBadgeCell } from "@/components/admin/tables/cells/member-only-badge-cell";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
@@ -20,19 +18,9 @@ export type BlogForTable = {
 };
 
 export const blogsColumns: ColumnDef<BlogForTable>[] = [
-  {
-    accessorKey: "thumbnailUrl",
-    header: "",
-    cell: ({ row }) => (
-      <ImageCell src={row.original.thumbnailUrl} alt={row.original.title} />
-    ),
-    enableSorting: false,
-  },
-  {
+{
     accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="タイトル" />
-    ),
+    header: "タイトル",
     cell: ({ row }) => (
       <span className="font-medium line-clamp-2 max-w-[300px]">
         {row.getValue("title")}
@@ -41,9 +29,7 @@ export const blogsColumns: ColumnDef<BlogForTable>[] = [
   },
   {
     accessorKey: "published",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="公開" />
-    ),
+    header: "公開",
     cell: ({ row }) => (
       <PublishedBadgeCell published={row.original.published} />
     ),
@@ -57,9 +43,7 @@ export const blogsColumns: ColumnDef<BlogForTable>[] = [
   },
   {
     accessorKey: "authorName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="投稿者" />
-    ),
+    header: "投稿者",
     cell: ({ row }) => (
       <span className="text-muted-foreground">
         {row.original.authorName ?? "-"}
@@ -68,9 +52,7 @@ export const blogsColumns: ColumnDef<BlogForTable>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="作成日" />
-    ),
+    header: "作成日",
     cell: ({ row }) => <DateCell date={row.getValue("createdAt")} />,
   },
   {

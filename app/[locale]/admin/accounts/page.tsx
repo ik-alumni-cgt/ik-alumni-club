@@ -70,23 +70,13 @@ export default async function AdminAccountsPage({
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">会員管理</h1>
-          <p className="text-muted-foreground">
-            会員の一覧・詳細・編集・削除ができます
-          </p>
-        </div>
-        <SendTestEmailButton />
-      </div>
-
       <div className="mb-4">
         <Suspense>
           <AccountFilters />
         </Suspense>
       </div>
 
-      <AccountsDataTable accounts={data} />
+      <AccountsDataTable accounts={data} toolbar={<SendTestEmailButton />} />
     </div>
   );
 }

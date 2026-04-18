@@ -3,8 +3,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
-import { ImageCell } from "@/components/admin/tables/cells/image-cell";
 import { PublishedBadgeCell } from "@/components/admin/tables/cells/published-badge-cell";
 import { MemberOnlyBadgeCell } from "@/components/admin/tables/cells/member-only-badge-cell";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
@@ -19,37 +17,23 @@ export type PastEventForTable = {
 };
 
 export const pastEventsColumns: ColumnDef<PastEventForTable>[] = [
-  {
-    accessorKey: "imageUrl",
-    header: "",
-    cell: ({ row }) => (
-      <ImageCell src={row.original.imageUrl} alt={row.original.title} />
-    ),
-    enableSorting: false,
-  },
-  {
+{
     accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="タイトル" />
-    ),
+    header: "タイトル",
     cell: ({ row }) => (
       <span className="font-medium">{row.getValue("title")}</span>
     ),
   },
   {
     accessorKey: "eventDate",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="イベント日時" />
-    ),
+    header: "イベント日時",
     cell: ({ row }) => (
       <DateCell date={row.getValue("eventDate")} showTime />
     ),
   },
   {
     accessorKey: "published",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="公開" />
-    ),
+    header: "公開",
     cell: ({ row }) => (
       <PublishedBadgeCell published={row.original.published} />
     ),

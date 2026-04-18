@@ -4,8 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
-import { ImageCell } from "@/components/admin/tables/cells/image-cell";
 
 export type ProfileMemberForTable = {
   id: string;
@@ -17,28 +15,16 @@ export type ProfileMemberForTable = {
 };
 
 export const profileMembersColumns: ColumnDef<ProfileMemberForTable>[] = [
-  {
-    accessorKey: "imageUrl",
-    header: "",
-    cell: ({ row }) => (
-      <ImageCell src={row.original.imageUrl} alt={row.original.name} />
-    ),
-    enableSorting: false,
-  },
-  {
+{
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="名前" />
-    ),
+    header: "名前",
     cell: ({ row }) => (
       <span className="font-medium">{row.getValue("name")}</span>
     ),
   },
   {
     accessorKey: "sortOrder",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="表示順" />
-    ),
+    header: "表示順",
     cell: ({ row }) => (
       <Badge variant="outline" className="text-xs">
         {row.getValue("sortOrder")}
@@ -47,9 +33,7 @@ export const profileMembersColumns: ColumnDef<ProfileMemberForTable>[] = [
   },
   {
     accessorKey: "isVisible",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="状態" />
-    ),
+    header: "状態",
     cell: ({ row }) =>
       row.original.isVisible ? (
         <Badge variant="default">公開</Badge>

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
 
 export type AccountForTable = {
@@ -110,9 +109,7 @@ export const accountsColumns: ColumnDef<AccountForTable>[] = [
   },
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="氏名" />
-    ),
+    header: "氏名",
     accessorFn: (row) => getDisplayName(row),
     cell: ({ row }) => (
       <span className="font-medium">{getDisplayName(row.original)}</span>
@@ -120,39 +117,29 @@ export const accountsColumns: ColumnDef<AccountForTable>[] = [
   },
   {
     accessorKey: "email",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="メールアドレス" />
-    ),
+    header: "メールアドレス",
     accessorFn: (row) => row.email || row.userEmail,
     cell: ({ row }) => row.original.email || row.original.userEmail,
   },
   {
     accessorKey: "planDisplayName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="プラン" />
-    ),
+    header: "プラン",
     cell: ({ row }) => row.original.planDisplayName ?? "未設定",
   },
   {
     accessorKey: "role",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="権限" />
-    ),
+    header: "権限",
     cell: ({ row }) => getRoleBadge(row.original.role),
   },
   {
     accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ステータス" />
-    ),
+    header: "ステータス",
     cell: ({ row }) =>
       getStatusBadge(row.original.status ?? "pending_profile"),
   },
   {
     accessorKey: "paymentStatus",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="支払い" />
-    ),
+    header: "支払い",
     cell: ({ row }) => getPaymentStatusBadge(row.original.paymentStatus),
   },
   {
@@ -183,9 +170,7 @@ export const accountsColumns: ColumnDef<AccountForTable>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="登録日" />
-    ),
+    header: "登録日",
     cell: ({ row }) => <DateCell date={row.getValue("createdAt")} />,
   },
   {

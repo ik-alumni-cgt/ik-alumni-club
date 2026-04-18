@@ -22,26 +22,19 @@ export default async function AdminInformationsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">お知らせ管理</h1>
-          <p className="text-muted-foreground">
-            お知らせの作成・編集・削除ができます
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/admin/informations/new">
-            <Plus className="mr-2 h-4 w-4" />
-            新規作成
-          </Link>
-        </Button>
-      </div>
-
       <DataTable
         columns={informationsColumns}
         data={data}
         searchKey="title"
         searchPlaceholder="タイトルで検索..."
+        toolbar={
+          <Button asChild>
+            <Link href="/admin/informations/new">
+              <Plus className="mr-2 h-4 w-4" />
+              新規作成
+            </Link>
+          </Button>
+        }
         emptyState={{
           title: "お知らせがありません",
           description: "新しいお知らせを作成してください",

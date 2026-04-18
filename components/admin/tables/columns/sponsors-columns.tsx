@@ -19,8 +19,6 @@ import {
 import { deleteSponsor } from "@/actions/sponsor";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
-import { ImageCell } from "@/components/admin/tables/cells/image-cell";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
 
 export type SponsorForTable = {
@@ -79,22 +77,9 @@ function DeleteSponsorAction({ sponsor }: { sponsor: SponsorForTable }) {
 }
 
 export const sponsorsColumns: ColumnDef<SponsorForTable>[] = [
-  {
-    accessorKey: "logoUrl",
-    header: "",
-    cell: ({ row }) => (
-      <ImageCell
-        src={row.original.logoUrl}
-        alt={`${row.original.companyName ?? ""}のロゴ`}
-      />
-    ),
-    enableSorting: false,
-  },
-  {
+{
     accessorKey: "companyName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="企業名" />
-    ),
+    header: "企業名",
     cell: ({ row }) => (
       <span className="font-medium">
         {row.original.companyName ?? "-"}
@@ -103,9 +88,7 @@ export const sponsorsColumns: ColumnDef<SponsorForTable>[] = [
   },
   {
     accessorKey: "representativeName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="代表者名" />
-    ),
+    header: "代表者名",
   },
   {
     accessorKey: "hasFlag",
@@ -133,9 +116,7 @@ export const sponsorsColumns: ColumnDef<SponsorForTable>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="回答日" />
-    ),
+    header: "回答日",
     cell: ({ row }) => (
       <DateCell date={row.getValue("createdAt")} showTime />
     ),
