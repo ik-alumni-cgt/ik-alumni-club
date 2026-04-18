@@ -1,6 +1,4 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { PublishedBadgeCell } from "@/components/admin/tables/cells/published-badge-cell";
 import { MemberOnlyBadgeCell } from "@/components/admin/tables/cells/member-only-badge-cell";
 import { DateCell } from "@/components/admin/tables/cells/date-cell";
@@ -11,50 +9,37 @@ export type ContentForTable = {
   published: boolean;
   isMemberOnly: boolean;
   updatedAt: string;
+  imageUrl?: string | null;
 };
 
-export function createContentColumns(
-  editBasePath: string
-): ColumnDef<ContentForTable>[] {
+export function createContentColumns(): ColumnDef<ContentForTable>[] {
   return [
     {
       accessorKey: "title",
       header: "タイトル",
+      meta: { widthPercent: 55 },
       cell: ({ row }) => (
-        <span className="font-medium line-clamp-2 max-w-[300px]">
+        <span className="block py-1 font-medium line-clamp-2">
           {row.getValue("title")}
         </span>
       ),
     },
     {
-      accessorKey: "published",
-      header: "公開状態",
+      id: "status",
+      header: "ステータス",
+      meta: { widthPercent: 25 },
       cell: ({ row }) => (
-        <PublishedBadgeCell published={row.original.published} />
-      ),
-    },
-    {
-      accessorKey: "isMemberOnly",
-      header: "限定",
-      cell: ({ row }) => (
-        <MemberOnlyBadgeCell isMemberOnly={row.original.isMemberOnly} />
+        <div className="flex items-center gap-1.5">
+          <PublishedBadgeCell published={row.original.published} />
+          <MemberOnlyBadgeCell isMemberOnly={row.original.isMemberOnly} />
+        </div>
       ),
     },
     {
       accessorKey: "updatedAt",
       header: "更新日",
+      meta: { widthPercent: 20 },
       cell: ({ row }) => <DateCell date={row.getValue("updatedAt")} />,
-    },
-    {
-      id: "actions",
-      header: () => <div className="text-right">操作</div>,
-      cell: ({ row }) => (
-        <div className="text-right">
-          <Button asChild variant="outline" size="sm">
-            <Link href={`${editBasePath}/${row.original.id}`}>編集</Link>
-          </Button>
-        </div>
-      ),
     },
   ];
 }

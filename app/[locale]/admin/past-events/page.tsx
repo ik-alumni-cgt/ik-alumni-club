@@ -13,6 +13,7 @@ export default async function AdminPastEventsPage() {
     published: pastEvent.published,
     isMemberOnly: pastEvent.isMemberOnly,
     updatedAt: pastEvent.updatedAt.toISOString(),
+    imageUrl: pastEvent.imageUrl,
   }));
 
   return (

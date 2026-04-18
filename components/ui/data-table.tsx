@@ -33,6 +33,8 @@ interface DataTableProps<TData, TValue> {
   pageSize?: number;
   toolbar?: React.ReactNode;
   bulkActions?: (table: ReturnType<typeof useReactTable<TData>>) => React.ReactNode;
+  hideHeader?: boolean;
+  onRowClick?: (row: TData) => void;
   emptyState?: {
     title: string;
     description?: string;
@@ -48,7 +50,9 @@ export function DataTable<TData, TValue>({
   enableRowSelection = false,
   pageSize = 20,
   toolbar,
+  hideHeader = false,
   bulkActions,
+  onRowClick,
   emptyState,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -109,29 +113,41 @@ export function DataTable<TData, TValue>({
       )}
 
       <div className="rounded-md border bg-white">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
+        <Table style={{ tableLayout: columns.some((col) => (col.meta as { widthPercent?: number } | undefined)?.widthPercent) ? "fixed" : undefined }}>
+          {columns.some((col) => (col.meta as { widthPercent?: number } | undefined)?.widthPercent) && (
+            <colgroup>
+              {columns.map((col, i) => {
+                const wp = (col.meta as { widthPercent?: number } | undefined)?.widthPercent;
+                return <col key={i} style={wp ? { width: `${wp}%` } : undefined} />;
+              })}
+            </colgroup>
+          )}
+          {!hideHeader && (
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+          )}
           <TableBody>
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={onRowClick ? "cursor-pointer hover:bg-muted/50" : undefined}
+                  onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

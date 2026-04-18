@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { Button } from "@/components/ui/button";
 import { getAllProfileMembers } from "@/data/profile-member";
-import { Plus } from "lucide-react";
+
 import Link from "next/link";
 import { DataTable } from "@/components/ui/data-table";
 import {
@@ -32,7 +32,6 @@ export default async function AdminProfileMembersPage() {
         toolbar={
           <Button asChild>
             <Link href="/admin/profile-members/new">
-              <Plus className="mr-2 h-4 w-4" />
               新規追加
             </Link>
           </Button>
@@ -43,7 +42,6 @@ export default async function AdminProfileMembersPage() {
           action: (
             <Button asChild className="mt-2">
               <Link href="/admin/profile-members/new">
-                <Plus className="mr-2 h-4 w-4" />
                 新規追加
               </Link>
             </Button>

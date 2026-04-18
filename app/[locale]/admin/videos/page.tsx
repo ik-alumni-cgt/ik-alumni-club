@@ -13,6 +13,7 @@ export default async function AdminVideosPage() {
     published: video.published,
     isMemberOnly: video.isMemberOnly,
     updatedAt: video.updatedAt.toISOString(),
+    imageUrl: video.thumbnailUrl,
   }));
 
   return (

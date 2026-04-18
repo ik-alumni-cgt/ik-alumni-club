@@ -13,6 +13,7 @@ export default async function AdminSchedulesPage() {
     published: schedule.published,
     isMemberOnly: schedule.isMemberOnly,
     updatedAt: schedule.updatedAt.toISOString(),
+    imageUrl: schedule.imageUrl,
   }));
 
   return (

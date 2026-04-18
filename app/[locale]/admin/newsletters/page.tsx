@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getAllNewsletters } from "@/data/newsletter";
-import { Plus } from "lucide-react";
+
 import Link from "next/link";
 import { ContentDataTable } from "@/components/admin/tables/content-data-table";
 import type { ContentForTable } from "@/components/admin/tables/columns/content-columns";
@@ -14,6 +14,7 @@ export default async function AdminNewslettersPage() {
     published: newsletter.published,
     isMemberOnly: newsletter.isMemberOnly,
     updatedAt: newsletter.updatedAt.toISOString(),
+    imageUrl: newsletter.thumbnailUrl,
   }));
 
   return (
@@ -24,7 +25,6 @@ export default async function AdminNewslettersPage() {
         toolbar={
           <Button asChild>
             <Link href="/admin/newsletters/new">
-              <Plus className="mr-2 h-4 w-4" />
               新規作成
             </Link>
           </Button>
@@ -35,7 +35,6 @@ export default async function AdminNewslettersPage() {
           action: (
             <Button asChild className="mt-2">
               <Link href="/admin/newsletters/new">
-                <Plus className="mr-2 h-4 w-4" />
                 新規作成
               </Link>
             </Button>

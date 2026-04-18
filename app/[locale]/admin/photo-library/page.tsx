@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getAllPhotos } from "@/data/photo-library";
-import { Plus } from "lucide-react";
+
 import Link from "next/link";
 import { ContentDataTable } from "@/components/admin/tables/content-data-table";
 import type { ContentForTable } from "@/components/admin/tables/columns/content-columns";
@@ -14,6 +14,7 @@ export default async function AdminPhotoLibraryPage() {
     published: photo.published,
     isMemberOnly: photo.isMemberOnly,
     updatedAt: photo.updatedAt.toISOString(),
+    imageUrl: photo.coverImageUrl,
   }));
 
   return (
@@ -24,7 +25,6 @@ export default async function AdminPhotoLibraryPage() {
         toolbar={
           <Button asChild>
             <Link href="/admin/photo-library/new">
-              <Plus className="mr-2 h-4 w-4" />
               新規作成
             </Link>
           </Button>
@@ -35,7 +35,6 @@ export default async function AdminPhotoLibraryPage() {
           action: (
             <Button asChild className="mt-2">
               <Link href="/admin/photo-library/new">
-                <Plus className="mr-2 h-4 w-4" />
                 新規作成
               </Link>
             </Button>
