@@ -38,7 +38,7 @@ export default async function EditAccountPage({
   };
 
   return (
-    <div className="container max-w-3xl py-10">
+    <div className="container max-w-3xl">
       <div className="mb-6">
         <Button asChild variant="ghost" size="sm" className="mb-4">
           <Link href={`/admin/accounts/${id}`}>

@@ -8,7 +8,7 @@ export default async function AdminCategoriesPage() {
   const categories = await getCategoriesTree();
 
   return (
-    <div className="container py-10">
+    <div className="container">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">カテゴリー管理</h1>

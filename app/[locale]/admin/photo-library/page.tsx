@@ -22,7 +22,7 @@ export default async function AdminPhotoLibraryPage() {
   }));
 
   return (
-    <div className="container py-10">
+    <div className="container">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">フォトライブラリ管理</h1>

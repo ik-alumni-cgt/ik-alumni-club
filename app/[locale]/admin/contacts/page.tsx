@@ -19,7 +19,7 @@ export default async function AdminContactsPage() {
   }));
 
   return (
-    <div className="container py-10">
+    <div className="container">
       <div className="mb-6">
         <h1 className="text-3xl font-bold">お問い合わせ管理</h1>
         <p className="text-muted-foreground">

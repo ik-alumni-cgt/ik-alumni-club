@@ -20,7 +20,7 @@ export default async function EditVideoPage({
   }
 
   return (
-    <div className="p-6">
+    <div>
       <h1 className="text-2xl font-bold mb-6">動画編集</h1>
       <VideoForm
         defaultValues={video}

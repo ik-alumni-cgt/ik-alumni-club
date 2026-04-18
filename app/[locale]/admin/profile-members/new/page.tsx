@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function NewProfileMemberPage() {
   return (
-    <div className="container max-w-3xl py-10">
+    <div className="container max-w-3xl">
       <div className="mb-6">
         <Button asChild variant="ghost" size="sm" className="mb-4">
           <Link href="/admin/profile-members">
