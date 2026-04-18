@@ -1,34 +1,53 @@
 import { getAllVideos } from "@/data/video";
-import { VideoCard } from "@/components/video-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { DataTable } from "@/components/ui/data-table";
+import {
+  videosColumns,
+  type VideoForTable,
+} from "@/components/admin/tables/columns/videos-columns";
 
 export default async function AdminVideosPage() {
   const videos = await getAllVideos();
 
+  const data: VideoForTable[] = videos.map((video) => ({
+    id: video.id,
+    title: video.title,
+    thumbnailUrl: video.thumbnailUrl,
+    published: video.published,
+    isMemberOnly: video.isMemberOnly,
+    authorName: video.authorName,
+    videoDate: video.videoDate,
+  }));
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">動画管理</h1>
+    <div className="container py-10">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">動画管理</h1>
+          <p className="text-muted-foreground">
+            動画の作成・編集・削除ができます
+          </p>
+        </div>
         <Button asChild>
           <Link href="/admin/videos/new">新規作成</Link>
         </Button>
       </div>
 
-      {videos.length === 0 ? (
-        <div className="text-center py-12">
-          <h3 className="text-lg mb-4">動画がありません</h3>
-          <Button asChild>
-            <Link href="/admin/videos/new">新規作成</Link>
-          </Button>
-        </div>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {videos.map((video) => (
-            <VideoCard key={video.id} video={video} showActions />
-          ))}
-        </div>
-      )}
+      <DataTable
+        columns={videosColumns}
+        data={data}
+        searchKey="title"
+        searchPlaceholder="タイトルで検索..."
+        emptyState={{
+          title: "動画がありません",
+          action: (
+            <Button asChild className="mt-2">
+              <Link href="/admin/videos/new">新規作成</Link>
+            </Button>
+          ),
+        }}
+      />
     </div>
   );
 }

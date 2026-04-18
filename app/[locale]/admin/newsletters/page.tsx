@@ -2,19 +2,26 @@ import { Button } from "@/components/ui/button";
 import { getAllNewsletters } from "@/data/newsletter";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { DataTable } from "@/components/ui/data-table";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, Lock } from "lucide-react";
+  newslettersColumns,
+  type NewsletterForTable,
+} from "@/components/admin/tables/columns/newsletters-columns";
 
 export default async function AdminNewslettersPage() {
   const newsletters = await getAllNewsletters();
+
+  const data: NewsletterForTable[] = newsletters.map((newsletter) => ({
+    id: newsletter.id,
+    issueNumber: newsletter.issueNumber,
+    title: newsletter.title,
+    published: newsletter.published,
+    isMemberOnly: newsletter.isMemberOnly,
+    category: newsletter.category,
+    publishedAt: newsletter.publishedAt?.toISOString() ?? null,
+    authorName: newsletter.authorName,
+    pdfUrl: newsletter.pdfUrl,
+  }));
 
   return (
     <div className="container py-10">
@@ -33,89 +40,24 @@ export default async function AdminNewslettersPage() {
         </Button>
       </div>
 
-      {newsletters.length === 0 ? (
-        <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold">Digital Magazineがありません</h3>
-            <p className="text-sm text-muted-foreground">
-              新しいDigital Magazineを作成してください
-            </p>
-            <Button asChild className="mt-4">
+      <DataTable
+        columns={newslettersColumns}
+        data={data}
+        searchKey="title"
+        searchPlaceholder="タイトルで検索..."
+        emptyState={{
+          title: "Digital Magazineがありません",
+          description: "新しいDigital Magazineを作成してください",
+          action: (
+            <Button asChild className="mt-2">
               <Link href="/admin/newsletters/new">
                 <Plus className="mr-2 h-4 w-4" />
                 新規作成
               </Link>
             </Button>
-          </div>
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {newsletters.map((newsletter) => (
-            <Card key={newsletter.id}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <CardTitle className="flex items-center gap-2">
-                      第{newsletter.issueNumber}号: {newsletter.title}
-                    </CardTitle>
-                    <CardDescription>{newsletter.excerpt}</CardDescription>
-                  </div>
-                  <div className="flex gap-2 flex-wrap">
-                    {newsletter.published ? (
-                      <Badge variant="default">公開中</Badge>
-                    ) : (
-                      <Badge variant="secondary">下書き</Badge>
-                    )}
-                    {newsletter.isMemberOnly && (
-                      <Badge variant="outline" className="flex items-center gap-1 border-amber-500 text-amber-700">
-                        <Lock className="h-3 w-3" />
-                        会員限定
-                      </Badge>
-                    )}
-                    {newsletter.category && (
-                      <Badge variant="outline">
-                        {newsletter.category === "regular" && "定期号"}
-                        {newsletter.category === "special" && "特別号"}
-                        {newsletter.category === "extra" && "号外"}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex gap-4 text-sm text-muted-foreground">
-                  {newsletter.publishedAt && (
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {new Date(newsletter.publishedAt).toLocaleDateString("ja-JP")}
-                    </div>
-                  )}
-                  {newsletter.authorName && (
-                    <div>作成者: {newsletter.authorName}</div>
-                  )}
-                  {newsletter.pdfUrl && (
-                    <div>
-                      <a
-                        href={newsletter.pdfUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        PDF版あり
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button asChild variant="outline">
-                  <Link href={`/admin/newsletters/${newsletter.id}`}>編集</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      )}
+          ),
+        }}
+      />
     </div>
   );
 }

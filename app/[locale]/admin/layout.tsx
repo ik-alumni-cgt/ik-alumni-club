@@ -24,12 +24,12 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="font-[family-name:var(--font-geist-sans)]">
+    <div className="bg-[#fafafa] font-[family-name:var(--font-geist-sans)]">
       <SidebarProvider>
         <AdminSidebar />
         <SidebarInset>
           <AdminHeader />
-          <main className="flex-1 bg-gray-50/50 p-4 md:p-6">
+          <main className="flex-1 p-4 md:p-6">
             <div className="mx-auto max-w-screen-2xl">{children}</div>
           </main>
         </SidebarInset>

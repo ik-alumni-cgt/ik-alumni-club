@@ -51,7 +51,7 @@ export function AdminHeader() {
   const breadcrumbs = getBreadcrumbs(pathname);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b bg-white px-4 md:px-6">
+    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b bg-[#fafafa] px-4 md:px-6">
       <div className="flex items-center gap-3">
         <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
         <Separator orientation="vertical" className="h-5" />
