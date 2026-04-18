@@ -117,8 +117,10 @@ export function DataTable<TData, TValue>({
           {columns.some((col) => (col.meta as { widthPercent?: number } | undefined)?.widthPercent) && (
             <colgroup>
               {columns.map((col, i) => {
-                const wp = (col.meta as { widthPercent?: number } | undefined)?.widthPercent;
-                return <col key={i} style={wp ? { width: `${wp}%` } : undefined} />;
+                const meta = col.meta as { widthPercent?: number; hideOnMobile?: boolean } | undefined;
+                const wp = meta?.widthPercent;
+                const hideOnMobile = meta?.hideOnMobile;
+                return <col key={i} style={wp ? { width: `${wp}%` } : undefined} className={hideOnMobile ? "hidden md:table-column" : undefined} />;
               })}
             </colgroup>
           )}
@@ -126,16 +128,19 @@ export function DataTable<TData, TValue>({
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  ))}
+                  {headerGroup.headers.map((header) => {
+                    const meta = header.column.columnDef.meta as { hideOnMobile?: boolean } | undefined;
+                    return (
+                      <TableHead key={header.id} className={meta?.hideOnMobile ? "hidden md:table-cell" : undefined}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
               ))}
             </TableHeader>
@@ -149,14 +154,17 @@ export function DataTable<TData, TValue>({
                   className={onRowClick ? "cursor-pointer hover:bg-muted/50" : undefined}
                   onClick={() => onRowClick?.(row.original)}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const meta = cell.column.columnDef.meta as { hideOnMobile?: boolean } | undefined;
+                    return (
+                      <TableCell key={cell.id} className={meta?.hideOnMobile ? "hidden md:table-cell" : undefined}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))
             ) : (
