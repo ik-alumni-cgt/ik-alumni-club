@@ -2,34 +2,25 @@ import { Button } from "@/components/ui/button";
 import { getAllNewsletters } from "@/data/newsletter";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { DataTable } from "@/components/ui/data-table";
-import {
-  newslettersColumns,
-  type NewsletterForTable,
-} from "@/components/admin/tables/columns/newsletters-columns";
+import { ContentDataTable } from "@/components/admin/tables/content-data-table";
+import type { ContentForTable } from "@/components/admin/tables/columns/content-columns";
 
 export default async function AdminNewslettersPage() {
   const newsletters = await getAllNewsletters();
 
-  const data: NewsletterForTable[] = newsletters.map((newsletter) => ({
+  const data: ContentForTable[] = newsletters.map((newsletter) => ({
     id: newsletter.id,
-    issueNumber: newsletter.issueNumber,
     title: newsletter.title,
     published: newsletter.published,
     isMemberOnly: newsletter.isMemberOnly,
-    category: newsletter.category,
-    publishedAt: newsletter.publishedAt?.toISOString() ?? null,
-    authorName: newsletter.authorName,
-    pdfUrl: newsletter.pdfUrl,
+    updatedAt: newsletter.updatedAt.toISOString(),
   }));
 
   return (
     <div>
-      <DataTable
-        columns={newslettersColumns}
+      <ContentDataTable
         data={data}
-        searchKey="title"
-        searchPlaceholder="タイトルで検索..."
+        editBasePath="/admin/newsletters"
         toolbar={
           <Button asChild>
             <Link href="/admin/newsletters/new">

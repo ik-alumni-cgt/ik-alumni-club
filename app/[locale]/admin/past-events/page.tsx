@@ -1,31 +1,25 @@
 import { getAllPastEvents } from "@/data/past-event";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { DataTable } from "@/components/ui/data-table";
-import {
-  pastEventsColumns,
-  type PastEventForTable,
-} from "@/components/admin/tables/columns/past-events-columns";
+import { ContentDataTable } from "@/components/admin/tables/content-data-table";
+import type { ContentForTable } from "@/components/admin/tables/columns/content-columns";
 
 export default async function AdminPastEventsPage() {
   const pastEvents = await getAllPastEvents();
 
-  const data: PastEventForTable[] = pastEvents.map((pastEvent) => ({
+  const data: ContentForTable[] = pastEvents.map((pastEvent) => ({
     id: pastEvent.id,
     title: pastEvent.title,
-    eventDate: pastEvent.eventDate.toISOString(),
-    imageUrl: pastEvent.imageUrl,
     published: pastEvent.published,
     isMemberOnly: pastEvent.isMemberOnly,
+    updatedAt: pastEvent.updatedAt.toISOString(),
   }));
 
   return (
     <div>
-      <DataTable
-        columns={pastEventsColumns}
+      <ContentDataTable
         data={data}
-        searchKey="title"
-        searchPlaceholder="タイトルで検索..."
+        editBasePath="/admin/past-events"
         toolbar={
           <Button asChild>
             <Link href="/admin/past-events/new">新規作成</Link>

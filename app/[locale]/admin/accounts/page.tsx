@@ -1,5 +1,4 @@
 import { getAllAccounts } from "@/data/account";
-import { SendTestEmailButton } from "@/components/admin/send-test-email-button";
 import { AccountFilters } from "@/components/admin/account-filters";
 import { AccountsDataTable } from "@/components/admin/tables/accounts-data-table";
 import type { MemberStatus } from "@/types/member";
@@ -76,7 +75,7 @@ export default async function AdminAccountsPage({
         </Suspense>
       </div>
 
-      <AccountsDataTable accounts={data} toolbar={<SendTestEmailButton />} />
+      <AccountsDataTable accounts={data} />
     </div>
   );
 }

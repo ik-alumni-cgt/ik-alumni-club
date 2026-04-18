@@ -2,31 +2,25 @@ import { Button } from "@/components/ui/button";
 import { getAllInformations } from "@/data/information";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { DataTable } from "@/components/ui/data-table";
-import {
-  informationsColumns,
-  type InformationForTable,
-} from "@/components/admin/tables/columns/informations-columns";
+import { ContentDataTable } from "@/components/admin/tables/content-data-table";
+import type { ContentForTable } from "@/components/admin/tables/columns/content-columns";
 
 export default async function AdminInformationsPage() {
   const informations = await getAllInformations();
 
-  const data: InformationForTable[] = informations.map((information) => ({
+  const data: ContentForTable[] = informations.map((information) => ({
     id: information.id,
     title: information.title,
-    imageUrl: information.imageUrl,
     published: information.published,
     isMemberOnly: information.isMemberOnly,
-    date: information.date,
+    updatedAt: information.updatedAt.toISOString(),
   }));
 
   return (
     <div>
-      <DataTable
-        columns={informationsColumns}
+      <ContentDataTable
         data={data}
-        searchKey="title"
-        searchPlaceholder="タイトルで検索..."
+        editBasePath="/admin/informations"
         toolbar={
           <Button asChild>
             <Link href="/admin/informations/new">

@@ -2,32 +2,25 @@ import { Button } from "@/components/ui/button";
 import { getAllPhotos } from "@/data/photo-library";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { DataTable } from "@/components/ui/data-table";
-import {
-  photoLibraryColumns,
-  type PhotoLibraryForTable,
-} from "@/components/admin/tables/columns/photo-library-columns";
+import { ContentDataTable } from "@/components/admin/tables/content-data-table";
+import type { ContentForTable } from "@/components/admin/tables/columns/content-columns";
 
 export default async function AdminPhotoLibraryPage() {
   const photos = await getAllPhotos();
 
-  const data: PhotoLibraryForTable[] = photos.map((photo) => ({
+  const data: ContentForTable[] = photos.map((photo) => ({
     id: photo.id,
     title: photo.title,
-    thumbnailUrl: photo.coverImageUrl || photo.images[0]?.imageUrl || null,
-    imageCount: photo.images.length,
     published: photo.published,
     isMemberOnly: photo.isMemberOnly,
-    createdAt: photo.createdAt.toISOString(),
+    updatedAt: photo.updatedAt.toISOString(),
   }));
 
   return (
     <div>
-      <DataTable
-        columns={photoLibraryColumns}
+      <ContentDataTable
         data={data}
-        searchKey="title"
-        searchPlaceholder="タイトルで検索..."
+        editBasePath="/admin/photo-library"
         toolbar={
           <Button asChild>
             <Link href="/admin/photo-library/new">

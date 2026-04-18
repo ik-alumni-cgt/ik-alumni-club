@@ -1,32 +1,25 @@
 import { getAllVideos } from "@/data/video";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { DataTable } from "@/components/ui/data-table";
-import {
-  videosColumns,
-  type VideoForTable,
-} from "@/components/admin/tables/columns/videos-columns";
+import { ContentDataTable } from "@/components/admin/tables/content-data-table";
+import type { ContentForTable } from "@/components/admin/tables/columns/content-columns";
 
 export default async function AdminVideosPage() {
   const videos = await getAllVideos();
 
-  const data: VideoForTable[] = videos.map((video) => ({
+  const data: ContentForTable[] = videos.map((video) => ({
     id: video.id,
     title: video.title,
-    thumbnailUrl: video.thumbnailUrl,
     published: video.published,
     isMemberOnly: video.isMemberOnly,
-    authorName: video.authorName,
-    videoDate: video.videoDate,
+    updatedAt: video.updatedAt.toISOString(),
   }));
 
   return (
     <div>
-      <DataTable
-        columns={videosColumns}
+      <ContentDataTable
         data={data}
-        searchKey="title"
-        searchPlaceholder="タイトルで検索..."
+        editBasePath="/admin/videos"
         toolbar={
           <Button asChild>
             <Link href="/admin/videos/new">新規作成</Link>

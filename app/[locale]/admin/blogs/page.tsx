@@ -2,32 +2,25 @@ import { Button } from "@/components/ui/button";
 import { getAllBlogs } from "@/data/blog";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { DataTable } from "@/components/ui/data-table";
-import {
-  blogsColumns,
-  type BlogForTable,
-} from "@/components/admin/tables/columns/blogs-columns";
+import { ContentDataTable } from "@/components/admin/tables/content-data-table";
+import type { ContentForTable } from "@/components/admin/tables/columns/content-columns";
 
 export default async function AdminBlogsPage() {
   const blogs = await getAllBlogs();
 
-  const data: BlogForTable[] = blogs.map((blog) => ({
+  const data: ContentForTable[] = blogs.map((blog) => ({
     id: blog.id,
     title: blog.title,
-    thumbnailUrl: blog.thumbnailUrl,
     published: blog.published,
     isMemberOnly: blog.isMemberOnly,
-    authorName: blog.authorName,
-    createdAt: blog.createdAt.toISOString(),
+    updatedAt: blog.updatedAt.toISOString(),
   }));
 
   return (
     <div>
-      <DataTable
-        columns={blogsColumns}
+      <ContentDataTable
         data={data}
-        searchKey="title"
-        searchPlaceholder="タイトルで検索..."
+        editBasePath="/admin/blogs"
         toolbar={
           <Button asChild>
             <Link href="/admin/blogs/new">
