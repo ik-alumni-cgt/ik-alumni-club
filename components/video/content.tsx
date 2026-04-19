@@ -16,8 +16,11 @@ export async function VideoContents() {
   }));
 
   const shortsItems = shorts.map((short) => ({
+    id: short.id,
     videoUrl: short.videoUrl,
     title: short.title,
+    thumbnailUrl: short.thumbnailUrl,
+    isMemberOnly: short.isMemberOnly,
   }));
 
   return (

@@ -13,8 +13,11 @@ interface VideoItem {
 }
 
 interface ShortsItem {
+  id: string;
   videoUrl: string;
   title: string;
+  thumbnailUrl: string | null;
+  isMemberOnly: boolean;
 }
 
 interface VideoSectionProps {
