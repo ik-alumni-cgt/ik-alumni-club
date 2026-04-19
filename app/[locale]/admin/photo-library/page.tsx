@@ -15,6 +15,10 @@ export default async function AdminPhotoLibraryPage() {
     isMemberOnly: photo.isMemberOnly,
     updatedAt: photo.updatedAt.toISOString(),
     imageUrl: photo.coverImageUrl,
+    categories: photo.photoLibraryCategories.map((pc) => ({
+      id: pc.category.id,
+      name: pc.category.name,
+    })),
   }));
 
   return (

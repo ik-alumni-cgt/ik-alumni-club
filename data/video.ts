@@ -32,6 +32,13 @@ export const getMemberOnlyVideos = async () => {
 export const getAllVideos = async () => {
   return db.query.videos.findMany({
     orderBy: [desc(videos.videoDate)],
+    with: {
+      videoCategories: {
+        with: {
+          category: true,
+        },
+      },
+    },
   });
 };
 
@@ -65,6 +72,22 @@ export const getRecentShorts = async (limit: number = 5) => {
 export const getPublicShorts = async () => {
   return db.query.videos.findMany({
     where: and(eq(videos.published, true), eq(videos.isMemberOnly, false), eq(videos.isShorts, true)),
+    orderBy: [desc(videos.videoDate)],
+  });
+};
+
+// Videoページ用: 公開済み通常動画一覧（会員限定含む）
+export const getAllPublishedVideos = async () => {
+  return db.query.videos.findMany({
+    where: and(eq(videos.published, true), eq(videos.isShorts, false)),
+    orderBy: [desc(videos.videoDate)],
+  });
+};
+
+// Videoページ用: 公開済みショート動画一覧（会員限定含む）
+export const getAllPublishedShorts = async () => {
+  return db.query.videos.findMany({
+    where: and(eq(videos.published, true), eq(videos.isShorts, true)),
     orderBy: [desc(videos.videoDate)],
   });
 };

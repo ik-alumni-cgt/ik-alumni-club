@@ -14,6 +14,10 @@ export default async function AdminSchedulesPage() {
     isMemberOnly: schedule.isMemberOnly,
     updatedAt: schedule.updatedAt.toISOString(),
     imageUrl: schedule.imageUrl,
+    categories: schedule.scheduleCategories.map((sc) => ({
+      id: sc.category.id,
+      name: sc.category.name,
+    })),
   }));
 
   return (

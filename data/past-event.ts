@@ -13,6 +13,13 @@ export const getPublishedPastEvents = async () => {
 export const getAllPastEvents = async () => {
   return db.query.pastEvents.findMany({
     orderBy: [desc(pastEvents.eventDate)],
+    with: {
+      pastEventCategories: {
+        with: {
+          category: true,
+        },
+      },
+    },
   });
 };
 

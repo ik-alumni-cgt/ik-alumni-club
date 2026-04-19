@@ -15,6 +15,10 @@ export default async function AdminNewslettersPage() {
     isMemberOnly: newsletter.isMemberOnly,
     updatedAt: newsletter.updatedAt.toISOString(),
     imageUrl: newsletter.thumbnailUrl,
+    categories: newsletter.newsletterCategories.map((nc) => ({
+      id: nc.category.id,
+      name: nc.category.name,
+    })),
   }));
 
   return (
