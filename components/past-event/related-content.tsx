@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Lock, FileText, Video, Newspaper, CalendarDays } from "lucide-react";
+import { Lock, FileText, Video, Newspaper, CalendarDays, Camera } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { RelatedContentItem } from "@/data/category";
 
@@ -28,6 +28,12 @@ const CONTENT_TYPE_CONFIG = {
     href: (id: string) => `/schedule/${id}`,
     icon: CalendarDays,
     color: "bg-purple-500",
+  },
+  photo_library: {
+    label: "PHOTO",
+    href: (id: string) => `/photo-library/${id}`,
+    icon: Camera,
+    color: "bg-pink-500",
   },
 } as const;
 

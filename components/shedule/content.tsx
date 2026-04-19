@@ -1,11 +1,11 @@
-import { getSchedules } from "@/data/schedule";
+import { getUpcomingSchedules } from "@/data/schedule";
 import { ContentsHeader } from "../contents/contents-header";
 import { ScheduleContentsCard } from "./card";
 import { ScrollStagger } from "@/components/scroll-animation/scroll-stagger";
 import Link from "next/link";
 
 export async function ScheduleContents() {
-  const schedules = await getSchedules();
+  const schedules = await getUpcomingSchedules();
   const items = schedules.slice(0, 3);
 
   return (

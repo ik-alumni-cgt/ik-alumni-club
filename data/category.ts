@@ -14,6 +14,7 @@ import { blogs } from "@/db/schemas/blogs";
 import { videos } from "@/db/schemas/videos";
 import { informations } from "@/db/schemas/informations";
 import { schedules } from "@/db/schemas/schedules";
+import { photoLibrary } from "@/db/schemas/photo-library";
 import { asc, eq, inArray, and, isNull, desc } from "drizzle-orm";
 import type { CategoryWithChildren } from "@/types/category";
 
@@ -112,14 +113,14 @@ async function filterToChildCategories(categoryIds: string[]): Promise<string[]>
 export type RelatedContentItem = {
   id: string;
   title: string;
-  contentType: "blog" | "video" | "information" | "schedule";
+  contentType: "blog" | "video" | "information" | "schedule" | "photo_library";
   thumbnailUrl: string | null;
   date: Date;
   isMemberOnly: boolean;
 };
 
 /**
- * カテゴリーIDに紐づく関連コンテンツ（Blog, Video, Information, Schedule）を取得
+ * カテゴリーIDに紐づく関連コンテンツ（Blog, Video, Information, Schedule, PhotoLibrary）を取得
  * 子カテゴリーのみでフィルタリングし、親カテゴリーは除外する
  */
 export const getRelatedContentByCategoryIds = async (
@@ -132,7 +133,7 @@ export const getRelatedContentByCategoryIds = async (
   if (childCategoryIds.length === 0) return [];
 
   // 各コンテンツタイプのIDをカテゴリーから取得
-  const [blogRows, videoRows, infoRows, scheduleRows] = await Promise.all([
+  const [blogRows, videoRows, infoRows, scheduleRows, photoRows] = await Promise.all([
     db.query.blogCategories.findMany({
       where: inArray(blogCategories.categoryId, childCategoryIds),
     }),
@@ -145,15 +146,19 @@ export const getRelatedContentByCategoryIds = async (
     db.query.scheduleCategories.findMany({
       where: inArray(scheduleCategories.categoryId, childCategoryIds),
     }),
+    db.query.photoLibraryCategories.findMany({
+      where: inArray(photoLibraryCategories.categoryId, childCategoryIds),
+    }),
   ]);
 
   const blogIds = [...new Set(blogRows.map((r) => r.blogId))];
   const videoIds = [...new Set(videoRows.map((r) => r.videoId))];
   const infoIds = [...new Set(infoRows.map((r) => r.informationId))];
   const scheduleIds = [...new Set(scheduleRows.map((r) => r.scheduleId))];
+  const photoIds = [...new Set(photoRows.map((r) => r.photoLibraryId))];
 
   // 各コンテンツの詳細を取得（公開済みのみ）
-  const [blogItems, videoItems, infoItems, scheduleItems] = await Promise.all([
+  const [blogItems, videoItems, infoItems, scheduleItems, photoItems] = await Promise.all([
     blogIds.length > 0
       ? db.query.blogs.findMany({
           where: and(inArray(blogs.id, blogIds), eq(blogs.published, true)),
@@ -176,6 +181,12 @@ export const getRelatedContentByCategoryIds = async (
       ? db.query.schedules.findMany({
           where: and(inArray(schedules.id, scheduleIds), eq(schedules.published, true)),
           orderBy: [desc(schedules.eventDate)],
+        })
+      : Promise.resolve([]),
+    photoIds.length > 0
+      ? db.query.photoLibrary.findMany({
+          where: and(inArray(photoLibrary.id, photoIds), eq(photoLibrary.published, true)),
+          orderBy: [desc(photoLibrary.publishedAt)],
         })
       : Promise.resolve([]),
   ]);
@@ -213,6 +224,14 @@ export const getRelatedContentByCategoryIds = async (
       thumbnailUrl: s.imageUrl,
       date: s.eventDate,
       isMemberOnly: s.isMemberOnly,
+    })),
+    ...photoItems.map((p) => ({
+      id: p.id,
+      title: p.title,
+      contentType: "photo_library" as const,
+      thumbnailUrl: p.coverImageUrl,
+      date: p.publishedAt ?? p.createdAt,
+      isMemberOnly: p.isMemberOnly,
     })),
   ];
 
