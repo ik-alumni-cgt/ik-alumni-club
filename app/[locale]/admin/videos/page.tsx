@@ -14,6 +14,10 @@ export default async function AdminVideosPage() {
     isMemberOnly: video.isMemberOnly,
     updatedAt: video.updatedAt.toISOString(),
     imageUrl: video.thumbnailUrl,
+    categories: video.videoCategories.map((vc) => ({
+      id: vc.category.id,
+      name: vc.category.name,
+    })),
   }));
 
   return (

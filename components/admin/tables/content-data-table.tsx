@@ -59,7 +59,7 @@ export function ContentDataTable({
       >
         <SheetContent
           side="right"
-          className="font-[family-name:var(--font-geist-sans)] sm:max-w-md"
+          className="font-sans sm:max-w-md"
           hideOverlay
         >
           <SheetHeader>

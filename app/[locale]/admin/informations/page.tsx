@@ -15,6 +15,10 @@ export default async function AdminInformationsPage() {
     isMemberOnly: information.isMemberOnly,
     updatedAt: information.updatedAt.toISOString(),
     imageUrl: information.imageUrl,
+    categories: information.informationCategories.map((ic) => ({
+      id: ic.category.id,
+      name: ic.category.name,
+    })),
   }));
 
   return (

@@ -52,6 +52,11 @@ export const getAllBlogs = async () => {
     orderBy: [desc(sql`COALESCE(${blogs.publishedAt}, ${blogs.createdAt})`)],
     with: {
       author: true,
+      blogCategories: {
+        with: {
+          category: true,
+        },
+      },
     },
   });
 };

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PublishedBadgeCell } from "@/components/admin/tables/cells/published-badge-cell";
@@ -39,6 +40,21 @@ export function ContentDetailPanel({ content, editBasePath }: Props) {
           <PublishedBadgeCell published={content.published} />
           <MemberOnlyBadgeCell isMemberOnly={content.isMemberOnly} />
         </div>
+      </div>
+
+      <div className="space-y-1">
+        <p className="text-sm text-muted-foreground">カテゴリー</p>
+        {content.categories && content.categories.length > 0 ? (
+          <div className="flex flex-wrap gap-1 pt-1">
+            {content.categories.map((category) => (
+              <Badge key={category.id} variant="outline" className="text-xs">
+                {category.name}
+              </Badge>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">-</p>
+        )}
       </div>
 
       <div className="space-y-1">

@@ -14,6 +14,10 @@ export default async function AdminPastEventsPage() {
     isMemberOnly: pastEvent.isMemberOnly,
     updatedAt: pastEvent.updatedAt.toISOString(),
     imageUrl: pastEvent.imageUrl,
+    categories: pastEvent.pastEventCategories.map((pc) => ({
+      id: pc.category.id,
+      name: pc.category.name,
+    })),
   }));
 
   return (

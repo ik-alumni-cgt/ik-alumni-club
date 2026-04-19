@@ -57,6 +57,11 @@ export const getAllNewsletters = async () => {
     orderBy: [desc(sql`COALESCE(${newsletters.publishedAt}, ${newsletters.createdAt})`)],
     with: {
       author: true,
+      newsletterCategories: {
+        with: {
+          category: true,
+        },
+      },
     },
   });
 };

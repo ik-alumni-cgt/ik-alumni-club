@@ -15,6 +15,10 @@ export default async function AdminBlogsPage() {
     isMemberOnly: blog.isMemberOnly,
     updatedAt: blog.updatedAt.toISOString(),
     imageUrl: blog.thumbnailUrl,
+    categories: blog.blogCategories.map((bc) => ({
+      id: bc.category.id,
+      name: bc.category.name,
+    })),
   }));
 
   return (

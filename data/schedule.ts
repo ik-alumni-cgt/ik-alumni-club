@@ -30,6 +30,13 @@ export const getUpcomingSchedules = async () => {
 export const getAllSchedules = async () => {
   return db.query.schedules.findMany({
     orderBy: [asc(schedules.sortOrder), desc(schedules.eventDate)],
+    with: {
+      scheduleCategories: {
+        with: {
+          category: true,
+        },
+      },
+    },
   });
 };
 

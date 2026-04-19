@@ -16,6 +16,13 @@ export const getInformations = async () => {
 export const getAllInformations = async () => {
   return db.query.informations.findMany({
     orderBy: [desc(informations.date)],
+    with: {
+      informationCategories: {
+        with: {
+          category: true,
+        },
+      },
+    },
   });
 };
 

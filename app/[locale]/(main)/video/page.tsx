@@ -1,6 +1,6 @@
 import { setLocale } from "@/app/web/i18n/set-locale";
 import { VideoListPage } from "@/components/video/video-list-page";
-import { getPublicVideos, getPublicShorts } from "@/data/video";
+import { getAllPublishedVideos, getAllPublishedShorts } from "@/data/video";
 import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
@@ -14,13 +14,16 @@ export default async function VideoPage({
   const t = await getTranslations("Contents");
 
   const [videoItems, shorts] = await Promise.all([
-    getPublicVideos(),
-    getPublicShorts(),
+    getAllPublishedVideos(),
+    getAllPublishedShorts(),
   ]);
 
   const shortsItems = shorts.map((short) => ({
+    id: short.id,
     videoUrl: short.videoUrl,
     title: short.title,
+    thumbnailUrl: short.thumbnailUrl,
+    isMemberOnly: short.isMemberOnly,
   }));
 
   return (

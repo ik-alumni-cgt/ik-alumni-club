@@ -24,7 +24,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="bg-[#fafafa] font-[family-name:var(--font-geist-sans)]">
+    <div className="bg-[#fafafa] font-sans">
       <SidebarProvider>
         <AdminSidebar />
         <SidebarInset>

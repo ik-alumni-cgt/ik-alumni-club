@@ -70,6 +70,11 @@ export const getAllPhotos = async () => {
       images: {
         orderBy: (images, { asc }) => [asc(images.sortOrder)],
       },
+      photoLibraryCategories: {
+        with: {
+          category: true,
+        },
+      },
     },
   });
 };
