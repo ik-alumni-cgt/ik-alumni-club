@@ -42,6 +42,20 @@ export async function createSponsor(formData: SponsorFormData) {
   }
 }
 
+// スポンサーロゴ更新（管理者のみ）
+export async function updateSponsorLogo(id: string, logoUrl: string | null) {
+  await verifyAdmin()
+
+  const resolvedLogoUrl = logoUrl
+    ? await resolveImageUpload(`sponsors/${id}-${nanoid()}`, logoUrl)
+    : null
+
+  await db
+    .update(sponsors)
+    .set({ logoUrl: resolvedLogoUrl })
+    .where(eq(sponsors.id, id))
+}
+
 // スポンサー削除（管理者のみ）
 export async function deleteSponsor(id: string) {
   await verifyAdmin()
