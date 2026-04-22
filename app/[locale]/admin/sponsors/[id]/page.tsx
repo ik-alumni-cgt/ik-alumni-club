@@ -11,10 +11,10 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import Image from "next/image"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale"
 import { DeleteSponsorButton } from "@/components/delete-sponsor-button"
+import { SponsorLogoEdit } from "@/components/admin/sponsor-logo-edit"
 
 export default async function SponsorDetailPage({
   params,
@@ -50,26 +50,27 @@ export default async function SponsorDetailPage({
             <CardDescription>スポンサー企業の基本情報です</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {sponsor.logoUrl && (
-              <div className="flex flex-col items-center gap-4">
-                <div className="relative h-32 w-32 rounded-lg overflow-hidden bg-muted">
-                  <Image
-                    src={sponsor.logoUrl}
-                    alt={`${sponsor.companyName}のロゴ`}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                <Button asChild variant="outline" size="sm">
-                  <a
-                    href={`/api/download-image?url=${encodeURIComponent(sponsor.logoUrl)}&filename=${encodeURIComponent(sponsor.companyName + "_logo")}`}
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    ロゴをダウンロード
-                  </a>
-                </Button>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-sm font-medium text-muted-foreground">
+                ロゴ
               </div>
-            )}
+              <div className="col-span-2 space-y-2">
+                <SponsorLogoEdit
+                  sponsorId={sponsor.id}
+                  initialLogoUrl={sponsor.logoUrl}
+                />
+                {sponsor.logoUrl && (
+                  <Button asChild variant="outline" size="sm">
+                    <a
+                      href={`/api/download-image?url=${encodeURIComponent(sponsor.logoUrl)}&filename=${encodeURIComponent((sponsor.companyName ?? "sponsor") + "_logo")}`}
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      ロゴをダウンロード
+                    </a>
+                  </Button>
+                )}
+              </div>
+            </div>
             <div className="grid grid-cols-3 gap-4">
               <div className="text-sm font-medium text-muted-foreground">
                 会社名
