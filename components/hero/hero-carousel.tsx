@@ -12,7 +12,7 @@ import hero4 from "./hero4.jpg";
 import hero5 from "./hero5.jpg";
 
 const images = [
-  { src: hero1, alt: "Hero 1", href: "https://www.ik-alumni-cgt.com/information/St337J1TNm73cYbjGT_1b" },
+  { src: hero1, alt: "Hero 1", href: "https://www.ik-alumni-cgt.com/information/msF6BJczMaceyFyaYXiOh" },
   { src: hero2, alt: "Hero 2", href: "https://www.ik-alumni-cgt.com/supporters" },
   { src: hero3, alt: "Hero 3", href: "https://www.ik-alumni-cgt.com/information/tO6hO-rok6TmGAydrXtXV" },
   { src: hero4, alt: "Hero 4", href: "https://linktr.ee/ik_alumni_2022" },

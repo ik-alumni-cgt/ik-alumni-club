@@ -25,6 +25,9 @@ const publicRoutes = [
   "/reset-password",
   "/register/email",
   "/feature/5th-anniversary",
+  "/terms",
+  "/privacy",
+  "/legal",
 ];
 const adminRoutes = ["/admin-login"]; // 管理者ログインページは認証不要
 
