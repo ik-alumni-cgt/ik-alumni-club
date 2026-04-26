@@ -24,6 +24,7 @@ export async function createSponsor(formData: SponsorFormData) {
     ...data,
     companyName: data.companyName || null,
     logoUrl,
+    websiteUrl: data.websiteUrl || null,
   })
 
   // ログイン中のユーザーがいればsponsorFormCompletedフラグを更新
@@ -53,6 +54,28 @@ export async function updateSponsorLogo(id: string, logoUrl: string | null) {
   await db
     .update(sponsors)
     .set({ logoUrl: resolvedLogoUrl })
+    .where(eq(sponsors.id, id))
+}
+
+// スポンサー企業URL更新（管理者のみ）
+export async function updateSponsorWebsiteUrl(id: string, websiteUrl: string | null) {
+  await verifyAdmin()
+
+  const trimmed = websiteUrl?.trim() || null
+  if (trimmed) {
+    try {
+      const url = new URL(trimmed)
+      if (url.protocol !== "http:" && url.protocol !== "https:") {
+        throw new Error("invalid protocol")
+      }
+    } catch {
+      throw new Error("有効なURLを入力してください")
+    }
+  }
+
+  await db
+    .update(sponsors)
+    .set({ websiteUrl: trimmed })
     .where(eq(sponsors.id, id))
 }
 

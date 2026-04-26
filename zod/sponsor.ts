@@ -23,6 +23,22 @@ export const sponsorFormSchema = createInsertSchema(sponsors, {
       },
       { message: "有効な画像を選択してください" }
     ),
+  websiteUrl: z
+    .string()
+    .trim()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val || val === "") return true
+        try {
+          const url = new URL(val)
+          return url.protocol === "http:" || url.protocol === "https:"
+        } catch {
+          return false
+        }
+      },
+      { message: "有効なURLを入力してください（例: https://example.com）" }
+    ),
   representativeName: z
     .string()
     .trim()

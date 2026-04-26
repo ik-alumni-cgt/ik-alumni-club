@@ -5,6 +5,7 @@ export const sponsors = pgTable("sponsors", {
   id: text("id").primaryKey().$defaultFn(() => nanoid()),
   companyName: text("company_name"),
   logoUrl: text("logo_url"),
+  websiteUrl: text("website_url"),
   representativeName: text("representative_name").notNull(),
   hasFlag: boolean("has_flag").notNull().default(false),
   programConsent: boolean("program_consent").notNull().default(false),

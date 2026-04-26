@@ -211,6 +211,13 @@
       "when": 1775903800124,
       "tag": "0029_fair_inertia",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1777194093582,
+      "tag": "0030_magenta_susan_delgado",
+      "breakpoints": true
     }
   ]
 }

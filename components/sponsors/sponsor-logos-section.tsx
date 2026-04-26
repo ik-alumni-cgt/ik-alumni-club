@@ -13,26 +13,41 @@ export async function SponsorLogosSection() {
           協賛企業
         </h2>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-          {sponsors.map((sponsor) => (
-            <div
-              key={sponsor.id}
-              className="flex items-center justify-center"
-            >
-              {sponsor.logoUrl ? (
-                <Image
-                  src={sponsor.logoUrl}
-                  alt={sponsor.companyName || "協賛企業"}
-                  width={160}
-                  height={80}
-                  className="object-contain max-h-16 md:max-h-20 w-auto"
-                />
-              ) : (
-                <span className="text-sm md:text-base font-medium text-muted-foreground">
-                  {sponsor.companyName}
-                </span>
-              )}
-            </div>
-          ))}
+          {sponsors.map((sponsor) => {
+            const content = sponsor.logoUrl ? (
+              <Image
+                src={sponsor.logoUrl}
+                alt={sponsor.companyName || "協賛企業"}
+                width={400}
+                height={200}
+                className="object-contain max-h-40 md:max-h-52 w-auto"
+              />
+            ) : (
+              <span className="text-sm md:text-base font-medium text-muted-foreground">
+                {sponsor.companyName}
+              </span>
+            );
+
+            return (
+              <div
+                key={sponsor.id}
+                className="flex items-center justify-center"
+              >
+                {sponsor.websiteUrl ? (
+                  <a
+                    href={sponsor.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-opacity hover:opacity-80"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  content
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
