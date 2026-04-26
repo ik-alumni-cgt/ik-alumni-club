@@ -22,9 +22,9 @@ export async function SponsorLogosSection() {
                 <Image
                   src={sponsor.logoUrl}
                   alt={sponsor.companyName || "協賛企業"}
-                  width={160}
-                  height={80}
-                  className="object-contain max-h-16 md:max-h-20 w-auto"
+                  width={400}
+                  height={200}
+                  className="object-contain max-h-40 md:max-h-52 w-auto"
                 />
               ) : (
                 <span className="text-sm md:text-base font-medium text-muted-foreground">
