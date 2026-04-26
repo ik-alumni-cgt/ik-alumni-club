@@ -35,6 +35,7 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
     defaultValues: {
       companyName: "",
       logoUrl: "",
+      websiteUrl: "",
       representativeName: "",
       hasFlag: false,
       programConsent: false,
@@ -120,6 +121,27 @@ export function SponsorForm({ onSubmitSuccess }: SponsorFormProps) {
               </FormControl>
               <FormDescription>
                 法人の場合は正式な会社名を入力してください
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="websiteUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>企業ホームページURL（任意）</FormLabel>
+              <FormControl>
+                <Input
+                  type="url"
+                  placeholder="例: https://example.com"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                URLを入力いただいた場合、ホームページ掲載時にロゴから企業サイトへリンクします
               </FormDescription>
               <FormMessage />
             </FormItem>

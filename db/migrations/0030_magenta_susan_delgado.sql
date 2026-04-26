@@ -1,0 +1,1 @@
+ALTER TABLE "sponsors" ADD COLUMN "website_url" text;

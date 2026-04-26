@@ -15,6 +15,7 @@ import { format } from "date-fns"
 import { ja } from "date-fns/locale"
 import { DeleteSponsorButton } from "@/components/delete-sponsor-button"
 import { SponsorLogoEdit } from "@/components/admin/sponsor-logo-edit"
+import { SponsorWebsiteUrlEdit } from "@/components/admin/sponsor-website-url-edit"
 
 export default async function SponsorDetailPage({
   params,
@@ -85,6 +86,27 @@ export default async function SponsorDetailPage({
               </div>
               <div className="col-span-2 text-sm">
                 {sponsor.representativeName}
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-sm font-medium text-muted-foreground">
+                企業ホームページURL
+              </div>
+              <div className="col-span-2 space-y-2">
+                <SponsorWebsiteUrlEdit
+                  sponsorId={sponsor.id}
+                  initialWebsiteUrl={sponsor.websiteUrl}
+                />
+                {sponsor.websiteUrl && (
+                  <a
+                    href={sponsor.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary hover:underline break-all"
+                  >
+                    {sponsor.websiteUrl}
+                  </a>
+                )}
               </div>
             </div>
           </CardContent>
