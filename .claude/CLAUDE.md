@@ -11,9 +11,10 @@
 
 ### アーキテクチャルール
 
-- [Next.js アーキテクチャ](rules/nextjs-architecture.md) - ディレクトリ構造・配置判断フロー
-- [Next.js ディレクトリ詳細](rules/nextjs-directories.md) - 各ディレクトリの責任・悪い例/良い例
-- [TypeScript Export のルール](rules/typescript-exports.md) - export/スコープ/配置ルール
+- [ディレクトリ構造](rules/directory-structure.md) - 全体構造・配置判断早見表・旧構造/新構造（DDD）の二重運用
+- [ディレクトリの役割](rules/directory-roles.md) - 旧構造の各ディレクトリの責任・悪い例/良い例
+- [ファイル規約](rules/file-conventions.md) - 命名規則・export/スコープ・型定義方針
+- [Next.js 実装パターン](rules/nextjs-patterns.md) - Server/Client Component, Server Action, データ取得, フォーム
 - [Bash コマンドのルール](rules/bash-commands.md) - パイプ使用禁止など
 
 ### ワークフロー

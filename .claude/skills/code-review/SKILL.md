@@ -7,9 +7,10 @@
 以下のルールに基づいてコードをレビューし、問題点と改善提案を報告する：
 
 - [プログラミング原則](../../rules/programming-principles.md)（DRY, YAGNI, KISS, SoC, SRP, Fail Fast）
-- [Next.js アーキテクチャ](../../rules/nextjs-architecture.md)（配置判断、構造）
-- [Next.js ディレクトリ詳細](../../rules/nextjs-directories.md)（責務分離）
-- [TypeScript Export とスコープのルール](../../rules/typescript-exports.md)（export、スコープ）
+- [ディレクトリ構造](../../rules/directory-structure.md)（全体構造・配置判断・旧/新構造の二重運用）
+- [ディレクトリの役割](../../rules/directory-roles.md)（責務分離）
+- [ファイル規約](../../rules/file-conventions.md)（命名・export・スコープ・型定義）
+- [Next.js 実装パターン](../../rules/nextjs-patterns.md)（実装テンプレ）
 
 ## 使い方
 
@@ -36,23 +37,27 @@
 
 ### 2. アーキテクチャ
 
-- 新規コードが新規構造（src/app/[feature]/, src/shared/）に配置されているか
-- 配置判断フローに従って適切な場所に配置されているか
-- 既存構造から新規構造への移行時のルールに従っているか
+- 配置判断早見表に従って適切な場所に配置されているか
+- 旧構造ドメインのコードは旧構造（actions/, data/, zod/, types/, components/[feature]/）に配置されているか
+- DDD 移行済みドメインのコードは src/modules/[domain]/ に配置されているか
+- 旧/新構造の境界が混ざっていないか（旧構造ドメインで src/modules/ を使っていない、新構造ドメインで actions/ data/ を使っていない）
 
-### 3. ディレクトリ/ファイルの責務
+### 3. ディレクトリ/ファイルの責務（旧構造）
 
-- components/: UI のみを担当し、API 呼び出しやビジネスロジックが含まれていないか
-- hooks/: 状態管理とビジネスロジックのみを担当しているか
-- queries.ts: データ取得のみを担当しているか
-- schemas.ts: バリデーションのみを担当しているか
-- utils.ts: データ整形・計算処理のみを担当しているか
+- components/: props を受け取って UI を描画するのみ。fetch / DB アクセス / ビジネスロジックを含まない
+- data/: GET 処理のみ。先頭に import "server-only" がある。書き込み処理が混じっていない
+- actions/: 書き込み処理（POST/PUT/DELETE 相当）のみ。GET 処理が混じっていない。権限チェックが先頭にある
+- zod/: バリデーションのみ。createInsertSchema を使って Drizzle と二重定義しない
+- types/: Drizzle の $inferSelect / $inferInsert を使っているか。手書き定義で重複していないか
+- hooks/: クライアント専用。サーバー処理を含まず JSX も返さない
+- lib/: ドメインに属さない共通処理のみ
 
 ### 4. Export とスコープ
 
-- 他のファイルで使われていない関数・型が export されていないか
+- 他のファイルで使われていない関数・型が export されていないか（YAGNI）
 - ファイルスコープのグローバル変数（let, var）が定義されていないか
 - 定数が適切なスコープで定義されているか
+- 型 import に import type が使われているか
 
 ## 実行フロー
 
@@ -87,18 +92,18 @@
 ### 出力例
 
 ```
-## コンポーネント内でAPI呼び出しを実行している
+## コンポーネント内で fetch / DB アクセスを実行している
 
-コンポーネントがデータ取得とUI表示の両方の責任を持っています。
+コンポーネントがデータ取得と UI 表示の両方の責任を持っています。
 
 ### 理由
 
-SRP（単一責任の原則）違反です。コンポーネントはpropsを受け取ってUIを描画することのみに責任を持つべきです。データ取得はhooksまたはqueries.tsで行うべきです。
+SRP（単一責任の原則）違反です。コンポーネントは props を受け取って UI を描画することのみに責任を持つべきです。データ取得は data/[feature].ts で行い、Server Component から呼んで props で渡してください。
 
 ### 対象範囲
 
-- src/app/users/components/UserList.tsx: 15-30
-- src/app/users/components/UserList.tsx: 18
+- components/blog/list.tsx: 15-30
+- components/blog/list.tsx: 18
 ```
 
 ## 注意事項

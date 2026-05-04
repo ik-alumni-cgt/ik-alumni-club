@@ -233,5 +233,6 @@ export async function reorderVideos(orders: { id: string; sortOrder: number }[])
 
 - 02_database-design.md
 - 04_api-list.md
-- .claude/rules/nextjs-architecture.md
+- .claude/rules/directory-structure.md
+- .claude/rules/directory-roles.md
 - .claude/rules/programming-principles.md
