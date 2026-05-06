@@ -8,4 +8,4 @@
 
 When writing code, always refer to the following coding standards:
 
-- [Coding Standards](./docs/04_coding-standards.md)
+- [Coding Standards](./docs/old/04_coding-standards.md)

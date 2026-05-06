@@ -53,16 +53,16 @@ const formatDate = (date: Date) => {
 良い例：
 
 ```typescript
-// utils/dateFormatter.ts
+// lib/utils.ts
 export const formatDate = (date: Date) => {
   return date.toLocaleDateString("ja-JP");
 };
 
-// UserList.tsx
-import { formatDate } from "@/utils/dateFormatter";
+// components/blog/list.tsx
+import { formatDate } from "@/lib/utils";
 
-// ProductList.tsx
-import { formatDate } from "@/utils/dateFormatter";
+// components/newsletter/list.tsx
+import { formatDate } from "@/lib/utils";
 ```
 
 ## YAGNI (You Aren't Gonna Need It)
@@ -115,34 +115,43 @@ export function validateImportData(
 
 ```typescript
 // ❌ 現在使われていないのに抽象化
+// data/_base.ts
 abstract class BaseRepository<T> {
   abstract findAll(): Promise<T[]>;
-  abstract findById(id: number): Promise<T>;
+  abstract findById(id: string): Promise<T | undefined>;
   abstract create(data: T): Promise<T>;
-  abstract update(id: number, data: T): Promise<T>;
-  abstract delete(id: number): Promise<void>;
+  abstract update(id: string, data: T): Promise<T>;
+  abstract delete(id: string): Promise<void>;
 }
 
-class UserRepository extends BaseRepository<User> {
-  // 実際にはfindAllとfindByIdしか使っていない
+// data/blog.ts
+class BlogRepository extends BaseRepository<Blog> {
+  // 実際には findAll と findById しか使っていない
 }
 ```
 
 良い例：
 
 ```typescript
-// ✅ 実際に必要な機能のみ実装
-export const userRepository = {
-  async findAll(): Promise<User[]> {
-    // 実装
-  },
+// ✅ 実際に必要な関数のみ export
+// data/blog.ts
+import "server-only";
+import { db } from "@/db";
+import { blogs } from "@/db/schemas/blogs";
+import { eq, desc } from "drizzle-orm";
 
-  async findById(id: number): Promise<User> {
-    // 実装
-  },
+export const getPublishedBlogs = async () => {
+  return db.query.blogs.findMany({
+    where: eq(blogs.published, true),
+    orderBy: [desc(blogs.createdAt)],
+  });
 };
 
-// 将来deleteが必要になったら、その時に追加
+export const getBlogById = async (id: string) => {
+  return db.query.blogs.findFirst({ where: eq(blogs.id, id) });
+};
+
+// 削除や更新が必要になったら、その時に actions/blog.ts に追加
 ```
 
 ## KISS (Keep It Simple, Stupid)
@@ -198,48 +207,53 @@ export function processUserData(rawData: RawData[]): DisplayData[] {
 悪い例：
 
 ```typescript
-// ❌ 不要なレイヤー
-interface IUserService {
-  getUsers(): Promise<User[]>;
+// ❌ 不要なレイヤー（旧構造ドメインで DDD 4 層を強引に持ち込む）
+// services/blog-service.ts
+interface IBlogService {
+  getBlogs(): Promise<Blog[]>;
 }
 
-class UserService implements IUserService {
-  constructor(private repository: IUserRepository) {}
-
-  async getUsers(): Promise<User[]> {
+class BlogService implements IBlogService {
+  constructor(private repository: IBlogRepository) {}
+  async getBlogs(): Promise<Blog[]> {
     return this.repository.findAll();
   }
 }
 
-interface IUserRepository {
-  findAll(): Promise<User[]>;
+// data/blog-repository.ts
+interface IBlogRepository {
+  findAll(): Promise<Blog[]>;
 }
 
-class UserRepository implements IUserRepository {
-  async findAll(): Promise<User[]> {
-    // 実装
+class BlogRepository implements IBlogRepository {
+  async findAll(): Promise<Blog[]> {
+    return db.query.blogs.findMany();
   }
 }
 
 // 使用側
-const repository = new UserRepository();
-const service = new UserService(repository);
-const users = await service.getUsers();
+const repository = new BlogRepository();
+const service = new BlogService(repository);
+const items = await service.getBlogs();
 ```
 
 良い例：
 
 ```typescript
-// ✅ 必要なレイヤーのみ
-export const userRepository = {
-  async getUsers(): Promise<User[]> {
-    // 実装
-  },
+// ✅ 旧構造ドメインでは関数 1 段でよい
+// data/blog.ts
+import "server-only";
+import { db } from "@/db";
+
+export const getPublishedBlogs = async () => {
+  return db.query.blogs.findMany({ where: eq(blogs.published, true) });
 };
 
-// 使用側
-const users = await userRepository.getUsers();
+// 使用側（Server Component）
+const items = await getPublishedBlogs();
 ```
+
+注: DDD モジュール（`src/modules/[domain]/`）では Repository / Use Case の分離が必要。これは YAGNI の例外で、ドメインの境界を保つために必要なレイヤー。詳細は `nextjs-ddd.md`（Phase 2 完了後追加）。
 
 ## SoC (Separation of Concerns)
 
@@ -255,37 +269,38 @@ const users = await userRepository.getUsers();
 
 悪い例：
 
-```typescript
-// ❌ UI、ビジネスロジック、API通信が混在
-const UserPage = () => {
-  const [users, setUsers] = useState<User[]>([]);
+```tsx
+// ❌ UI、ビジネスロジック、データ取得が 1 ファイルに混在
+// app/[locale]/(main)/blog/page.tsx
+"use client";
+
+const BlogPage = () => {
+  const [items, setItems] = useState<Blog[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchUsers = async () => {
+  const fetchBlogs = async () => {
     setIsLoading(true);
-    const response = await fetch("/api/users");
+    const response = await fetch("/api/blogs");
     const data = await response.json();
 
     // ビジネスロジック
-    const activeUsers = data.filter((u) => u.isActive);
-    const sortedUsers = activeUsers.sort((a, b) =>
-      a.name.localeCompare(b.name)
+    const published = data.filter((b: Blog) => b.published);
+    const sorted = published.sort((a: Blog, b: Blog) =>
+      b.createdAt.localeCompare(a.createdAt)
     );
 
-    setUsers(sortedUsers);
+    setItems(sorted);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchBlogs();
   }, []);
 
   return (
     <div>
       {isLoading && <p>Loading...</p>}
-      {users.map((u) => (
-        <div key={u.id}>{u.name}</div>
-      ))}
+      {items.map((b) => <div key={b.id}>{b.title}</div>)}
     </div>
   );
 };
@@ -296,48 +311,46 @@ const UserPage = () => {
 ```typescript
 // ✅ 関心事を分離
 
-// queries.ts - データ取得
-export async function getUsers(): Promise<User[]> {
-  const response = await fetch("/api/users");
-  return response.json();
-}
+// data/blog.ts - データ取得
+import "server-only";
+import { db } from "@/db";
+import { blogs } from "@/db/schemas/blogs";
+import { eq, desc } from "drizzle-orm";
 
-// utils.ts - ビジネスロジック
-export function filterAndSortUsers(users: User[]): User[] {
-  return users
-    .filter((u) => u.isActive)
-    .sort((a, b) => a.name.localeCompare(b.name));
-}
-
-// hooks/useUsers.ts - 状態管理
-export const useUsers = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    getUsers()
-      .then(filterAndSortUsers)
-      .then(setUsers)
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  return { users, isLoading };
+export const getPublishedBlogs = async () => {
+  return db.query.blogs.findMany({
+    where: eq(blogs.published, true),
+    orderBy: [desc(blogs.createdAt)],
+  });
 };
+```
 
-// components/UserPage.tsx - UI
-const UserPage = () => {
-  const { users, isLoading } = useUsers();
+```tsx
+// components/blog/list.tsx - UI（props を受け取って表示するだけ）
+import type { Blog } from "@/types/blog";
 
+type Props = { items: Blog[] };
+
+export const BlogList = ({ items }: Props) => {
   return (
-    <div>
-      {isLoading && <p>Loading...</p>}
-      {users.map((u) => (
-        <div key={u.id}>{u.name}</div>
+    <ul>
+      {items.map((b) => (
+        <li key={b.id}>{b.title}</li>
       ))}
-    </div>
+    </ul>
   );
 };
+```
+
+```tsx
+// app/[locale]/(main)/blog/page.tsx - 取得 + 描画の組み合わせ
+import { getPublishedBlogs } from "@/data/blog";
+import { BlogList } from "@/components/blog/list";
+
+export default async function BlogPage() {
+  const items = await getPublishedBlogs();
+  return <BlogList items={items} />;
+}
 ```
 
 ## SRP (Single Responsibility Principle)
@@ -355,28 +368,35 @@ const UserPage = () => {
 悪い例：
 
 ```typescript
-// ❌ 複数の責任を持つ関数
-function handleUserSubmit(formData: FormData) {
+// ❌ 複数の責任を持つ Server Action
+"use server";
+
+export async function createBlogHandler(formData: BlogFormData) {
   // バリデーション
-  if (!formData.email.includes("@")) {
-    throw new Error("Invalid email");
+  if (!formData.title || formData.title.length === 0) {
+    throw new Error("タイトルが必要です");
   }
 
   // データ変換
-  const user = {
-    name: formData.name.trim(),
-    email: formData.email.toLowerCase(),
+  const data = {
+    title: formData.title.trim(),
+    content: formData.content.trim(),
   };
 
-  // API通信
-  fetch("/api/users", {
-    method: "POST",
-    body: JSON.stringify(user),
-  });
+  // 権限チェック
+  const session = await getSession();
+  if (session?.user.role !== "admin") {
+    throw new Error("権限がありません");
+  }
 
-  // UI更新
-  toast.success("User created");
-  router.push("/users");
+  // DB 操作
+  const [blog] = await db.insert(blogs).values(data).returning();
+
+  // キャッシュ再検証
+  revalidatePath("/admin/blogs");
+  revalidatePath("/blog");
+
+  return blog;
 }
 ```
 
@@ -385,64 +405,72 @@ function handleUserSubmit(formData: FormData) {
 ```typescript
 // ✅ 責任を分離
 
-// validators/userValidator.ts
-export function validateUserEmail(email: string): void {
-  if (!email.includes("@")) {
-    throw new Error("Invalid email");
-  }
-}
+// zod/blog.ts - バリデーション
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+import { blogs } from "@/db/schemas/blogs";
 
-// utils/userTransformer.ts
-export function transformUserFormData(formData: FormData): User {
-  return {
-    name: formData.name.trim(),
-    email: formData.email.toLowerCase(),
-  };
-}
+export const blogFormSchema = createInsertSchema(blogs, {
+  title: z.string().trim().min(1, "タイトルを入力してください"),
+}).omit({ id: true, authorId: true, createdAt: true, updatedAt: true });
 
-// api/userApi.ts
-export async function createUser(user: User): Promise<void> {
-  await fetch("/api/users", {
-    method: "POST",
-    body: JSON.stringify(user),
-  });
-}
+export type BlogFormData = z.infer<typeof blogFormSchema>;
+```
 
-// hooks/useUserSubmit.ts
-export const useUserSubmit = () => {
-  const router = useRouter();
-
-  const handleSubmit = async (formData: FormData) => {
-    validateUserEmail(formData.email);
-    const user = transformUserFormData(formData);
-    await createUser(user);
-    toast.success("User created");
-    router.push("/users");
-  };
-
-  return { handleSubmit };
+```typescript
+// lib/session.ts - 権限チェック（既存）
+export const verifyAdmin = async () => {
+  // ...
 };
+```
+
+```typescript
+// actions/blog.ts - 入口（薄く保つ。検証・権限・操作・再検証のオーケストレーションのみ）
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { verifyAdmin } from "@/lib/session";
+import { db } from "@/db";
+import { blogs } from "@/db/schemas/blogs";
+import { blogFormSchema, type BlogFormData } from "@/zod/blog";
+
+export async function createBlog(formData: BlogFormData) {
+  const { userId } = await verifyAdmin();
+  const data = blogFormSchema.parse(formData);
+
+  const [blog] = await db
+    .insert(blogs)
+    .values({ ...data, authorId: userId })
+    .returning();
+
+  revalidatePath("/admin/blogs");
+  revalidatePath("/blog");
+
+  return blog;
+}
 ```
 
 ### コンポーネントレベルでの SRP
 
 悪い例：
 
-```typescript
-// ❌ データ取得とUIを両方担当
-const UserList = () => {
-  const [users, setUsers] = useState<User[]>([]);
+```tsx
+// ❌ データ取得と UI を両方担当
+"use client";
+
+const BlogList = () => {
+  const [items, setItems] = useState<Blog[]>([]);
 
   useEffect(() => {
-    fetch("/api/users")
+    fetch("/api/blogs")
       .then((res) => res.json())
-      .then(setUsers);
+      .then(setItems);
   }, []);
 
   return (
     <ul>
-      {users.map((u) => (
-        <li key={u.id}>{u.name}</li>
+      {items.map((b) => (
+        <li key={b.id}>{b.title}</li>
       ))}
     </ul>
   );
@@ -451,17 +479,19 @@ const UserList = () => {
 
 良い例：
 
-```typescript
-// ✅ UIのみを担当
+```tsx
+// ✅ UI のみを担当（データは props で受け取る）
+import type { Blog } from "@/types/blog";
+
 type Props = {
-  users: User[];
+  items: Blog[];
 };
 
-const UserList = ({ users }: Props) => {
+export const BlogList = ({ items }: Props) => {
   return (
     <ul>
-      {users.map((u) => (
-        <li key={u.id}>{u.name}</li>
+      {items.map((b) => (
+        <li key={b.id}>{b.title}</li>
       ))}
     </ul>
   );
@@ -547,45 +577,52 @@ function processUserData(data: unknown): User[] {
 悪い例：
 
 ```typescript
-// ❌ anyを使用してエラーを遅延
-function getUser(id: any): any {
-  return fetch(`/api/users/${id}`).then((res) => res.json());
+// ❌ any を使用してエラーを遅延
+function getBlog(id: any): any {
+  return db.query.blogs.findFirst({ where: eq(blogs.id, id) });
 }
 
 // 使用側でエラーが起きる
-const user = await getUser("invalid");
-console.log(user.name.toUpperCase()); // ランタイムエラー
+const blog = await getBlog(123); // 本来は string なのに number を渡している
+console.log(blog.title.toUpperCase()); // ランタイムエラーの可能性
 ```
 
 良い例：
 
 ```typescript
 // ✅ 型で早期にエラーを検出
-function getUser(id: number): Promise<User> {
-  return fetch(`/api/users/${id}`).then((res) => res.json());
-}
+import type { Blog } from "@/types/blog";
+
+export const getBlogById = async (id: string): Promise<Blog | undefined> => {
+  return db.query.blogs.findFirst({ where: eq(blogs.id, id) });
+};
 
 // コンパイル時にエラー
-const user = await getUser("invalid"); // Type error
+const blog = await getBlogById(123); // Type error: number is not assignable to string
 ```
 
 ### Zod でのバリデーション
 
 ```typescript
 // ✅ スキーマで早期バリデーション
-import { z } from "zod";
+// actions/blog.ts
+"use server";
 
-const userSchema = z.object({
-  email: z.string().email(),
-  name: z.string().min(1),
-  age: z.number().min(0).max(150),
-});
+import { revalidatePath } from "next/cache";
+import { verifyAdmin } from "@/lib/session";
+import { db } from "@/db";
+import { blogs } from "@/db/schemas/blogs";
+import { blogFormSchema } from "@/zod/blog";
 
-export function createUser(data: unknown) {
+export async function createBlog(data: unknown) {
+  await verifyAdmin();
+
   // 最初にバリデーション（失敗したら即エラー）
-  const validated = userSchema.parse(data);
+  const validated = blogFormSchema.parse(data);
 
   // ここからは安全な型で作業
-  return api.createUser(validated);
+  const [blog] = await db.insert(blogs).values(validated).returning();
+  revalidatePath("/admin/blogs");
+  return blog;
 }
 ```
