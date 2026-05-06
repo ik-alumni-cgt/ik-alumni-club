@@ -3,7 +3,7 @@ import { AnniversaryCard } from "@/components/anniversary/anniversary-card"
 /** ニュースデータ */
 const NEWS_ITEMS = [
   {
-    date: "2027.01.10",
+    date: "2026.05.07",
     title: "五周年記念コンサート 開催決定のお知らせ",
     href: "#",
   },
