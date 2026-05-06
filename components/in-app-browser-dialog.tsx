@@ -54,7 +54,7 @@ export function InAppBrowserDialog() {
           <AlertDialogDescription asChild>
             <div className="space-y-3">
               <p>
-                QRコードからのアクセスありがとうございます。
+                アクセスいただきありがとうございます。
               </p>
               <p>
                 このままではログインや会員登録が正常に動作しない場合があります。
