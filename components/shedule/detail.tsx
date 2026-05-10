@@ -57,7 +57,7 @@ export function ScheduleDetail({ item }: { item: Schedule }) {
             rel="noopener noreferrer"
             className="text-blue-600 hover:text-blue-800 underline font-medium"
           >
-            詳細・お申し込みはこちら
+            詳細はこちら
           </a>
         </div>
       )}
