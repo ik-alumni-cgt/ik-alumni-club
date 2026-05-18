@@ -9,6 +9,7 @@ const publicRoutes = [
   "/",
   "/information",
   "/schedule",
+  "/past-events",
   "/video",
   "/blog",
   "/profiles",
