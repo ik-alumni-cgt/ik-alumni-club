@@ -1,6 +1,8 @@
 import { getHeroSlides } from "@/data/hero-slide";
 import { HeroSlidesManager } from "@/components/admin/hero-slides-manager";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminHeroBackgroundPage() {
   const slides = await getHeroSlides("background");
 
