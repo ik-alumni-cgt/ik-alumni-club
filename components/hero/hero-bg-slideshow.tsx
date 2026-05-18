@@ -2,33 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import type { HeroSlide } from "@/types/hero-slide";
 
-// 全角数字のファイル名に対応
-const imageNumbers = [
-  "１", "２", "３", "４", "５", "６", "７", "８", "９", "１０",
-  "１１", "１２", "１３", "１４", "１５", "１６", "１７", "１８", "１９", "２０",
-  "２１", "２２", "２３", "２４", "２５", "２６", "２７", "２８", "２９", "３０",
-  "３１", "３２", "３３", "３４", "３５", "３６", "３７", "３８", "３９", "４０",
-  "４１", "４２", "４３", "４４",
-];
-
-const imageExtensions: Record<string, string> = {
-  "１": "jpg", "２": "jpg", "３": "jpg", "４": "jpg", "５": "JPG",
-  "６": "JPG", "７": "jpg", "８": "JPEG", "９": "JPEG", "１０": "JPEG",
-  "１１": "jpg", "１２": "JPG", "１３": "jpg", "１４": "JPEG", "１５": "jpg",
-  "１６": "jpg", "１７": "JPG", "１８": "JPEG", "１９": "jpg", "２０": "JPG",
-  "２１": "JPG", "２２": "JPG", "２３": "JPG", "２４": "JPG", "２５": "JPG",
-  "２６": "JPG", "２７": "JPG", "２８": "jpg", "２９": "JPG", "３０": "JPG",
-  "３１": "JPG", "３２": "JPEG", "３３": "jpg", "３４": "JPG", "３５": "jpg",
-  "３６": "jpg", "３７": "JPG", "３８": "jpg", "３９": "JPG", "４０": "JPEG",
-  "４１": "JPG", "４２": "JPG", "４３": "jpg", "４４": "jpg",
+type Props = {
+  items: HeroSlide[];
 };
 
-const images = imageNumbers.map(
-  (num) => `/hero-bg/${num}.${imageExtensions[num]}`
-);
+export function HeroBgSlideshow({ items }: Props) {
+  // 画像が無い場合は描画しない
+  if (items.length === 0) return null;
+  return <HeroBgSlideshowInner images={items.map((item) => item.imageUrl)} />;
+}
 
-export function HeroBgSlideshow() {
+function HeroBgSlideshowInner({ images }: { images: string[] }) {
   const [displayIndex, setDisplayIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [isFading, setIsFading] = useState(false);
@@ -43,7 +29,7 @@ export function HeroBgSlideshow() {
       }, 50);
     }, 5000);
     return () => clearInterval(interval);
-  }, [displayIndex]);
+  }, [displayIndex, images.length]);
 
   // フェード完了後にインデックスを更新
   useEffect(() => {
@@ -62,7 +48,7 @@ export function HeroBgSlideshow() {
       {/* 現在の画像（背面） */}
       <Image
         src={images[displayIndex]}
-        alt={`Hero Background ${displayIndex + 1}`}
+        alt=""
         width={1920}
         height={1080}
         className="w-full h-auto mx-auto md:px-8"
@@ -72,7 +58,7 @@ export function HeroBgSlideshow() {
       {nextIndex !== null && (
         <Image
           src={images[nextIndex]}
-          alt={`Hero Background ${nextIndex + 1}`}
+          alt=""
           width={1920}
           height={1080}
           className={`w-full h-auto mx-auto md:px-8 absolute top-0 left-0 z-10 transition-opacity duration-1000 ${

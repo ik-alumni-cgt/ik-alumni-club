@@ -5,19 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import hero1 from "./hero1.jpg";
-import hero2 from "./hero2.jpg";
-import hero3 from "./hero3.jpg";
-import hero4 from "./hero4.jpg";
-import hero5 from "./hero5.jpg";
-
-const images = [
-  { src: hero1, alt: "Hero 1", href: "https://www.ik-alumni-cgt.com/information/msF6BJczMaceyFyaYXiOh" },
-  { src: hero2, alt: "Hero 2", href: "https://www.ik-alumni-cgt.com/supporters" },
-  { src: hero3, alt: "Hero 3", href: "https://www.ik-alumni-cgt.com/information/tO6hO-rok6TmGAydrXtXV" },
-  { src: hero4, alt: "Hero 4", href: "https://linktr.ee/ik_alumni_2022" },
-  { src: hero5, alt: "Hero 5", href: "https://www.ik-alumni-cgt.com/information/Q0qmGTSBsw4KsQLK0OTGW" },
-];
+import type { HeroSlide } from "@/types/hero-slide";
 
 // SP: 35vw、PC: 33.333%
 const SP_IMAGE_WIDTH = 50;
@@ -25,7 +13,19 @@ const PC_IMAGE_WIDTH = 33.333;
 const SP_GAP = 4; // SP版のギャップ（4vw）
 const PC_GAP = 1; // PC版のギャップ（1vw）
 
-export function HeroCarousel() {
+type Props = {
+  items: HeroSlide[];
+};
+
+export function HeroCarousel({ items }: Props) {
+  // 画像が無い場合は描画しない（無限ループ計算が破綻するため）
+  if (items.length === 0) return null;
+  return <HeroCarouselInner items={items} />;
+}
+
+function HeroCarouselInner({ items }: Props) {
+  const images = items;
+
   const [currentIndex, setCurrentIndex] = useState(images.length);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
@@ -66,7 +66,7 @@ export function HeroCarousel() {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [currentIndex]);
+  }, [currentIndex, images.length]);
 
   const handleNext = () => {
     setIsTransitioning(true);
@@ -189,18 +189,20 @@ export function HeroCarousel() {
             }}
           >
             {extendedImages.map((image, index) => {
+              const href = image.linkUrl ?? "#";
+              const isExternal = href.startsWith("http");
               return (
                 <div
-                  key={`${index}-${image.alt}`}
+                  key={index}
                   className="flex-shrink-0"
                   style={{
                     width: `${getImageWidth()}vw`,
                   }}
                 >
                   <Link
-                    href={image.href}
-                    target={image.href.startsWith("http") ? "_blank" : undefined}
-                    rel={image.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    href={href}
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
                     onClick={(e) => {
                       if (hasDragged) {
                         e.preventDefault();
@@ -210,12 +212,11 @@ export function HeroCarousel() {
                   >
                     <div className="relative aspect-[16/9] w-full overflow-hidden shadow-lg">
                       <Image
-                        src={image.src}
-                        alt={image.alt}
+                        src={image.imageUrl}
+                        alt=""
                         fill
                         className="object-cover pointer-events-none"
                         draggable={false}
-                        placeholder="blur"
                         sizes="(max-width: 768px) 85vw, 33vw"
                       />
                     </div>
