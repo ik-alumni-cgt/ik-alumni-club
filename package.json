@@ -12,7 +12,6 @@
     "drizzle:migrate": "pnpm drizzle-kit migrate",
     "drizzle:gm": "pnpm drizzle:generate && pnpm drizzle:migrate",
     "drizzle:fix-history": "tsx scripts/fix-migration-history.ts",
-    "seed:hero": "tsx db/seed-hero.ts",
     "stripe:webhook": "stripe listen --forward-to http://localhost:3001/api/auth/stripe/webhook",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
