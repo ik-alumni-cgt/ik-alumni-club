@@ -9,6 +9,8 @@ import {
   FileText,
   Newspaper,
   Image,
+  GalleryHorizontal,
+  Images,
   Settings,
   Building2,
   ClipboardList,
@@ -67,6 +69,16 @@ export const contentItems: MenuItem[] = [
     title: "フォトライブラリ",
     icon: Image,
     url: "/admin/photo-library",
+  },
+  {
+    title: "ヒーローカルーセル",
+    icon: GalleryHorizontal,
+    url: "/admin/hero-carousel",
+  },
+  {
+    title: "メイン写真",
+    icon: Images,
+    url: "/admin/hero-background",
   },
   {
     title: "プロフィールメンバー",

@@ -18,6 +18,7 @@ import * as likeSchema from './schemas/likes';
 import * as contactSchema from './schemas/contacts';
 import * as pastEventSchema from './schemas/past-events';
 import * as profileMemberSchema from './schemas/profile-members';
+import * as heroSlideSchema from './schemas/hero-slides';
 
 config({ path: '.env' });
 
@@ -42,5 +43,6 @@ export const db = drizzle({
         ...contactSchema,
         ...pastEventSchema,
         ...profileMemberSchema,
+        ...heroSlideSchema,
     },
 });

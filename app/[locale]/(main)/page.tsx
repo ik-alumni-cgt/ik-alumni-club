@@ -9,6 +9,7 @@ import { SupportersContents } from "@/components/supporters/content";
 import { SponsorLogosSection } from "@/components/sponsors/sponsor-logos-section";
 import { MaintenancePage } from "@/components/maintenance/maintenance-page";
 import { ScrollFadeIn } from "@/components/scroll-animation/scroll-fade-in";
+import { getHeroSlides } from "@/data/hero-slide";
 
 export const dynamic = 'force-dynamic';
 
@@ -29,11 +30,16 @@ export default async function Home({
     }
   }
 
+  const [carouselSlides, backgroundSlides] = await Promise.all([
+    getHeroSlides("carousel"),
+    getHeroSlides("background"),
+  ]);
+
   return (
     <div className="font-sans max-w-full">
       <div className="relative w-full mb-16 md:mb-32 bg-gradient-red pt-[156px] md:pt-[164px] pb-8 md:pb-16 -mt-[140px]">
-        <HeroBgSlideshow />
-        <HeroCarousel />
+        <HeroBgSlideshow items={backgroundSlides} />
+        <HeroCarousel items={carouselSlides} />
       </div>
       {/* <AboutSection /> */}
       <ScrollFadeIn className="mb-16 md:mb-32">
