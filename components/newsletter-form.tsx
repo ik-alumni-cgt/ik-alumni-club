@@ -127,6 +127,7 @@ export function NewsletterForm({
                   type="number"
                   placeholder="1"
                   {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
                   disabled={mode === "edit"}
                 />
               </FormControl>
