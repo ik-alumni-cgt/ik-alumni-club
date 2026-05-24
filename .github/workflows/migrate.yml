@@ -10,11 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install dependencies & tooling
-        run: |
-          npm install -g pnpm
-          pnpm install
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Enable corepack (use pinned pnpm from package.json)
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - name: Fix migration history
         run: pnpm drizzle:fix-history
         env:
