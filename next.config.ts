@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   transpilePackages: ["@workspace/ui"],
   images: {
+    // Vercel の画像最適化（_next/image）の無料枠超過で 402 になるためバイパス。
+    // 画像実体は Cloudflare R2（egress 無料）から原寸配信。軽量化は別タスクで対応（Notion タスク #59）。
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
