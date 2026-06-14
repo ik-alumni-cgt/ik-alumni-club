@@ -16,7 +16,7 @@ export async function SupportersContents() {
   const isLoggedIn = !!session?.user;
 
   return (
-    <section className="w-full py-16 md:py-24 bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500">
+    <section id="supporters-section" className="w-full scroll-mt-20 md:scroll-mt-36 py-16 md:py-24 bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 md:mb-16">
           <div className="mb-4 md:mb-6 flex justify-center">
