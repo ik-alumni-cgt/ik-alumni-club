@@ -187,6 +187,11 @@ export const getRelatedContentByCategoryIds = async (
       ? db.query.photoLibrary.findMany({
           where: and(inArray(photoLibrary.id, photoIds), eq(photoLibrary.published, true)),
           orderBy: [desc(photoLibrary.publishedAt)],
+          with: {
+            images: {
+              orderBy: (images, { asc }) => [asc(images.sortOrder)],
+            },
+          },
         })
       : Promise.resolve([]),
   ]);
@@ -229,7 +234,7 @@ export const getRelatedContentByCategoryIds = async (
       id: p.id,
       title: p.title,
       contentType: "photo_library" as const,
-      thumbnailUrl: p.coverImageUrl,
+      thumbnailUrl: p.coverImageUrl ?? p.images[0]?.imageUrl ?? null,
       date: p.publishedAt ?? p.createdAt,
       isMemberOnly: p.isMemberOnly,
     })),
