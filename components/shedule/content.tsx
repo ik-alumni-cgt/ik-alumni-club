@@ -42,6 +42,14 @@ export async function ScheduleContents() {
           })}
         </ScrollStagger>
       )}
+      <div className="flex justify-center mt-[40px]">
+        <Link
+          href="/past-events"
+          className="text-white hover:opacity-70 underline underline-offset-4"
+        >
+          過去イベントはこちら
+        </Link>
+      </div>
     </div>
   );
 }
