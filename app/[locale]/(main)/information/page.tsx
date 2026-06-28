@@ -1,7 +1,7 @@
 import { setLocale } from "@/app/web/i18n/set-locale";
 import { InformationList } from "@/components/information/list";
 import { InformationCategoryFilter } from "@/components/information/category-filter";
-import { getInformations, getUsedInformationCategories } from "@/data/information";
+import { getInformations, getNewsFilterCategories } from "@/data/information";
 import { getTranslations } from "next-intl/server";
 
 export const dynamic = 'force-dynamic';
@@ -18,7 +18,7 @@ export default async function InformationPage({
   const { category } = await searchParams;
   const [items, categories] = await Promise.all([
     getInformations(category),
-    getUsedInformationCategories(),
+    getNewsFilterCategories(),
   ]);
 
   return (

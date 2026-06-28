@@ -1,7 +1,11 @@
 import { db } from "@/db";
 import { informations } from "@/db/schemas/informations";
-import { eq, desc } from "drizzle-orm";
+import { categories } from "@/db/schemas/categories";
+import { eq, desc, asc } from "drizzle-orm";
 import "server-only";
+
+// お知らせ絞り込みに使う親カテゴリーの名前（この名前のカテゴリーの子を候補にする）
+const NEWS_PARENT_NAME = "news";
 
 // 公開済みお知らせ一覧を取得（一般公開用）
 // 会員限定コンテンツも一覧には表示（詳細ページでアクセス制御）
@@ -26,29 +30,18 @@ export const getInformations = async (categorySlug?: string) => {
   );
 };
 
-// 公開済みお知らせに実際に付与されているカテゴリー一覧を取得（絞り込み UI 用）
-export const getUsedInformationCategories = async () => {
-  const items = await db.query.informations.findMany({
-    where: eq(informations.published, true),
-    with: {
-      informationCategories: {
-        with: {
-          category: true,
-        },
-      },
-    },
+// 絞り込み UI 用のカテゴリー一覧を取得
+// 親カテゴリー（slug=news）の子カテゴリーのみを対象にする
+export const getNewsFilterCategories = async () => {
+  const parent = await db.query.categories.findFirst({
+    where: eq(categories.name, NEWS_PARENT_NAME),
   });
+  if (!parent) return [];
 
-  const byId = new Map<string, { id: string; name: string; slug: string; sortOrder: number }>();
-  for (const item of items) {
-    for (const ic of item.informationCategories) {
-      if (ic.category) byId.set(ic.category.id, ic.category);
-    }
-  }
-
-  return [...byId.values()].sort(
-    (a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name),
-  );
+  return db.query.categories.findMany({
+    where: eq(categories.parentId, parent.id),
+    orderBy: [asc(categories.sortOrder), asc(categories.name)],
+  });
 };
 
 // 全お知らせ一覧を取得（管理者用）

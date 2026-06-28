@@ -1,13 +1,4 @@
-"use client";
-
-import { useRouter, usePathname } from "next/navigation";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import Link from "next/link";
 
 type Props = {
   categories: { slug: string; name: string }[];
@@ -15,35 +6,37 @@ type Props = {
 };
 
 export function InformationCategoryFilter({ categories, currentSlug }: Props) {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const handleChange = (value: string) => {
-    if (value === "all") {
-      router.push(pathname);
-    } else {
-      router.push(`${pathname}?category=${value}`);
-    }
-  };
-
   if (categories.length === 0) return null;
 
+  const itemBase =
+    "inline-block px-3 py-1 text-sm font-bold transition-colors border-b-2";
+  const active = "text-red-500 border-red-500";
+  const inactive = "text-gray-500 border-transparent hover:text-gray-800";
+
   return (
-    <div className="mb-8 flex items-center gap-3">
-      <span className="text-sm font-medium text-gray-700">カテゴリ:</span>
-      <Select value={currentSlug ?? "all"} onValueChange={handleChange}>
-        <SelectTrigger className="w-48">
-          <SelectValue placeholder="すべて" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">すべて</SelectItem>
-          {categories.map((category) => (
-            <SelectItem key={category.slug} value={category.slug}>
+    <nav className="mb-8">
+      <ul className="flex flex-wrap items-center gap-x-2 gap-y-2">
+        <li>
+          <Link
+            href="/information"
+            className={`${itemBase} ${!currentSlug ? active : inactive}`}
+          >
+            ALL
+          </Link>
+        </li>
+        {categories.map((category) => (
+          <li key={category.slug}>
+            <Link
+              href={`/information?category=${category.slug}`}
+              className={`${itemBase} ${
+                currentSlug === category.slug ? active : inactive
+              }`}
+            >
               {category.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
