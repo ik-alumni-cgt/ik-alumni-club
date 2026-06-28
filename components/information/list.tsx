@@ -1,13 +1,15 @@
 import { InformationCard } from "@/components/information/information-card";
 import { ScrollStagger } from "@/components/scroll-animation/scroll-stagger";
 
+type CategoryRef = {
+  category: { id: string; name: string; color: string | null } | null;
+};
+
 type Information = {
   id: string;
   title: string;
   date: string;
-  content: string;
-  published: boolean;
-  isMemberOnly: boolean;
+  informationCategories?: CategoryRef[];
 };
 
 export function InformationList({ items }: { items: Information[] }) {
@@ -25,6 +27,11 @@ export function InformationList({ items }: { items: Information[] }) {
           id={item.id}
           date={item.date}
           title={item.title}
+          categories={
+            item.informationCategories
+              ?.map((ic) => ic.category)
+              .filter((c): c is NonNullable<typeof c> => c !== null) ?? []
+          }
         />
       ))}
     </ScrollStagger>
