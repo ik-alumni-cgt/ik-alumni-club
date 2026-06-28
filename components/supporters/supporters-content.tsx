@@ -29,6 +29,7 @@ import { VideoCard } from "./cards/video-card";
 import { NewsletterCard } from "./cards/newsletter-card";
 import { PhotoLibraryCard } from "./cards/photo-library-card";
 import { ExclusiveBlogCard } from "./cards/exclusive-blog-card";
+import { truncateHtmlByBlocks } from "@/lib/truncate-html";
 
 const videoImages = [video01, video02, video03];
 const newsletterImages = [newsletter1, newsletter2, newsletter3];
@@ -40,7 +41,13 @@ const photoImages = [
 
 export async function SupportersContent() {
   const sampleBlogs = await getRecentBlogs(1);
-  const sampleBlog = sampleBlogs[0] ?? null;
+  // 限定コンテンツのため、お試しは本文の先頭 1/3 程度のみを渡す（全文はクライアントに送らない）
+  const sampleBlog = sampleBlogs[0]
+    ? {
+        ...sampleBlogs[0],
+        content: truncateHtmlByBlocks(sampleBlogs[0].content, 1 / 3),
+      }
+    : null;
 
   return (
     <div className="mb-16 md:mb-24">
