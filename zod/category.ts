@@ -15,6 +15,11 @@ export const categoryFormSchema = createInsertSchema(categories, {
     .max(100, "スラッグは100文字以内で入力してください")
     .regex(/^[a-z0-9-]+$/, "スラッグは半角英数字とハイフンのみ使用できます"),
   parentId: z.string().nullable().optional(),
+  color: z
+    .string()
+    .regex(/^#[0-9a-fA-F]{6}$/, "色は #RRGGBB 形式で指定してください")
+    .nullable()
+    .optional(),
   sortOrder: z.number().int(),
 }).omit({
   id: true,

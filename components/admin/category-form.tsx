@@ -40,6 +40,7 @@ export function CategoryForm({ defaultValues, mode, parentCategories }: Props) {
       name: "",
       slug: "",
       parentId: null,
+      color: "#3B82F6",
       sortOrder: 0,
     },
   });
@@ -149,6 +150,36 @@ export function CategoryForm({ defaultValues, mode, parentCategories }: Props) {
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="color"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>色</FormLabel>
+              <FormControl>
+                <div className="flex items-center gap-3">
+                  <Input
+                    type="color"
+                    className="h-10 w-16 p-1"
+                    value={field.value ?? "#3B82F6"}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                  <Input
+                    placeholder="#3B82F6"
+                    className="w-40"
+                    value={field.value ?? ""}
+                    onChange={(e) => field.onChange(e.target.value || null)}
+                  />
+                </div>
+              </FormControl>
+              <FormDescription>
+                一覧のカテゴリーバッジに使う色です（#RRGGBB 形式）
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

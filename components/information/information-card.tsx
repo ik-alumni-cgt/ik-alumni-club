@@ -1,12 +1,24 @@
 import Link from "next/link";
 
+type CategoryBadge = {
+  id: string;
+  name: string;
+  color: string | null;
+};
+
 interface InformationCardProps {
   id: string;
   date: string;
   title: string;
+  categories?: CategoryBadge[];
 }
 
-export function InformationCard({ id, date, title }: InformationCardProps) {
+export function InformationCard({
+  id,
+  date,
+  title,
+  categories = [],
+}: InformationCardProps) {
   // 日付を "MM.DD" 形式に変換
   const formatDate = (dateString: string) => {
     const d = new Date(dateString);
@@ -26,6 +38,19 @@ export function InformationCard({ id, date, title }: InformationCardProps) {
           </div>
         </div>
         <div className="flex-1">
+          {categories.length > 0 && (
+            <div className="mb-1 flex flex-wrap gap-1.5">
+              {categories.map((category) => (
+                <span
+                  key={category.id}
+                  className="inline-block rounded-full px-2 py-0.5 text-xs font-bold text-white"
+                  style={{ backgroundColor: category.color ?? "#6B7280" }}
+                >
+                  {category.name}
+                </span>
+              ))}
+            </div>
+          )}
           <p className="text-base md:text-lg font-bold text-black">
             {title}
           </p>
