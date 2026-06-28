@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { Blog } from "@/types/blog";
+import { BlogContent } from "@/components/blog/blog-content";
 import {
   Dialog,
   DialogContent,
@@ -82,8 +83,19 @@ export function ExclusiveBlogCard({ sampleBlog }: ExclusiveBlogCardProps) {
                     </div>
                   )}
                   <p className="text-muted-foreground">{sampleBlog.excerpt}</p>
-                  <div className="prose prose-sm max-w-none whitespace-pre-wrap">
-                    {sampleBlog.content}
+                  <div className="relative">
+                    <div className="prose prose-sm max-w-none">
+                      <BlogContent html={sampleBlog.content} />
+                    </div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-white to-transparent" />
+                  </div>
+                  <div className="mt-2 rounded-lg bg-orange-50 p-4 text-center">
+                    <p className="text-sm font-bold text-orange-700">
+                      ここから先は会員限定です
+                    </p>
+                    <p className="mt-1 text-xs text-orange-600">
+                      続きは会員登録するとお読みいただけます
+                    </p>
                   </div>
                 </div>
               </>
