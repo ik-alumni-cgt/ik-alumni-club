@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { Blog } from "@/types/blog";
+import { BlogContent } from "@/components/blog/blog-content";
 import {
   Dialog,
   DialogContent,
@@ -82,8 +83,8 @@ export function ExclusiveBlogCard({ sampleBlog }: ExclusiveBlogCardProps) {
                     </div>
                   )}
                   <p className="text-muted-foreground">{sampleBlog.excerpt}</p>
-                  <div className="prose prose-sm max-w-none whitespace-pre-wrap">
-                    {sampleBlog.content}
+                  <div className="prose prose-sm max-w-none">
+                    <BlogContent html={sampleBlog.content} />
                   </div>
                 </div>
               </>
