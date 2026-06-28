@@ -4,8 +4,8 @@ import { categories } from "@/db/schemas/categories";
 import { eq, desc, asc } from "drizzle-orm";
 import "server-only";
 
-// お知らせ絞り込みに使う親カテゴリー（NEWS）の slug
-const NEWS_PARENT_SLUG = "news";
+// お知らせ絞り込みに使う親カテゴリーの名前（この名前のカテゴリーの子を候補にする）
+const NEWS_PARENT_NAME = "news";
 
 // 公開済みお知らせ一覧を取得（一般公開用）
 // 会員限定コンテンツも一覧には表示（詳細ページでアクセス制御）
@@ -34,7 +34,7 @@ export const getInformations = async (categorySlug?: string) => {
 // 親カテゴリー（slug=news）の子カテゴリーのみを対象にする
 export const getNewsFilterCategories = async () => {
   const parent = await db.query.categories.findFirst({
-    where: eq(categories.slug, NEWS_PARENT_SLUG),
+    where: eq(categories.name, NEWS_PARENT_NAME),
   });
   if (!parent) return [];
 
