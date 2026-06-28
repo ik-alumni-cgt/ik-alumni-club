@@ -8,6 +8,10 @@ import {
 import { AdminSidebar } from "@/components/admin-dashboard/admin-sidebar";
 import { AdminHeader } from "@/components/admin-dashboard/admin-header";
 
+// 管理画面は認証必須かつ DB 参照前提のため、配下すべてを動的レンダリングにする。
+// （ビルド時の静的生成で DB スキーマに依存して失敗するのを防ぐ）
+export const dynamic = "force-dynamic";
+
 export default async function AdminLayout({
   children,
 }: {
