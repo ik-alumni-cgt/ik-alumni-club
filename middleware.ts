@@ -26,9 +26,11 @@ const publicRoutes = [
   "/reset-password",
   "/register/email",
   "/feature/5th-anniversary",
+  "/cheerly",
   "/terms",
   "/privacy",
   "/legal",
+  "/refund",
   // 編集者エリア。実際の認可は /team-blog のレイアウト（verifyEditor）で行うため、
   // ここで弾くと LINE ログイン画面にも到達できなくなる
   "/team-login",
