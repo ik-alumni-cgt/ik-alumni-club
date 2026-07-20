@@ -53,6 +53,7 @@ export function AccountForm({
       role: account.role,
       status: account.status || "pending_profile",
       isActive: account.isActive,
+      isEditor: account.isEditor,
     },
   });
 
@@ -312,6 +313,27 @@ export function AccountForm({
                   <FormLabel className="text-base">アクティブ</FormLabel>
                   <FormDescription>
                     アクティブな会員のみシステムを利用できます
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isEditor"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">編集者</FormLabel>
+                  <FormDescription>
+                    メンバーブログの執筆を許可します。支払い済みかつ氏名が入力済みの場合のみ執筆できます
                   </FormDescription>
                 </div>
                 <FormControl>

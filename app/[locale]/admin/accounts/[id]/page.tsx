@@ -13,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { DeleteAccountButton } from "@/components/delete-account-button";
 import { ResetPaymentButton } from "@/components/admin/reset-payment-button";
+import { EditorFlagToggle } from "@/components/admin/editor-flag-toggle";
 
 export default async function AccountDetailPage({
   params,
@@ -243,6 +244,20 @@ export default async function AccountDetailPage({
                 ) : (
                   <Badge variant="destructive">無効</Badge>
                 )}
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-sm font-medium text-muted-foreground">
+                編集者
+              </div>
+              <div className="col-span-2 flex items-center gap-3 text-sm">
+                <EditorFlagToggle
+                  accountId={account.id}
+                  isEditor={account.isEditor}
+                />
+                <span className="text-muted-foreground">
+                  メンバーブログの執筆を許可します
+                </span>
               </div>
             </div>
           </CardContent>

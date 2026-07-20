@@ -29,13 +29,13 @@ export function TeamLoginForm({
     setIsLineLoading(true);
 
     try {
-      // 新規・既存いずれのユーザーも執筆エリアへ送り、
+      // 新規・既存いずれのユーザーも専用コールバックへ集約し、
       // 通常の登録・課金フロー（/register/terms）を経由させない。
-      // 編集者ゲートの判定は /team-blog のレイアウトで行う。
+      // コールバックで会員レコードを用意し、ゲート判定は /team-blog 側で行う。
       await authClient.signIn.oauth2({
         providerId: "line",
-        callbackURL: "/team-blog",
-        newUserCallbackURL: "/team-blog",
+        callbackURL: "/team-login/callback",
+        newUserCallbackURL: "/team-login/callback",
         errorCallbackURL: "/team-login",
       });
     } catch (error) {
