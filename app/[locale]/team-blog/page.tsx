@@ -1,13 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { getBlogsByAuthor } from "@/data/blog";
-import { verifyTeamMemberOrAdmin } from "@/lib/session";
+import { verifyEditor } from "@/lib/session";
 import Link from "next/link";
 import { ContentDataTable } from "@/components/admin/tables/content-data-table";
 import type { ContentForTable } from "@/components/admin/tables/columns/content-columns";
 
+// セッションに応じてガードが働くため、ページ単位でも動的レンダリングを強制する
+// （レイアウトの force-dynamic だけではページがプリレンダリングされる）
+export const dynamic = "force-dynamic";
+
 export default async function TeamBlogListPage() {
-  // ログイン中の team_member / admin 本人の記事のみ表示
-  const { userId } = await verifyTeamMemberOrAdmin();
+  // ログイン中の編集者 / admin 本人の記事のみ表示
+  const { userId } = await verifyEditor();
   const blogs = await getBlogsByAuthor(userId);
 
   const data: ContentForTable[] = blogs.map((blog) => ({

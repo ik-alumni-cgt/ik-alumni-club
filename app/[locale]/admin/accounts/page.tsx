@@ -17,7 +17,6 @@ const VALID_STATUSES: MemberStatus[] = [
   "pending_profile",
   "active",
   "inactive",
-  "pending_approval",
 ];
 const VALID_PAYMENT_STATUSES: PaymentStatus[] = [
   "pending",

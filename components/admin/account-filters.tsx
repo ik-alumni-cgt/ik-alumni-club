@@ -57,7 +57,6 @@ export function AccountFilters() {
         <SelectContent>
           <SelectItem value="all">すべてのステータス</SelectItem>
           <SelectItem value="active">アクティブ</SelectItem>
-          <SelectItem value="pending_approval">承認待ち</SelectItem>
           <SelectItem value="pending_profile">プロフィール入力待ち</SelectItem>
           <SelectItem value="inactive">非アクティブ</SelectItem>
         </SelectContent>

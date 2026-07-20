@@ -4,6 +4,9 @@ import { getCategoriesTree } from "@/data/category";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+// レイアウトのガードを必ず通すため、ページ単位でも動的レンダリングを強制する
+export const dynamic = "force-dynamic";
+
 export default async function NewTeamBlogPage() {
   const categoriesTree = await getCategoriesTree();
 

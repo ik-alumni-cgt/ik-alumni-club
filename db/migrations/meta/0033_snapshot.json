@@ -1,5 +1,5 @@
 {
-  "id": "53311162-0c1d-4505-b92b-f56e5090dd96",
+  "id": "d83227de-4306-419f-9ed2-e6c71b2ba7ea",
   "prevId": "1e1c15c0-054a-4fcc-8cfb-fe8d7cea5ce0",
   "version": "7",
   "dialect": "postgresql",
@@ -1728,6 +1728,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "is_editor": {
+          "name": "is_editor",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "status": {
           "name": "status",
           "type": "members_status",
@@ -2708,8 +2715,7 @@
       "values": [
         "admin",
         "officer",
-        "member",
-        "team_member"
+        "member"
       ]
     },
     "public.members_status": {
@@ -2718,8 +2724,7 @@
       "values": [
         "pending_profile",
         "active",
-        "inactive",
-        "pending_approval"
+        "inactive"
       ]
     },
     "public.payment_status": {

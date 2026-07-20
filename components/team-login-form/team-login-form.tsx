@@ -29,12 +29,13 @@ export function TeamLoginForm({
     setIsLineLoading(true);
 
     try {
-      // 新規・既存いずれのユーザーも専用コールバックへ集約し、
-      // 通常の登録・課金フロー（/register/terms）を経由させない
+      // 新規・既存いずれのユーザーも執筆エリアへ送り、
+      // 通常の登録・課金フロー（/register/terms）を経由させない。
+      // 編集者ゲートの判定は /team-blog のレイアウトで行う。
       await authClient.signIn.oauth2({
         providerId: "line",
-        callbackURL: "/team-login/callback",
-        newUserCallbackURL: "/team-login/callback",
+        callbackURL: "/team-blog",
+        newUserCallbackURL: "/team-blog",
         errorCallbackURL: "/team-login",
       });
     } catch (error) {
@@ -77,7 +78,7 @@ export function TeamLoginForm({
               )}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              初回ログイン後、管理者の承認をお待ちください。
+              編集者権限が付与されたアカウントのみ利用できます。
             </p>
           </div>
         </CardContent>

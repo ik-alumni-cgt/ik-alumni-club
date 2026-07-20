@@ -31,8 +31,6 @@ function getStatusBadge(status: string) {
       return <Badge variant="default">アクティブ</Badge>;
     case "pending_profile":
       return <Badge variant="secondary">プロフィール入力待ち</Badge>;
-    case "pending_approval":
-      return <Badge variant="secondary" className="bg-amber-100 text-amber-800">承認待ち</Badge>;
     case "inactive":
       return <Badge variant="destructive">非アクティブ</Badge>;
     default:

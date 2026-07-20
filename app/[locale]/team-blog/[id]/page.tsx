@@ -4,10 +4,13 @@ import { DeleteBlogButton } from "@/components/delete-blog-button";
 import { Button } from "@/components/ui/button";
 import { getBlog } from "@/data/blog";
 import { getCategoriesTree, getBlogCategoryIds } from "@/data/category";
-import { verifyTeamMemberOrAdmin } from "@/lib/session";
+import { verifyEditor } from "@/lib/session";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+// レイアウトのガードを必ず通すため、ページ単位でも動的レンダリングを強制する
+export const dynamic = "force-dynamic";
 
 export default async function EditTeamBlogPage({
   params,
@@ -15,7 +18,7 @@ export default async function EditTeamBlogPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const { userId, member } = await verifyTeamMemberOrAdmin();
+  const { userId, isAdmin } = await verifyEditor();
 
   const [blog, categoriesTree, initialCategoryIds] = await Promise.all([
     getBlog(id),
@@ -27,8 +30,8 @@ export default async function EditTeamBlogPage({
     notFound();
   }
 
-  // team_member は自分の記事のみ編集可能（他人の記事は存在しない扱い）
-  if (member.role !== "admin" && blog.authorId !== userId) {
+  // 編集者は自分の記事のみ編集可能（他人の記事は存在しない扱い）
+  if (!isAdmin && blog.authorId !== userId) {
     notFound();
   }
 
@@ -47,7 +50,7 @@ export default async function EditTeamBlogPage({
 
       <div className="mb-6">
         <h2 className="mb-3 text-lg font-semibold">プレビュー</h2>
-        <BlogCard blog={blog} isAdmin={true} />
+        <BlogCard blog={blog} isAdmin={true} editBasePath="/team-blog" />
       </div>
 
       <div className="mb-6">

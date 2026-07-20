@@ -4,8 +4,8 @@ import { memberPlans } from "./member-plans";
 import { nanoid } from "nanoid";
 import { relations } from "drizzle-orm";
 
-export const membersRole = ["admin", "officer", "member", "team_member"] as const;
-export const membersStatus = ["pending_profile", "active", "inactive", "pending_approval"] as const;
+export const membersRole = ["admin", "officer", "member"] as const;
+export const membersStatus = ["pending_profile", "active", "inactive"] as const;
 export const paymentStatus = ["pending", "completed", "failed", "canceled"] as const;
 
 export const membersRoleEnum = pgEnum("members_role", membersRole);
@@ -40,6 +40,11 @@ export const members = pgTable("members", {
   // プラン・権限情報
   planId: integer("plan_id").references(() => memberPlans.id, { onDelete: "restrict" }),
   role: membersRoleEnum("role").notNull(),
+
+  // 編集者権限（メンバーブログの執筆可否）
+  // role とは独立したフラグ。「支払い済みの会員」かつ「編集者」を同時に表現するため。
+  // 付与は当面 DB 直接更新で運用する。
+  isEditor: boolean("is_editor").default(false).notNull(),
 
   // ステータス管理
   status: membersStatusEnum("status").default("pending_profile"),

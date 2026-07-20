@@ -271,7 +271,6 @@ export function AccountForm({
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="member">会員</SelectItem>
-                    <SelectItem value="team_member">チームメンバー</SelectItem>
                     <SelectItem value="officer">役員</SelectItem>
                     <SelectItem value="admin">管理者</SelectItem>
                   </SelectContent>
@@ -295,7 +294,6 @@ export function AccountForm({
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="pending_profile">プロフィール入力待ち</SelectItem>
-                    <SelectItem value="pending_approval">承認待ち</SelectItem>
                     <SelectItem value="active">アクティブ</SelectItem>
                     <SelectItem value="inactive">非アクティブ</SelectItem>
                   </SelectContent>

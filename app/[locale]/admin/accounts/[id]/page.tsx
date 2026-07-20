@@ -13,7 +13,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { DeleteAccountButton } from "@/components/delete-account-button";
 import { ResetPaymentButton } from "@/components/admin/reset-payment-button";
-import { ApproveTeamMemberButton } from "@/components/admin/approve-team-member-button";
 
 export default async function AccountDetailPage({
   params,
@@ -33,8 +32,6 @@ export default async function AccountDetailPage({
         return <Badge variant="default">アクティブ</Badge>;
       case "pending_profile":
         return <Badge variant="secondary">プロフィール入力待ち</Badge>;
-      case "pending_approval":
-        return <Badge variant="secondary" className="bg-amber-100 text-amber-800">承認待ち</Badge>;
       case "inactive":
         return <Badge variant="destructive">非アクティブ</Badge>;
       default:
@@ -46,10 +43,6 @@ export default async function AccountDetailPage({
     switch (role) {
       case "admin":
         return <Badge variant="default">管理者</Badge>;
-      case "officer":
-        return <Badge variant="outline">役員</Badge>;
-      case "team_member":
-        return <Badge variant="outline">チームメンバー</Badge>;
       case "member":
         return <Badge variant="outline">会員</Badge>;
       default:
@@ -299,27 +292,6 @@ export default async function AccountDetailPage({
             />
           </CardContent>
         </Card>
-
-        {account.status === "pending_approval" && (
-          <Card className="border-amber-400">
-            <CardHeader>
-              <CardTitle>チームメンバー承認</CardTitle>
-              <CardDescription>
-                このアカウントは承認待ちです。承認するとメンバーブログの執筆と会員コンテンツの閲覧ができるようになります。
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ApproveTeamMemberButton
-                accountId={account.id}
-                accountName={
-                  account.lastName && account.firstName
-                    ? `${account.lastName} ${account.firstName}`
-                    : account.user.name
-                }
-              />
-            </CardContent>
-          </Card>
-        )}
 
         <Card className="border-destructive">
           <CardHeader>

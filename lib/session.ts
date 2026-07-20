@@ -5,8 +5,9 @@ import { redirect } from "next/navigation";
 import { auth } from "./auth";
 import { db } from "@/db";
 import { members } from "@/db/schemas/member";
+import { accounts } from "@/db/schemas/auth";
 import { blogs } from "@/db/schemas/blogs";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { MemberWithPlan } from "@/types/member";
 
 export const verifySession = async() => {
@@ -76,10 +77,6 @@ export const verifyActiveMember = async() => {
     if (member.status === "pending_profile") {
       redirect("/profile/complete");
     }
-    // チームメンバーの承認待ちは承認待ちページへ
-    if (member.status === "pending_approval") {
-      redirect("/team-login/pending");
-    }
     // 退会済みの場合はエラー
     if (member.status === "inactive") {
       throw new Error("このアカウントは無効化されています");
@@ -90,85 +87,176 @@ export const verifyActiveMember = async() => {
   return { userId, memberId: member.id, member };
 }
 
+/** 編集者エリアの入口。編集者は LINE ログインのみを使う。 */
+export const EDITOR_LOGIN_PATH = "/team-login";
 /**
- * チームメンバー（team_member）または管理者であることを確認
- * team_member は status === 'active' の場合のみアクセス可能。
- * 承認待ち（pending_approval）は承認待ちページへリダイレクトする。
- * /team-blog 配下のガードとして使用する。
+ * 氏名未入力の編集者を誘導する先。
+ * /team-blog 配下に置くとレイアウトのガードと無限ループになるため、
+ * ログイン導線側（/team-login 配下）に置く。
  */
-export const verifyTeamMemberOrAdmin = async() => {
-  const session = await verifySession();
-  const userId = session.user.id;
+export const EDITOR_PROFILE_PATH = "/team-login/profile";
 
+/** 編集者ゲートを通らなかった理由。画面側の出し分けに使う。 */
+export type EditorDeniedReason =
+  | "no_session"
+  | "line_required"
+  | "not_editor"
+  | "unpaid"
+  | "name_required";
+
+/** 編集者ゲートを通らなかった理由の日本語メッセージ。 */
+export const EDITOR_DENIED_MESSAGES: Record<EditorDeniedReason, string> = {
+  no_session: "ログインが必要です",
+  line_required: "LINE でのログインが必要です",
+  not_editor: "ブログの執筆権限がありません",
+  unpaid: "お支払いが完了していないため利用できません",
+  name_required: "氏名を入力してください",
+};
+
+type EditorAccess =
+  | {
+      ok: true;
+      userId: string;
+      memberId: string;
+      member: typeof members.$inferSelect;
+      isAdmin: boolean;
+    }
+  | { ok: false; reason: EditorDeniedReason };
+
+/**
+ * 編集者としてメンバーブログを扱えるかを判定する。
+ *
+ * 編集者は次の 4 条件をすべて満たす必要がある。
+ *  1. LINE 連携済みのアカウントでログインしている
+ *  2. 編集者フラグ（is_editor）が true
+ *  3. 支払い済み（payment_status === 'completed'）
+ *  4. 氏名（last_name / first_name）が入力済み
+ *
+ * 管理者（role === 'admin'）は従来どおり素通しする。
+ * 既存の管理者運用に条件を追加しないため。
+ */
+const resolveEditorAccess = async(): Promise<EditorAccess> => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    return { ok: false, reason: "no_session" };
+  }
+
+  const userId = session.user.id;
   const member = await db.query.members.findFirst({
     where: eq(members.userId, userId),
   });
 
-  if (!member) {
-    redirect("/");
+  // 管理者は条件を問わず通す
+  if (member && member.role === "admin") {
+    return { ok: true, userId, memberId: member.id, member, isAdmin: true };
   }
 
-  // 管理者は status に依らずアクセス可能
-  if (member.role === "admin") {
-    return { userId, memberId: member.id, member };
+  // 1. LINE 連携の確認
+  const lineAccount = await db.query.accounts.findFirst({
+    where: and(eq(accounts.userId, userId), eq(accounts.providerId, "line")),
+    columns: { id: true },
+  });
+
+  if (!lineAccount) {
+    return { ok: false, reason: "line_required" };
   }
 
-  // チームメンバーは承認済み（active）のみアクセス可能
-  if (member.role === "team_member") {
-    if (member.status === "pending_approval") {
-      redirect("/team-login/pending");
-    }
-    if (member.status !== "active") {
-      redirect("/");
-    }
-    return { userId, memberId: member.id, member };
+  // 2. 編集者フラグ
+  if (!member || !member.isEditor) {
+    return { ok: false, reason: "not_editor" };
   }
 
-  // それ以外のロールはアクセス不可
-  redirect("/");
+  // 3. 支払い済み
+  if (member.paymentStatus !== "completed") {
+    return { ok: false, reason: "unpaid" };
+  }
+
+  // 4. 氏名の入力
+  if (!member.lastName?.trim() || !member.firstName?.trim()) {
+    return { ok: false, reason: "name_required" };
+  }
+
+  return { ok: true, userId, memberId: member.id, member, isAdmin: false };
 }
 
 /**
- * ブログ執筆権限を確認（admin または active な team_member）
- * 戻り値の member.role で「全記事編集可(admin)」「自分の記事のみ(team_member)」を判定する。
+ * 編集者エリア（/team-blog 配下）のページ・レイアウト用ガード。
+ * 条件を満たさない場合は理由に応じたページへリダイレクトする。
+ */
+export const verifyEditor = async() => {
+  const access = await resolveEditorAccess();
+
+  if (access.ok) {
+    return access;
+  }
+
+  if (access.reason === "name_required") {
+    redirect(EDITOR_PROFILE_PATH);
+  }
+
+  redirect(`${EDITOR_LOGIN_PATH}/denied?reason=${access.reason}`);
+}
+
+/**
+ * 氏名未入力でも通す、氏名入力ページ専用のガード。
+ * 氏名以外の 3 条件（LINE・編集者・支払い済み）は満たしている必要がある。
+ */
+export const verifyEditorForProfile = async() => {
+  const access = await resolveEditorAccess();
+
+  if (access.ok) {
+    return access;
+  }
+
+  if (access.reason === "name_required") {
+    // 氏名だけが未入力の状態。このページの対象なのでセッション情報を引き直す。
+    const session = await verifySession();
+    const userId = session.user.id;
+    const member = await db.query.members.findFirst({
+      where: eq(members.userId, userId),
+    });
+
+    if (!member) {
+      redirect(`${EDITOR_LOGIN_PATH}/denied?reason=not_editor`);
+    }
+
+    return { ok: true as const, userId, memberId: member.id, member, isAdmin: false };
+  }
+
+  redirect(`${EDITOR_LOGIN_PATH}/denied?reason=${access.reason}`);
+}
+
+/**
+ * ブログ執筆権限を確認する（Server Action 用）。
+ * ページ用の verifyEditor と違い、リダイレクトではなく例外を投げる。
  */
 export const verifyBlogWriter = async() => {
-  const session = await verifySession();
-  const userId = session.user.id;
+  const access = await resolveEditorAccess();
 
-  const member = await db.query.members.findFirst({
-    where: eq(members.userId, userId),
-  });
-
-  if (!member) {
-    throw new Error("会員情報が見つかりません");
+  if (!access.ok) {
+    throw new Error(EDITOR_DENIED_MESSAGES[access.reason]);
   }
 
-  const isWriter =
-    member.role === "admin" ||
-    (member.role === "team_member" && member.status === "active");
-
-  if (!isWriter) {
-    throw new Error("ブログの執筆権限がありません");
-  }
-
-  return { userId, memberId: member.id, member };
+  return { userId: access.userId, memberId: access.memberId, member: access.member, isAdmin: access.isAdmin };
 }
 
 /**
  * 対象ブログの編集・削除権限を確認する。
- * admin は全記事、team_member は自分の記事（authorId 一致）のみ許可。
+ * admin は全記事、編集者は自分の記事（authorId 一致）のみ許可。
  * ブログ本体・カテゴリなど、記事に紐づく操作の共通ガードとして使用する。
  */
 export const verifyCanModifyBlog = async(blogId: string) => {
-  const { userId, member } = await verifyBlogWriter();
+  const { userId, member, isAdmin } = await verifyBlogWriter();
 
   // admin は全記事を操作可能
-  if (member.role === "admin") {
+  if (isAdmin) {
     return { userId, member };
   }
 
-  // team_member は自分の記事のみ
+  // 編集者は自分の記事のみ
   const target = await db.query.blogs.findFirst({
     where: eq(blogs.id, blogId),
     columns: { authorId: true },

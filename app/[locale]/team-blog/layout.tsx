@@ -1,4 +1,4 @@
-import { verifyTeamMemberOrAdmin } from "@/lib/session";
+import { verifyEditor } from "@/lib/session";
 import Link from "next/link";
 
 // 認証必須かつ DB 参照前提のため、配下すべてを動的レンダリングにする
@@ -9,9 +9,9 @@ export default async function TeamBlogLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // team_member（承認済み）または admin のみアクセス可能
-  // 承認待ち（pending_approval）は /team-login/pending へリダイレクトされる
-  await verifyTeamMemberOrAdmin();
+  // 編集者（LINE ログイン + is_editor + 支払い済み + 氏名入力済み）または admin のみ
+  // 条件を満たさない場合は理由に応じて /team-login 配下へリダイレクトされる
+  await verifyEditor();
 
   return (
     <div className="min-h-screen bg-gray-50">
