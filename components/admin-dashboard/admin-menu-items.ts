@@ -17,6 +17,7 @@ import {
   Tags,
   MessageSquare,
   ShieldCheck,
+  UserPlus,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -92,6 +93,11 @@ export const memberItems: MenuItem[] = [
     title: "会員管理",
     icon: Users,
     url: "/admin/accounts",
+  },
+  {
+    title: "編集者の招待",
+    icon: UserPlus,
+    url: "/admin/editor-invites",
   },
   {
     title: "システムアカウント",

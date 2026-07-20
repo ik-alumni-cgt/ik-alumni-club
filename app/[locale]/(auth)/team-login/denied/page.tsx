@@ -15,11 +15,7 @@ const MESSAGES: Record<EditorDeniedReason, { title: string; body: string }> = {
   },
   not_editor: {
     title: "執筆権限がありません",
-    body: "メンバーブログの執筆には編集者権限が必要です。運営までお問い合わせください。",
-  },
-  unpaid: {
-    title: "お支払いが確認できません",
-    body: "メンバーブログの利用には会費のお支払いが必要です。お支払い状況をご確認ください。",
+    body: "メンバーブログの執筆には招待が必要です。運営までお問い合わせください。",
   },
   name_required: {
     title: "氏名の入力が必要です",

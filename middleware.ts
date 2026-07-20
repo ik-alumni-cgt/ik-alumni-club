@@ -33,6 +33,8 @@ const publicRoutes = [
   // ここで弾くと LINE ログイン画面にも到達できなくなる
   "/team-login",
   "/team-blog",
+  // 招待リンクは未ログインの人が開くので必ず公開にする
+  "/team-invite",
 ];
 const adminRoutes = ["/admin-login"]; // 管理者ログインページは認証不要
 

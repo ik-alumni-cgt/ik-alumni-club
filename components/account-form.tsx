@@ -333,7 +333,7 @@ export function AccountForm({
                 <div className="space-y-0.5">
                   <FormLabel className="text-base">編集者</FormLabel>
                   <FormDescription>
-                    メンバーブログの執筆を許可します。支払い済みかつ氏名が入力済みの場合のみ執筆できます
+                    メンバーブログの執筆を許可します。通常は招待リンク経由で自動的に付与されます
                   </FormDescription>
                 </div>
                 <FormControl>

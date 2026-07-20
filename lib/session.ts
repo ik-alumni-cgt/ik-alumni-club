@@ -101,7 +101,6 @@ export type EditorDeniedReason =
   | "no_session"
   | "line_required"
   | "not_editor"
-  | "unpaid"
   | "name_required";
 
 /** 編集者ゲートを通らなかった理由の日本語メッセージ。 */
@@ -109,7 +108,6 @@ export const EDITOR_DENIED_MESSAGES: Record<EditorDeniedReason, string> = {
   no_session: "ログインが必要です",
   line_required: "LINE でのログインが必要です",
   not_editor: "ブログの執筆権限がありません",
-  unpaid: "お支払いが完了していないため利用できません",
   name_required: "氏名を入力してください",
 };
 
@@ -126,11 +124,14 @@ type EditorAccess =
 /**
  * 編集者としてメンバーブログを扱えるかを判定する。
  *
- * 編集者は次の 4 条件をすべて満たす必要がある。
+ * 編集者は次の 3 条件をすべて満たす必要がある。
  *  1. LINE 連携済みのアカウントでログインしている
  *  2. 編集者フラグ（is_editor）が true
- *  3. 支払い済み（payment_status === 'completed'）
- *  4. 氏名（last_name / first_name）が入力済み
+ *  3. 氏名（last_name / first_name）が入力済み
+ *
+ * 支払い状態はここでは見ない。編集者になれるのは招待を受けた人だけで、
+ * 誰を招待するかは管理者が判断するため。会費の話をチームメンバーに
+ * 見せないためでもある。
  *
  * 管理者（role === 'admin'）は従来どおり素通しする。
  * 既存の管理者運用に条件を追加しないため。
@@ -169,12 +170,7 @@ const resolveEditorAccess = async(): Promise<EditorAccess> => {
     return { ok: false, reason: "not_editor" };
   }
 
-  // 3. 支払い済み
-  if (member.paymentStatus !== "completed") {
-    return { ok: false, reason: "unpaid" };
-  }
-
-  // 4. 氏名の入力
+  // 3. 氏名の入力
   if (!member.lastName?.trim() || !member.firstName?.trim()) {
     return { ok: false, reason: "name_required" };
   }
