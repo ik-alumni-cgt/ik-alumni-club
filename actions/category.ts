@@ -12,7 +12,7 @@ import {
   pastEventCategories,
 } from "@/db/schemas/categories";
 import { categoryFormSchema, type CategoryFormData } from "@/zod/category";
-import { verifyAdmin } from "@/lib/session";
+import { verifyAdmin, verifyCanModifyBlog } from "@/lib/session";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -69,7 +69,8 @@ export async function deleteCategory(id: string) {
 
 // コンテンツのカテゴリー割り当てを更新する共通関数
 export async function updateBlogCategories(blogId: string, categoryIds: string[]) {
-  await verifyAdmin();
+  // admin は全記事 / team_member は自分の記事のみカテゴリ設定可能
+  await verifyCanModifyBlog(blogId);
 
   await db.delete(blogCategories).where(eq(blogCategories.blogId, blogId));
 

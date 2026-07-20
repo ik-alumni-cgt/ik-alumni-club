@@ -26,3 +26,9 @@ export const isOfficerOrAdmin = async () => {
   const member = await getMemberByUserId(session.user.id);
   return member?.role === "admin" || member?.role === "officer";
 };
+
+export const isTeamMemberOrAdmin = async () => {
+  const session = await verifySession();
+  const member = await getMemberByUserId(session.user.id);
+  return member?.role === "admin" || member?.role === "team_member";
+};

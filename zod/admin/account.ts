@@ -10,12 +10,12 @@ export const adminAccountFormSchema = memberProfileFormSchema.extend({
   planId: z.number().nullable().optional(),
 
   // 権限設定
-  role: z.enum(["admin", "officer", "member"], {
+  role: z.enum(["admin", "officer", "member", "team_member"], {
     message: "権限を選択してください",
   }),
 
   // ステータス設定
-  status: z.enum(["pending_profile", "active", "inactive"], {
+  status: z.enum(["pending_profile", "active", "inactive", "pending_approval"], {
     message: "ステータスを選択してください",
   }),
 

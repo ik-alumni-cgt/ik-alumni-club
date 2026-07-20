@@ -62,6 +62,25 @@ export const getAllBlogs = async () => {
 };
 
 /**
+ * 特定の執筆者（authorId）の全記事を取得
+ * team_member の執筆エリア（/team-blog）で自分の記事のみ表示するために使用
+ */
+export const getBlogsByAuthor = async (authorId: string) => {
+  return db.query.blogs.findMany({
+    where: eq(blogs.authorId, authorId),
+    orderBy: [desc(sql`COALESCE(${blogs.publishedAt}, ${blogs.createdAt})`)],
+    with: {
+      author: true,
+      blogCategories: {
+        with: {
+          category: true,
+        },
+      },
+    },
+  });
+};
+
+/**
  * IDで特定のブログを取得
  */
 export const getBlog = async (id: string) => {

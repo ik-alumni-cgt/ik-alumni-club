@@ -41,9 +41,11 @@ interface BlogFormProps {
   mode: "create" | "edit";
   categoriesTree?: CategoryWithChildren[];
   initialCategoryIds?: string[];
+  // 保存後の遷移先。管理画面は /admin/blogs、チームメンバーは /team-blog を渡す
+  redirectPath?: string;
 }
 
-export function BlogForm({ defaultValues, mode, categoriesTree = [], initialCategoryIds = [] }: BlogFormProps) {
+export function BlogForm({ defaultValues, mode, categoriesTree = [], initialCategoryIds = [], redirectPath = "/admin/blogs" }: BlogFormProps) {
   const router = useRouter();
   const [categoryIds, setCategoryIds] = useState<string[]>(initialCategoryIds);
   const form = useForm<BlogFormData>({
@@ -83,7 +85,7 @@ export function BlogForm({ defaultValues, mode, categoriesTree = [], initialCate
           description: `${data.title}を更新しました`,
         });
       }
-      router.push("/admin/blogs");
+      router.push(redirectPath);
       router.refresh();
     } catch (error) {
       toast.error("エラーが発生しました", {

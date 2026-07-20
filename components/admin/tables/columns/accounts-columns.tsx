@@ -36,6 +36,8 @@ function getStatusBadge(status: string) {
       return <Badge variant="default">アクティブ</Badge>;
     case "pending_profile":
       return <Badge variant="secondary">プロフィール入力待ち</Badge>;
+    case "pending_approval":
+      return <Badge variant="secondary" className="bg-amber-100 text-amber-800">承認待ち</Badge>;
     case "inactive":
       return <Badge variant="destructive">非アクティブ</Badge>;
     default:
@@ -47,6 +49,10 @@ function getRoleBadge(role: string) {
   switch (role) {
     case "admin":
       return <Badge variant="default">管理者</Badge>;
+    case "officer":
+      return <Badge variant="outline">役員</Badge>;
+    case "team_member":
+      return <Badge variant="outline">チームメンバー</Badge>;
     case "member":
       return <Badge variant="outline">会員</Badge>;
     default:

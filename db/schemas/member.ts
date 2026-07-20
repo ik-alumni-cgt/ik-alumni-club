@@ -4,8 +4,8 @@ import { memberPlans } from "./member-plans";
 import { nanoid } from "nanoid";
 import { relations } from "drizzle-orm";
 
-export const membersRole = ["admin", "officer", "member"] as const;
-export const membersStatus = ["pending_profile", "active", "inactive"] as const;
+export const membersRole = ["admin", "officer", "member", "team_member"] as const;
+export const membersStatus = ["pending_profile", "active", "inactive", "pending_approval"] as const;
 export const paymentStatus = ["pending", "completed", "failed", "canceled"] as const;
 
 export const membersRoleEnum = pgEnum("members_role", membersRole);

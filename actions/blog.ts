@@ -3,7 +3,7 @@
 import { db } from "@/db";
 import { blogs } from "@/db/schemas/blogs";
 import { blogFormSchema, type BlogFormData } from "@/zod/blog";
-import { verifyAdmin } from "@/lib/session";
+import { verifyBlogWriter, verifyCanModifyBlog } from "@/lib/session";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { resolveImageUpload } from "@/lib/storage";
@@ -13,8 +13,8 @@ import { nanoid } from "nanoid";
  * ブログ記事を新規作成
  */
 export async function createBlog(formData: BlogFormData) {
-  // 1. 管理者権限チェック
-  const { userId } = await verifyAdmin();
+  // 1. 執筆権限チェック（admin または team_member）
+  const { userId } = await verifyBlogWriter();
 
   // 2. バリデーション
   const data = blogFormSchema.parse(formData);
@@ -47,6 +47,7 @@ export async function createBlog(formData: BlogFormData) {
 
   // 6. キャッシュ再検証
   revalidatePath("/admin/blogs");
+  revalidatePath("/team-blog");
   revalidatePath("/blogs");
 
   return newBlog;
@@ -56,8 +57,8 @@ export async function createBlog(formData: BlogFormData) {
  * ブログ記事を更新
  */
 export async function updateBlog(id: string, formData: BlogFormData) {
-  // 1. 管理者権限チェック
-  await verifyAdmin();
+  // 1. 編集権限チェック（admin は全記事 / team_member は自分の記事のみ）
+  await verifyCanModifyBlog(id);
 
   // 2. バリデーション
   const data = blogFormSchema.parse(formData);
@@ -84,6 +85,7 @@ export async function updateBlog(id: string, formData: BlogFormData) {
 
   // 5. キャッシュ再検証
   revalidatePath("/admin/blogs");
+  revalidatePath("/team-blog");
   revalidatePath("/blogs");
   revalidatePath(`/blogs/${id}`);
 
@@ -94,14 +96,15 @@ export async function updateBlog(id: string, formData: BlogFormData) {
  * ブログ記事を削除
  */
 export async function deleteBlog(id: string) {
-  // 1. 管理者権限チェック
-  await verifyAdmin();
+  // 1. 削除権限チェック（admin は全記事 / team_member は自分の記事のみ）
+  await verifyCanModifyBlog(id);
 
   // 2. データベースから削除
   await db.delete(blogs).where(eq(blogs.id, id));
 
   // 3. キャッシュ再検証
   revalidatePath("/admin/blogs");
+  revalidatePath("/team-blog");
   revalidatePath("/blogs");
 }
 
@@ -109,7 +112,8 @@ export async function deleteBlog(id: string) {
  * ブログの公開状態を切り替え
  */
 export async function toggleBlogPublish(id: string, published: boolean) {
-  await verifyAdmin();
+  // admin は全記事 / team_member は自分の記事のみ
+  await verifyCanModifyBlog(id);
 
   await db
     .update(blogs)
@@ -117,5 +121,6 @@ export async function toggleBlogPublish(id: string, published: boolean) {
     .where(eq(blogs.id, id));
 
   revalidatePath("/admin/blogs");
+  revalidatePath("/team-blog");
   revalidatePath("/blogs");
 }
