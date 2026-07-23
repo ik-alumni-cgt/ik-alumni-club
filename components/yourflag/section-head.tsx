@@ -10,7 +10,7 @@ type Props = {
 export function SectionHead({ kicker, children, desc, titleClassName }: Props) {
   return (
     <div className="text-center mb-8 md:mb-12">
-      <span className="inline-flex items-center justify-center gap-1 font-[family-name:var(--font-inter)] font-bold text-[#1289c9] text-base tracking-[.06em]">
+      <span className="inline-flex items-center justify-center gap-1 font-[family-name:var(--font-inter)] font-bold text-[#0483B8] text-base tracking-[.06em]">
         {kicker}
       </span>
       <h2
