@@ -3,7 +3,7 @@ type Props = {
   className?: string
 }
 
-// soco-st の SVG（public/cheerly/icons）を currentColor で着色して表示する。
+// soco-st の SVG（public/yourflag/icons）を currentColor で着色して表示する。
 // mask を使うことで <img> では効かない色指定（ブランドブルー）を可能にする。
 export function MaskIcon({ src, className }: Props) {
   return (
