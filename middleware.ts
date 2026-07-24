@@ -26,7 +26,7 @@ const publicRoutes = [
   "/reset-password",
   "/register/email",
   "/feature/5th-anniversary",
-  "/cheerly",
+  "/yourflag",
   "/terms",
   "/privacy",
   "/legal",

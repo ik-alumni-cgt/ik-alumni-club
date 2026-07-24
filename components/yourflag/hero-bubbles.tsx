@@ -3,15 +3,15 @@
 import { useEffect, useRef } from "react"
 
 const WISHES = [
+  "その活動を、ずっと応援したい",
+  "OB・OGとして力になりたい",
+  "地域のチームを支えたい",
+  "現金集金をやめたい",
   "会費をオンラインで集めたい",
   "名簿を一元管理したい",
   "入金確認の手作業をなくしたい",
-  "現金集金をやめたい",
-  "申込をフォーム化したい",
   "引き継ぎを楽にしたい",
   "年会費を自動更新したい",
-  "QRコードで会員を募りたい",
-  "会員データを安全に守りたい",
   "応援者との接点を増やしたい",
 ]
 
@@ -52,18 +52,18 @@ export function HeroBubbles() {
 
   return (
     <div className="hidden lg:block absolute inset-0 z-[1] pointer-events-none" aria-hidden>
-      <style>{"@keyframes cheerly-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}"}</style>
+      <style>{"@keyframes yourflag-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}"}</style>
       {BUBBLES.map((b, i) => (
         <div
           key={i}
-          className={`absolute ${b.pos} bg-white rounded-[.7rem] px-[1.2rem] py-[.7rem] shadow-[0_10px_30px_-12px_rgba(27,80,224,.4)]`}
-          style={{ animation: `cheerly-float 5s ease-in-out ${b.delay} infinite` }}
+          className={`absolute ${b.pos} bg-white rounded-[.7rem] px-[1.2rem] py-[.7rem] shadow-[0_10px_30px_-12px_rgba(0,120,180,.4)]`}
+          style={{ animation: `yourflag-float 5s ease-in-out ${b.delay} infinite` }}
         >
           <span
             ref={(el) => {
               refs.current[i] = el
             }}
-            className="block text-[#1289c9] font-bold text-[.9rem] leading-[1.5] text-center transition-opacity duration-500"
+            className="block text-[#0483B8] font-bold text-[.9rem] leading-[1.5] text-center transition-opacity duration-500"
           >
             {b.text}
           </span>

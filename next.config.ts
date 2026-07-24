@@ -30,6 +30,16 @@ const nextConfig: NextConfig = {
     },
     middlewareClientMaxBodySize: '100mb', // Middlewareのリクエストボディ制限
   },
+  async redirects() {
+    return [
+      // 旧サービス名 Cheerly は YOURFLAG に統合。配布済み資料・QRコード（/cheerly）を維持。
+      {
+        source: '/cheerly',
+        destination: '/yourflag',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 const withNextIntl = createNextIntlPlugin('./app/web/i18n/request.ts');
