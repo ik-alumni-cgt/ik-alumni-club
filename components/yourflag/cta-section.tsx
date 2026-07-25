@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { FlagMark } from "./flag-mark"
 
 export function CtaSection() {
   return (
@@ -15,9 +14,7 @@ export function CtaSection() {
       </svg>
 
       <div className="relative mx-auto w-full max-w-[1000px] px-7 md:px-8">
-        <FlagMark className="w-16 h-14 mx-auto drop-shadow-[0_6px_16px_rgba(0,0,0,.2)]" />
-
-        <p className="mt-6 leading-[1.9] font-medium text-white/95 text-[.95rem] md:text-base">
+        <p className="leading-[1.9] font-medium text-white/95 text-[.95rem] md:text-base">
           それぞれの「応援したい」という気持ちが、団体の未来をつくっていく。
           <br className="max-md:hidden" />
           その活動が10年後、20年後も続いていくための仕組みを、YOURFLAGはつくります。

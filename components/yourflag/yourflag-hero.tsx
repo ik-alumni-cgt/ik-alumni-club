@@ -58,14 +58,17 @@ export function YourflagHero() {
           ))}
         </div>
 
-        <dl className="yf-hero-rise mx-auto mt-9 flex w-fit max-md:w-full items-stretch gap-6 md:gap-9 rounded-[.9rem] bg-white px-6 md:px-10 py-4 md:py-5 shadow-[0_12px_40px_-18px_rgba(0,120,180,.5)] max-[560px]:flex-col" style={{ animationDelay: ".32s" }}>
+        <dl className="yf-hero-rise mx-auto mt-9 grid grid-cols-3 w-full max-w-[560px] rounded-[.9rem] bg-white py-4 md:py-5 shadow-[0_12px_40px_-18px_rgba(0,120,180,.5)]" style={{ animationDelay: ".32s" }}>
           {STATS.map((s, i) => (
             <div
               key={s.label}
-              className={`flex-1 text-center px-2 ${i > 0 ? "border-l border-[#e3e6ec] max-[560px]:border-l-0 max-[560px]:border-t max-[560px]:pt-4" : ""}`}
+              className={`text-center px-2 md:px-4 ${i > 0 ? "border-l border-[#e3e6ec]" : ""}`}
             >
               <dt className="font-bold text-[.9rem]">{s.label}</dt>
               <dd className="mt-2 flex items-end justify-center gap-0.5 font-bold">
+                <span className="invisible" aria-hidden>
+                  {s.unit}
+                </span>
                 <span className="font-[family-name:var(--font-inter)] font-semibold text-[#00B0F0] leading-[.9] text-[clamp(2rem,5vw,2.9rem)]">
                   {s.num}
                 </span>

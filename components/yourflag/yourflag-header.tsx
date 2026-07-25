@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { FlagMark } from "./flag-mark"
+import Image from "next/image"
 
 const NAV = [
   { href: "#purpose", label: "私たちの目的" },
@@ -32,11 +32,15 @@ export function YourflagHeader() {
 
   return (
     <header className="sticky top-0 left-0 z-[100] flex items-center justify-between bg-white px-5 md:px-9 py-3 w-full shadow-[0_1px_0_rgba(17,17,17,.06)]">
-      <a href="#" className="flex items-center gap-2 font-black text-[1.5rem] tracking-[.02em]" aria-label="YOURFLAG トップ">
-        <FlagMark className="w-9 h-8 shrink-0" />
-        <span className="font-[family-name:var(--font-inter)]">
-          YOUR<span className="text-[#00B0F0]">FLAG</span>
-        </span>
+      <a href="#" className="flex items-center" aria-label="YOURFLAG トップ">
+        <Image
+          src="/yourflag/logo/logo-horizontal.png"
+          alt="YOURFLAG クラブ活動支援サービス"
+          width={1150}
+          height={240}
+          priority
+          className="h-9 w-auto md:h-10"
+        />
       </a>
 
       {/* desktop nav */}
