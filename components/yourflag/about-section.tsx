@@ -1,15 +1,5 @@
+import Image from "next/image"
 import { SectionHead } from "./section-head"
-import { FlagMark } from "./flag-mark"
-
-function HandshakeIcon() {
-  return (
-    <svg viewBox="0 0 64 64" className="w-16 h-16 md:w-20 md:h-20" fill="none" aria-hidden>
-      <path d="M6 22h14l6 5-5 5a4 4 0 0 1-6 0l-3-3H6V22Z" fill="#FF9300" />
-      <path d="M58 22H44l-9 8a4 4 0 0 0 0 6l2 2a4 4 0 0 0 6 0l3-3 3 3a3.5 3.5 0 0 0 5-5 3.5 3.5 0 0 0 4-5 3.5 3.5 0 0 0 0-4l-3-3Z" fill="#00B0F0" />
-      <path d="M32 24l-6 5 4 4 6-5-4-4Z" fill="#FF9300" opacity=".85" />
-    </svg>
-  )
-}
 
 function Party({
   side,
@@ -57,11 +47,7 @@ export function AboutSection() {
     <section id="about" className="py-14 md:py-24">
       <div className="mx-auto w-full max-w-[1100px] px-7 md:px-8">
         <SectionHead
-          kicker={
-            <>
-              About <FlagMark className="w-6 h-5" />
-            </>
-          }
+          kicker="About"
           desc={
             <>
               YOURFLAGは、クラブ活動・スポーツ・文化団体と、その活動を応援する人をつなぐ
@@ -81,7 +67,13 @@ export function AboutSection() {
             wish="活動に必要不可欠な、安定した資金を集めたい"
           />
           <div className="grid place-items-center py-2 md:px-2 max-md:rotate-90">
-            <HandshakeIcon />
+            <Image
+              src="/yourflag/logo/handshake.png"
+              alt="団体と支援者が手を取り合う"
+              width={320}
+              height={191}
+              className="w-16 md:w-20 h-auto"
+            />
           </div>
           <Party
             side="supporter"

@@ -7,7 +7,7 @@ const ITEMS = [
     no: "1",
     icon: "/yourflag/icons/support.svg",
     title: "団体ページ作成",
-    body: "YOURFLAG内に団体専用のページを作成。URLやQRコードを共有するだけで、支援者が簡単にアクセスできます。",
+    body: "YOURFLAG内に団体専用のページを作成。URLや二次元コードを共有するだけで、支援者が簡単にアクセスできます。",
   },
   {
     no: "2",

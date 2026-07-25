@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { FlagMark } from "./flag-mark"
+import Image from "next/image"
 
 const NAV = [
   { href: "#purpose", label: "私たちの目的" },
@@ -24,12 +24,13 @@ export function YourflagFooter() {
       <div className="mx-auto w-full max-w-[1200px] px-7 md:px-8">
         <div className="flex flex-wrap justify-between gap-8">
           <div className="max-w-[22rem]">
-            <div className="flex items-center gap-2 font-black text-[1.4rem]">
-              <FlagMark className="w-8 h-7" />
-              <span className="font-[family-name:var(--font-inter)] text-white">
-                YOUR<span className="text-[#00B0F0]">FLAG</span>
-              </span>
-            </div>
+            <Image
+              src="/yourflag/logo/logo-horizontal.png"
+              alt="YOURFLAG クラブ活動支援サービス"
+              width={1150}
+              height={240}
+              className="h-9 w-auto"
+            />
             <p className="mt-3 text-[.8rem] leading-[1.7] text-[#8b95ab]">
               クラブ活動・スポーツ・文化団体と、その活動を応援する人をつなぐ継続支援プラットフォーム
             </p>

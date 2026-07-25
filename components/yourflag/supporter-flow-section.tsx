@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { SectionHead } from "./section-head"
 import { Reveal } from "./reveal"
 
@@ -8,9 +9,6 @@ const STEPS = [
   { no: "04", title: "オンラインで決済" },
   { no: "05", title: "支援スタート" },
 ]
-
-const CARD = ["VISA", "JCB", "Mastercard", "AMEX"]
-const MOBILE = ["Apple Pay", "Google Pay"]
 
 export function SupporterFlowSection() {
   return (
@@ -54,51 +52,15 @@ export function SupporterFlowSection() {
         </Reveal>
 
         {/* payment methods */}
-        <Reveal className="mx-auto max-w-[820px] mt-10 rounded-[1rem] border border-[#e3e6ec] bg-white px-6 md:px-8 py-7">
+        <Reveal className="mx-auto max-w-[820px] mt-10">
           <p className="text-center font-bold text-[.95rem] mb-6">《 各種決済方法にも対応 》</p>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-4">
-            <div className="text-center">
-              <p className="text-[.68rem] font-bold text-[#6b7280] tracking-[.08em] mb-2">
-                クレジット決済
-              </p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {CARD.map((c) => (
-                  <span
-                    key={c}
-                    className="font-[family-name:var(--font-inter)] font-bold text-[.72rem] text-[#333] border border-[#e3e6ec] rounded-[.4rem] px-3 py-2"
-                  >
-                    {c}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <span className="hidden md:block w-px self-stretch bg-[#e3e6ec]" aria-hidden />
-            <div className="text-center">
-              <p className="text-[.68rem] font-bold text-[#6b7280] tracking-[.08em] mb-2">
-                モバイル決済
-              </p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {MOBILE.map((m) => (
-                  <span
-                    key={m}
-                    className="font-[family-name:var(--font-inter)] font-bold text-[.72rem] text-[#333] border border-[#e3e6ec] rounded-[.4rem] px-3 py-2"
-                  >
-                    {m}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <span className="hidden md:block w-px self-stretch bg-[#e3e6ec]" aria-hidden />
-            <div className="text-center">
-              <p className="text-[.68rem] font-bold text-[#6b7280] tracking-[.08em] mb-2">または</p>
-              <p className="font-bold text-[.85rem] leading-[1.6]">
-                銀行振込
-                <br />
-                コンビニ決済
-              </p>
-              <p className="text-[.62rem] text-[#9aa1ad] mt-1">※コンビニ決済は順次スタート</p>
-            </div>
-          </div>
+          <Image
+            src="/yourflag/logo/payment-methods.png"
+            alt="対応決済方法。クレジット決済（VISA、JCB、Mastercard、American Express）、モバイル決済（Apple Pay、Google Pay）、または銀行振込・コンビニ決済（コンビニ決済は順次スタート）"
+            width={1640}
+            height={238}
+            className="w-full h-auto"
+          />
         </Reveal>
       </div>
     </section>
