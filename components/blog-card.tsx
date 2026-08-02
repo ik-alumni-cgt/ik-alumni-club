@@ -16,9 +16,12 @@ import { Calendar, Lock } from "lucide-react";
 export function BlogCard({
   blog,
   isAdmin = false,
+  editBasePath = "/admin/blogs",
 }: {
   blog: Blog;
   isAdmin?: boolean;
+  /** 編集ボタンの遷移先。管理画面以外（/team-blog 等）から使うときに差し替える。 */
+  editBasePath?: string;
 }) {
   return (
     <Card className="flex flex-col">
@@ -60,7 +63,7 @@ export function BlogCard({
       <CardFooter className="mt-auto flex gap-2">
         {isAdmin ? (
           <Button asChild variant="outline" className="w-full">
-            <Link href={`/admin/blogs/${blog.id}`}>編集</Link>
+            <Link href={`${editBasePath}/${blog.id}`}>編集</Link>
           </Button>
         ) : (
           <Button asChild className="w-full">

@@ -31,6 +31,12 @@ const publicRoutes = [
   "/privacy",
   "/legal",
   "/refund",
+  // 編集者エリア。実際の認可は /team-blog のレイアウト（verifyEditor）で行うため、
+  // ここで弾くと LINE ログイン画面にも到達できなくなる
+  "/team-login",
+  "/team-blog",
+  // 招待リンクは未ログインの人が開くので必ず公開にする
+  "/team-invite",
 ];
 const adminRoutes = ["/admin-login"]; // 管理者ログインページは認証不要
 

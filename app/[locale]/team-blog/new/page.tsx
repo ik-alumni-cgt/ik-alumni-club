@@ -1,0 +1,33 @@
+import { BlogForm } from "@/components/blog-form";
+import { Button } from "@/components/ui/button";
+import { getCategoriesTree } from "@/data/category";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+
+// レイアウトのガードを必ず通すため、ページ単位でも動的レンダリングを強制する
+export const dynamic = "force-dynamic";
+
+export default async function NewTeamBlogPage() {
+  const categoriesTree = await getCategoriesTree();
+
+  return (
+    <div className="max-w-3xl">
+      <div className="mb-6">
+        <Button asChild variant="ghost" size="sm" className="mb-4">
+          <Link href="/team-blog">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            一覧に戻る
+          </Link>
+        </Button>
+        <h1 className="text-3xl font-bold">ブログ作成</h1>
+        <p className="text-muted-foreground">新しいブログ記事を作成します</p>
+      </div>
+
+      <BlogForm
+        mode="create"
+        categoriesTree={categoriesTree}
+        redirectPath="/team-blog"
+      />
+    </div>
+  );
+}

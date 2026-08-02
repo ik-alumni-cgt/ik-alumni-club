@@ -20,9 +20,11 @@ import { Trash2 } from "lucide-react";
 export function DeleteBlogButton({
   blogId,
   blogTitle,
+  redirectPath = "/admin/blogs",
 }: {
   blogId: string;
   blogTitle: string;
+  redirectPath?: string;
 }) {
   const router = useRouter();
 
@@ -32,7 +34,7 @@ export function DeleteBlogButton({
       toast.success("ブログを削除しました", {
         description: `${blogTitle}を削除しました`,
       });
-      router.push("/admin/blogs");
+      router.push(redirectPath);
       router.refresh();
     } catch (error) {
       toast.error("エラーが発生しました", {

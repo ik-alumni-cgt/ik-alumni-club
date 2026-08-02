@@ -21,6 +21,9 @@ export const adminAccountFormSchema = memberProfileFormSchema.extend({
 
   // アクティブフラグ
   isActive: z.boolean(),
+
+  // 編集者フラグ（メンバーブログの執筆可否）
+  isEditor: z.boolean(),
 });
 
 export type AdminAccountFormData = z.infer<typeof adminAccountFormSchema>;

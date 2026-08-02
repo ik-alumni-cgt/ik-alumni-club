@@ -38,6 +38,7 @@ export async function updateAccount(accountId: string, formData: AdminAccountFor
       role: data.role,
       status: data.status,
       isActive: data.isActive,
+      isEditor: data.isEditor,
       profileCompleted: data.status === "active" ? true : false,
       ...(isAdmin && {
         paymentStatus: null,
