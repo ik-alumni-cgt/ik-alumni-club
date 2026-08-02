@@ -1,6 +1,6 @@
 "use server"
 
-import { verifyAdmin } from "@/lib/session"
+import { verifyBlogWriter } from "@/lib/session"
 import { generatePresignedPutUrl } from "@/lib/storage"
 import { nanoid } from "nanoid"
 
@@ -9,7 +9,7 @@ import { nanoid } from "nanoid"
  * クライアントはこのURLに直接PUTしてR2にアップロードする（サーバー経由なし）
  */
 export async function generateBlogImagePresignedUrl(contentType: string) {
-  await verifyAdmin()
+  await verifyBlogWriter()
 
   return generatePresignedPutUrl({
     key: `blogs/content/${nanoid()}`,

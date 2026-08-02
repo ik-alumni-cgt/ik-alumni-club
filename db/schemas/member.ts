@@ -41,6 +41,11 @@ export const members = pgTable("members", {
   planId: integer("plan_id").references(() => memberPlans.id, { onDelete: "restrict" }),
   role: membersRoleEnum("role").notNull(),
 
+  // 編集者権限（メンバーブログの執筆可否）
+  // role とは独立したフラグ。「支払い済みの会員」かつ「編集者」を同時に表現するため。
+  // 付与は当面 DB 直接更新で運用する。
+  isEditor: boolean("is_editor").default(false).notNull(),
+
   // ステータス管理
   status: membersStatusEnum("status").default("pending_profile"),
   profileCompleted: boolean("profile_completed").default(false).notNull(),

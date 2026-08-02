@@ -61,3 +61,14 @@ export const memberProfileFormSchema = z.object({
 });
 
 export type MemberProfileFormData = z.infer<typeof memberProfileFormSchema>;
+
+/**
+ * 編集者の氏名入力フォームのバリデーションスキーマ
+ * メンバーブログの利用条件は氏名のみ必須のため、姓名だけを抜き出す
+ */
+export const editorNameFormSchema = memberProfileFormSchema.pick({
+  lastName: true,
+  firstName: true,
+});
+
+export type EditorNameFormData = z.infer<typeof editorNameFormSchema>;
