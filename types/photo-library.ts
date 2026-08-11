@@ -21,3 +21,10 @@ export type PhotoLibraryWithImages = PhotoLibrary & {
     image: string | null;
   } | null;
 };
+
+// 複数アルバムを 1 つに束ねた集約グループの型
+export type PhotoLibraryGroup = {
+  slug: string;
+  title: string;
+  albums: PhotoLibraryWithImages[];
+};
