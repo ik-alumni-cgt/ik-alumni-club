@@ -2,6 +2,21 @@ import "server-only";
 import { db } from "@/db";
 import { photoLibrary } from "@/db/schemas/photo-library";
 import { and, desc, eq, sql } from "drizzle-orm";
+import type { PhotoLibraryGroup } from "@/types/photo-library";
+
+/**
+ * 会員限定フォトライブラリで 1 つに束ねるグループの定義
+ * categoryNames をすべて持つアルバムを 1 グループとして扱う（AND 条件）
+ * slug はカテゴリページの URL に使う
+ * 新しい発表会を束ねたくなったら、この配列に 1 件追加する
+ */
+const PHOTO_LIBRARY_GROUPS = [
+  {
+    slug: "happyokai-2026",
+    title: "発表会2026",
+    categoryNames: ["CONCERT", "2026"],
+  },
+];
 
 
 /**
@@ -41,9 +56,9 @@ export const getPublicPhotos = async () => {
 };
 
 /**
- * 会員限定フォトライブラリ一覧を取得（isMemberOnly = true のみ）
+ * 会員限定フォトライブラリをカテゴリ付きで取得（isMemberOnly = true のみ）
  */
-export const getMemberOnlyPhotos = async () => {
+const findMemberOnlyPhotosWithCategories = async () => {
   return db.query.photoLibrary.findMany({
     where: and(
       eq(photoLibrary.published, true),
@@ -55,8 +70,58 @@ export const getMemberOnlyPhotos = async () => {
       images: {
         orderBy: (images, { asc }) => [asc(images.sortOrder)],
       },
+      photoLibraryCategories: {
+        with: {
+          category: true,
+        },
+      },
     },
   });
+};
+
+type MemberOnlyPhoto = Awaited<ReturnType<typeof findMemberOnlyPhotosWithCategories>>[number];
+
+const belongsToGroup = (photo: MemberOnlyPhoto, categoryNames: string[]) => {
+  const names = photo.photoLibraryCategories.map((pc) => pc.category.name.toLowerCase());
+  return categoryNames.every((name) => names.includes(name.toLowerCase()));
+};
+
+/**
+ * 会員限定フォトライブラリ一覧を、集約グループと単体アルバムに分けて取得
+ * グループに属するアルバムは albums に含めない（一覧ではグループカードに集約する）
+ */
+export const getMemberOnlyPhotoSections = async () => {
+  const photos = await findMemberOnlyPhotosWithCategories();
+
+  const groups: PhotoLibraryGroup[] = PHOTO_LIBRARY_GROUPS.map((group) => ({
+    slug: group.slug,
+    title: group.title,
+    albums: photos.filter((photo) => belongsToGroup(photo, group.categoryNames)),
+  })).filter((group) => group.albums.length > 0);
+
+  const groupedIds = new Set(groups.flatMap((group) => group.albums.map((album) => album.id)));
+  const albums = photos.filter((photo) => !groupedIds.has(photo.id));
+
+  return { groups, albums };
+};
+
+/**
+ * slug から集約グループとそのアルバムを取得（会員限定のカテゴリページ用）
+ * 定義がない、または該当アルバムが 0 件の場合は undefined
+ */
+export const getPhotoLibraryGroup = async (slug: string): Promise<PhotoLibraryGroup | undefined> => {
+  const group = PHOTO_LIBRARY_GROUPS.find((g) => g.slug === slug);
+  if (!group) {
+    return undefined;
+  }
+
+  const photos = await findMemberOnlyPhotosWithCategories();
+  const albums = photos.filter((photo) => belongsToGroup(photo, group.categoryNames));
+  if (albums.length === 0) {
+    return undefined;
+  }
+
+  return { slug: group.slug, title: group.title, albums };
 };
 
 /**
