@@ -1,4 +1,3 @@
-import Link from "next/link"
 import Image from "next/image"
 
 const NAV = [
@@ -10,12 +9,11 @@ const NAV = [
   { href: "#faq", label: "よくある質問" },
 ]
 
+// 法的文面は YOURFLAG 専用ページ（ドメイン取得までは LP と同じドメイン上に置く）
 const LEGAL = [
-  { href: "/legal", label: "特定商取引法に基づく表記" },
-  { href: "/privacy", label: "プライバシーポリシー" },
-  { href: "/terms", label: "利用規約" },
-  { href: "/refund", label: "返金について" },
-  { href: "/contact", label: "お問い合わせ" },
+  { href: "/yourflag/tokushoho", label: "特定商取引法に基づく表記" },
+  { href: "/yourflag/privacy", label: "プライバシーポリシー" },
+  { href: "/yourflag/terms", label: "会員規約" },
 ]
 
 export function YourflagFooter() {
@@ -35,14 +33,13 @@ export function YourflagFooter() {
               クラブ活動・スポーツ・文化団体と、その活動を応援する人をつなぐ継続支援プラットフォーム
             </p>
             <div className="mt-5 text-[.8rem] leading-[1.9] text-[#aab2c5]">
-              <p className="font-bold text-white tracking-[.06em]">IK ALUMNI CGT</p>
-              <p>細沼 笙 / 齋藤 遼</p>
+              <p className="font-bold text-white tracking-[.06em]">運営: 細沼 笙</p>
               <p>
                 <a
-                  href="mailto:cgt.ik.est2022@gmail.com"
+                  href="mailto:yourflag.est2026@gmail.com"
                   className="hover:text-white transition-colors break-all"
                 >
-                  cgt.ik.est2022@gmail.com
+                  yourflag.est2026@gmail.com
                 </a>
               </p>
             </div>
@@ -64,16 +61,16 @@ export function YourflagFooter() {
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[.78rem] font-semibold">
             {LEGAL.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="text-[#aab2c5] hover:text-white transition-colors">
+                <a href={l.href} className="text-[#aab2c5] hover:text-white transition-colors">
                   {l.label}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
         </nav>
 
         <p className="mt-6 text-[.72rem] text-[#6b7690]">
-          © YOURFLAG — IK ALUMNI CGT / クラブ活動支援サービス
+          © YOURFLAG / 運営 細沼 笙
         </p>
       </div>
     </footer>
