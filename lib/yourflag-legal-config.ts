@@ -4,7 +4,7 @@
  * 文面は仮のもので、弁護士等の専門家の確認を経て更新する（2026-09-12 decision）。
  * 記入が済んだら PENDING を実際の値に置き換え、LEGAL_IS_DRAFT を false にする。
  */
-export const LEGAL_IS_DRAFT = true;
+export const LEGAL_IS_DRAFT = false;
 
 export const PENDING = "【要記入】";
 
@@ -18,4 +18,4 @@ export const OPERATOR = {
   privacyContact: "yourflag.est2026@gmail.com",
 };
 
-export const LEGAL_UPDATED_AT = "2026年9月21日（仮）";
+export const LEGAL_UPDATED_AT = "2026年10月5日";
