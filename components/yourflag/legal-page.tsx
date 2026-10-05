@@ -15,7 +15,7 @@ export function LegalPage({ title, intro, sections }: { title: string; intro?: s
 
         {LEGAL_IS_DRAFT && (
           <p className="mt-6 rounded-lg bg-accent px-4 py-3 text-sm font-bold text-accent-foreground" data-testid="legal-draft">
-            この文面は仮のものです。専門家（弁護士等）の確認前のため、内容が変わることがあります。「【要記入】」は記入前の項目です。
+            この文面は仮のものです。専門家（弁護士等）の確認前のため、内容が変わることがあります。
           </p>
         )}
 
