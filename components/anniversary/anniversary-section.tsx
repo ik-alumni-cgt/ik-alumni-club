@@ -22,7 +22,7 @@ export function AnniversarySection({
         <AnniversaryFadeIn>
           {/* セクションタイトル */}
           <h2
-            className="text-2xl md:text-4xl font-bold text-center tracking-widest mb-12 md:mb-16"
+            className="text-2xl md:text-4xl font-bold text-center tracking-widest mb-12 md:mb-16 text-[#e0b84a]"
             style={{ fontFamily: "var(--font-academy)" }}
           >
             {title}
