@@ -1,31 +1,22 @@
 import Image from "next/image"
-import logo from "@/components/header/logo_main.png"
 import { AnniversaryFadeIn } from "@/components/anniversary/anniversary-fade-in"
 
 export function AnniversaryHero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-16">
+      <h1 className="sr-only">IK ALUMNI CGT 5th Anniversary concert</h1>
 
-      {/* メインコンテンツ */}
+      {/* メインビジュアル（ティザー完成版） */}
       <AnniversaryFadeIn>
-        <div className="relative z-10 text-center flex flex-col items-center">
-          <Image
-            src={logo}
-            alt="IK ALUMNI COLOR GUARD TEAM"
-            width={150}
-            height={150}
-            className="mb-6"
-          />
-          <h1
-            className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-widest mb-4"
-            style={{ fontFamily: "var(--font-academy)" }}
-          >
-            5th ANNIVERSARY
-          </h1>
-          <p className="text-sm md:text-lg text-white/70 tracking-wider">
-            五周年記念コンサート
-          </p>
-        </div>
+        <Image
+          src="/anniversary/hero.webp"
+          alt="IK ALUMNI CGT 5th Anniversary concert 2027.2.7 SUN OPEN 14:30 START 15:30 柏市民文化会館 大ホール"
+          width={1200}
+          height={1606}
+          priority
+          sizes="(min-width: 768px) 600px, 90vw"
+          className="relative z-10 w-auto h-auto max-h-[85vh] max-w-full"
+        />
       </AnniversaryFadeIn>
 
       {/* スクロール促進の矢印 */}

@@ -6,17 +6,20 @@ import { AnniversarySection } from "@/components/anniversary/anniversary-section
 import { AnniversaryFooter } from "@/components/anniversary/anniversary-footer"
 import { AnniversaryScrollToTop } from "@/components/anniversary/anniversary-scroll-to-top"
 import { ConceptSection } from "@/components/anniversary/concept-section"
+import { HistorySection } from "@/components/anniversary/history-section"
 import { NewsSection } from "@/components/anniversary/news-section"
 import { ScheduleSection } from "@/components/anniversary/schedule-section"
+import { ProgramSection } from "@/components/anniversary/program-section"
 import { GoodsSection } from "@/components/anniversary/goods-section"
 import { FaqSection } from "@/components/anniversary/faq-section"
-import bgImage from "./5th-anniversary-back-graund.png"
 
 // セクション定義 - 追加・削除・並べ替えはここで管理
 const SECTIONS = [
   { id: "concept", label: "CONCEPT" },
+  { id: "history", label: "HISTORY" },
   { id: "news", label: "NEWS" },
   { id: "schedule", label: "SCHEDULE" },
+  { id: "program", label: "PROGRAM" },
   { id: "goods", label: "GOODS" },
   { id: "faq", label: "FAQ" },
 ] as const
@@ -33,13 +36,13 @@ export default async function AnniversaryPage({
       {/* 固定背景画像 */}
       <div className="fixed inset-0 z-0">
         <Image
-          src={bgImage}
+          src="/anniversary/bg.webp"
           alt=""
           fill
           className="object-cover object-top"
           priority
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/30" />
       </div>
 
       {/* コンテンツ */}
@@ -55,6 +58,11 @@ export default async function AnniversaryPage({
         <ConceptSection />
       </AnniversarySection>
 
+      {/* HISTORY */}
+      <AnniversarySection id="history" title="HISTORY">
+        <HistorySection />
+      </AnniversarySection>
+
       {/* NEWS */}
       <AnniversarySection id="news" title="NEWS">
         <NewsSection />
@@ -63,6 +71,11 @@ export default async function AnniversaryPage({
       {/* SCHEDULE */}
       <AnniversarySection id="schedule" title="SCHEDULE">
         <ScheduleSection />
+      </AnniversarySection>
+
+      {/* PROGRAM */}
+      <AnniversarySection id="program" title="PROGRAM">
+        <ProgramSection />
       </AnniversarySection>
 
       {/* GOODS */}

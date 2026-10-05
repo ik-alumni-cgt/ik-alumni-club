@@ -19,7 +19,7 @@ const FAQ_CATEGORIES = [
       },
       {
         question: "公演の終了時刻は何時頃ですか？",
-        answer: "終演時刻は決まり次第お知らせいたします。",
+        answer: "18:00 終演予定です。",
       },
       {
         question: "途中入場・途中退場はできますか？",
