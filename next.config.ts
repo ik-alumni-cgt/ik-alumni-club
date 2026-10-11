@@ -30,6 +30,19 @@ const nextConfig: NextConfig = {
     },
     middlewareClientMaxBodySize: '100mb', // Middlewareのリクエストボディ制限
   },
+  async headers() {
+    // イベント当日限りの投票ページは検索結果に出さない（meta robots と二重で指定）
+    return [
+      {
+        source: "/:locale(ja|en)?/feature/event-vote/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/api/vote",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+    ];
+  },
   async redirects() {
     return [
       // 旧サービス名 Cheerly は YOURFLAG に統合。配布済み資料・QRコード（/cheerly）を維持。
