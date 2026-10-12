@@ -1,49 +1,56 @@
 import { AnniversaryCard } from "@/components/anniversary/anniversary-card"
+import { getInformations } from "@/data/information"
 
-/** ニュースデータ */
-const NEWS_ITEMS = [
-  {
-    date: "2026.05.07",
-    title: "五周年記念コンサート 開催決定のお知らせ",
-    href: "#",
-  },
-]
+// 五周年ページに表示するお知らせのカテゴリー slug（管理画面で付与）
+const ANNIVERSARY_CATEGORY_SLUG = "5th-anniversary"
+const NEWS_LIMIT = 5
 
-export function NewsSection() {
+export async function NewsSection() {
+  const informations = await getInformations(ANNIVERSARY_CATEGORY_SLUG)
+  const items = informations.slice(0, NEWS_LIMIT)
+
   return (
     <div className="max-w-3xl mx-auto">
       <AnniversaryCard>
-        {/* ニュースリスト */}
-        <ul className="flex flex-col">
-          {NEWS_ITEMS.map((item, index) => (
-            <li
-              key={index}
-              className={`${index !== NEWS_ITEMS.length - 1 ? "border-b border-white/30" : ""}`}
-            >
-              <a
-                href={item.href}
-                className="block py-6 text-left hover:opacity-70 transition-opacity"
-              >
-                <time className="text-xs md:text-sm text-white/60 tracking-wider">
-                  {item.date}
-                </time>
-                <p className="text-sm md:text-base text-white mt-2 leading-relaxed">
-                  {item.title}
-                </p>
-              </a>
-            </li>
-          ))}
-        </ul>
+        {items.length === 0 ? (
+          <p className="text-sm md:text-base text-white/80 tracking-wider py-4">
+            配信までしばらくお待ちください
+          </p>
+        ) : (
+          <>
+            {/* ニュースリスト */}
+            <ul className="flex flex-col">
+              {items.map((item, index) => (
+                <li
+                  key={item.id}
+                  className={index !== items.length - 1 ? "border-b border-white/30" : ""}
+                >
+                  <a
+                    href={`/information/${item.id}`}
+                    className="block py-6 text-left hover:opacity-70 transition-opacity"
+                  >
+                    <time className="text-xs md:text-sm text-white/60 tracking-wider">
+                      {item.date.replaceAll("-", ".")}
+                    </time>
+                    <p className="text-sm md:text-base text-white mt-2 leading-relaxed">
+                      {item.title}
+                    </p>
+                  </a>
+                </li>
+              ))}
+            </ul>
 
-        {/* VIEW MORE */}
-        <div className="mt-8">
-          <a
-            href="#"
-            className="inline-block text-sm tracking-widest text-white/80 hover:text-white transition-colors border-b border-white/40 pb-1"
-          >
-            VIEW MORE
-          </a>
-        </div>
+            {/* VIEW MORE */}
+            <div className="mt-8">
+              <a
+                href={`/information?category=${ANNIVERSARY_CATEGORY_SLUG}`}
+                className="inline-block text-sm tracking-widest text-white/80 hover:text-white transition-colors border-b border-white/40 pb-1"
+              >
+                VIEW MORE
+              </a>
+            </div>
+          </>
+        )}
       </AnniversaryCard>
     </div>
   )
