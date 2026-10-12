@@ -51,9 +51,6 @@ export function ScheduleSection() {
         {/* 入場について */}
         <div className="text-xs md:text-sm text-white/60 leading-relaxed tracking-wider">
           <p>入場無料・指定席</p>
-          <p className="mt-2">
-            チケットの販売開始は決まり次第お知らせいたします。
-          </p>
         </div>
       </AnniversaryCard>
     </div>

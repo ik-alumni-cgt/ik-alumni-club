@@ -9,6 +9,8 @@ import { ConceptSection } from "@/components/anniversary/concept-section"
 import { HistorySection } from "@/components/anniversary/history-section"
 import { NewsSection } from "@/components/anniversary/news-section"
 import { ScheduleSection } from "@/components/anniversary/schedule-section"
+import { TicketSection } from "@/components/anniversary/ticket-section"
+import { DonateSection } from "@/components/anniversary/donate-section"
 import { ProgramSection } from "@/components/anniversary/program-section"
 import { GoodsSection } from "@/components/anniversary/goods-section"
 import { FaqSection } from "@/components/anniversary/faq-section"
@@ -19,10 +21,15 @@ const SECTIONS = [
   { id: "history", label: "HISTORY" },
   { id: "news", label: "NEWS" },
   { id: "schedule", label: "SCHEDULE" },
+  { id: "ticket", label: "TICKET" },
+  { id: "donate", label: "DONATE" },
   { id: "program", label: "PROGRAM" },
   { id: "goods", label: "GOODS" },
   { id: "faq", label: "FAQ" },
 ] as const
+
+// NEWS を DB から取得するため動的レンダリング
+export const dynamic = "force-dynamic"
 
 export default async function AnniversaryPage({
   params,
@@ -71,6 +78,16 @@ export default async function AnniversaryPage({
       {/* SCHEDULE */}
       <AnniversarySection id="schedule" title="SCHEDULE">
         <ScheduleSection />
+      </AnniversarySection>
+
+      {/* TICKET */}
+      <AnniversarySection id="ticket" title="TICKET">
+        <TicketSection />
+      </AnniversarySection>
+
+      {/* DONATE */}
+      <AnniversarySection id="donate" title="DONATE">
+        <DonateSection />
       </AnniversarySection>
 
       {/* PROGRAM */}
